@@ -15,4 +15,4 @@ def product_detail(request, product_id):
 def index(request):
     return render(request, 'home/index.html')
 def test(request):
-    return render(request, 'companies/company_detail.html')
+    return render(request, 'account/register.html')
