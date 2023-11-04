@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import ProductForm, ProductImageFormSet
+from django.http import JsonResponse
+from .models import Category
 
 def create_product(request):
     if request.method == 'POST':
@@ -15,4 +17,10 @@ def create_product(request):
         form = ProductForm()
         formset = ProductImageFormSet()
 
-    return render(request, 'product/add_product.html', {'form': form, 'formset': formset})
+    return render(request, 'product/create_product.html', {'form': form, 'formset': formset})
+
+def load_subcategories(request):
+    category_id = request.GET.get('category_id')
+    subcategories = Category.objects.filter(parent_id=category_id).order_by('title')
+    subcategory_list = [{'id': sub.id, 'title': sub.title} for sub in subcategories]
+    return JsonResponse(subcategory_list, safe=False)

@@ -1,4 +1,82 @@
 {% extends 'home/base.html' %} {% block content %}
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    // Function to update the options for a select element
+    function updateOptions(selectElementId, options, defaultOptionText) {
+      var selectElement = $('#' + selectElementId);
+      selectElement.empty(); // Clear all existing options
+      selectElement.append($('<option>', {
+        value: '',
+        text: defaultOptionText,
+        selected: true
+      }));
+      $.each(options, function (index, item) {
+        selectElement.append($('<option>', {
+          value: item.pk_i_id,
+          text: item.s_name_native || item.s_name // Use native name if available
+        }));
+      });
+      selectElement.prop('disabled', options.length === 0);
+    }
+
+    // Listen for changes in the country dropdown
+    $("#countryId").on("change", function () {
+      var countryId = $(this).val();
+      var url = "https://epsilon.mb-themes.com/index.php?page=ajax&action=regions&countryId=" + countryId;
+
+      if (countryId) {
+        $("#regionId").prop('disabled', false);
+        $("#cityId").prop('disabled', true).empty().append($('<option>', {
+          value: '',
+          text: 'Select a city...'
+        }));
+
+        // Fetch regions for the selected country
+        $.ajax({
+          type: "POST",
+          url: url,
+          dataType: "json",
+          success: function (data) {
+            updateOptions('regionId', data, 'Select a region...');
+          }
+        });
+      } else {
+        updateOptions('regionId', [], 'Select a region...');
+        updateOptions('cityId', [], 'Select a city...');
+        $("#regionId, #cityId").prop('disabled', true);
+      }
+    });
+
+    // Listen for changes in the region dropdown
+    $("#regionId").on("change", function () {
+      var regionId = $(this).val();
+      var url = "https://epsilon.mb-themes.com/index.php?page=ajax&action=cities&regionId=" + regionId;
+
+      if (regionId) {
+        $("#cityId").prop('disabled', false);
+        // Fetch cities for the selected region
+        $.ajax({
+          type: "POST",
+          url: url,
+          dataType: "json",
+          success: function (data) {
+            updateOptions('cityId', data, 'Select a city...');
+          }
+        });
+      } else {
+        updateOptions('cityId', [], 'Select a city...');
+        $("#cityId").prop('disabled', true);
+      }
+    });
+
+    // Initialize with the country dropdown if it has a selected value
+    if ($("#countryId").val()) {
+      $("#countryId").trigger('change');
+    }
+  });
+</script>
+
 <body id="body-item-post" class="item-publish">
   {% include 'home/header.html' %}
 
@@ -42,35 +120,24 @@
 
           <section class="s1">
             <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
-
             <div class="in">
-              <!-- CATEGORY -->
               <div class="row category multi">
-                <label for="catId">Select category for your listing <span class="req">*</span></label>
-                <select id="catId" name="catId">
-                  <option value="">Select category</option>
-                  <option value="for-sale">For sale</option>
-                  <option value="vehicles">Vehicles</option>
+                {{ form.category.label_tag }} <span class="req">*</span>
+                {{ form.category }} <!-- Let's assume this has a class that styles it, like "form-control" -->
+              </div>
+              <!-- Subcategory Select - initially hidden and populated via JavaScript -->
+              <div id="subcategory-select" class="row category multi" style="display:none;">
+                <label for="id_subcategory">Select subcategory <span class="req">*</span></label>
+                <!-- Add the same classes to this select element for consistent styling -->
+                <select id="id_subcategory" name="subcategory" class="form-control">
+                  <option value="">Select subcategory</option>
+                  <!-- Populated via JavaScript -->
                 </select>
-
-                <div id="subcategory-select" style="display:none;">
-                  <label for="subcatId">Select subcategory <span class="req">*</span></label>
-                  <select id="subcatId" name="subcatId">
-                    <option value="">Select subcategory</option>
-                    <!-- Subcategories will be populated based on the main category selected -->
-                  </select>
-                </div>
               </div>
             </div>
-
-            <div class="tip">
-              <i class="fas fa-times close-tip"></i>
-              <p><strong>Category selection is important!</strong></p>
-              <p>Selecting the correct category for your item is an essential part of the selling process.</p>
-              <p>If you select an improper category, potential buyers may not find your item, and it may take much
-                longer to sell.</p>
-            </div>
+            <!-- ...other HTML... -->
           </section>
+          
 
           <section class="location">
             <h2>Listing location <i class="show-tip fas fa-question-circle"></i></h2>
@@ -345,7 +412,38 @@
 
   {% include 'mobile_sidemenu.html' %}
 
+  <style>
+    a.fi_img-link.fi-no-image>img {
+      content: url("https://epsilon.mb-themes.com//oc-content/themes/epsilon/images/no-image.png");
+    }
+  </style>
+  <script type="text/javascript">
+    // Example JavaScript to dynamically change subcategories based on the main category selected.
+    // This is just a template and will not work without proper JavaScript code to handle the logic.
 
+    $('#id_category').change(function () {
+      var categoryId = $(this).val();
+  var subcategorySelect = $('#id_subcategory');
+  $('#subcategory-select').show(); // Show the subcategory dropdown
+  var url = "{% url 'product:ajax_load_subcategories' %}" + "?category_id=" + categoryId;
+  
+      $.ajax({
+        url: url,
+        success: function (data) {
+          subcategorySelect.html('<option value="">Select subcategory</option>');
+          $.each(data, function(index, item) {
+            subcategorySelect.append('<option value="' + item.id + '">' + item.title + '</option>');
+          });
+          subcategorySelect.prop('disabled', false);  // Enable the subcategory select
+        },
+        error: function(xhr, errmsg, err) {
+          // Handle errors here
+          console.log(xhr.status + ": " + xhr.responseText);
+        }
+      });
+    });
+    
+  </script>
 </body>
 
 </html>
