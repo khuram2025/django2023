@@ -1,9 +1,11 @@
-{% extends 'home/base.html' %} {% block content %}
+{% extends 'home/base.html' %} {% load static %}
+<!-- If you have static files to load -->
+
+{% block content %}
 
 <body id="body-user-register" class="pre-account register">
   {% include 'home/header.html' %}
   <div class="content loc-register sec-register">
-
     <div id="flashbox" class="container">
       <div class="wrap">
         <div class="wrap2"></div>
@@ -13,75 +15,92 @@
       <div class="box">
         <h1>Register a new account</h1>
 
+        <a class="alt-action" href="{% url 'login' %}">Already have an account? Login &#8594;</a>
 
-        <a class="alt-action" href="https://epsilon.mb-themes.com/user/login">Already have account? Login &#8594;</a>
-
-        <form name="register" id="register" action="https://epsilon.mb-themes.com/index.php" method="post"><input type='hidden' name='octoken' value='mezxphzsud7d' />
-          <input type="hidden" name="page" value="register" />
-          <input type="hidden" name="action" value="register_post" />
-
-
+        <form name="register" id="register" action="{% url 'register' %}" method="post">
+          {% csrf_token %}
           <ul id="error_list"></ul>
 
           <div class="row nm">
-            <label for="name">Name <span class="req">*</span></label>
-            <div class="input-box"><input id="s_name" type="text" name="s_name" value="" /></div>
+            <label for="full_name">Name <span class="req">*</span></label>
+            <div class="input-box">
+              <input id="full_name" type="text" name="full_name" required />
+            </div>
           </div>
 
           <div class="row em">
-            <label for="email">E-mail <span class="req">*</span></label>
-            <div class="input-box"><input id="s_email" type="text" name="s_email" value="" /></div>
+            <label for="email">E-mail</label>
+            <div class="input-box">
+              <input id="email" type="email" name="email" />
+            </div>
           </div>
 
           <div class="row mb">
-            <label for="phone">Mobile Phone</label>
-            <div class="input-box"><input id="s_phone_mobile" type="text" name="s_phone_mobile" value="" /></div>
+            <label for="mobile">Mobile Phone <span class="req">*</span></label>
+            <div class="input-box">
+              <input id="mobile" type="text" name="mobile" required />
+            </div>
           </div>
 
           <div class="row p1">
-            <label for="password">Password <span class="req">*</span></label>
+            <label for="password1">Password <span class="req">*</span></label>
             <div class="input-box">
-              <input id="s_password" type="password" name="s_password" value="" autocomplete="off" /> <a href="#" class="toggle-pass" title="Show/hide password"><i class="fa fa-eye-slash"></i></a>
+              <input id="password1" type="password" name="password1" autocomplete="off" required />
+              <!-- ... -->
             </div>
           </div>
 
           <div class="row p2">
-            <label for="password">Re-type password <span class="req">*</span></label>
+            <label for="password2">Re-type password <span class="req">*</span></label>
             <div class="input-box">
-              <input id="s_password2" type="password" name="s_password2" value="" autocomplete="off" /> <a href="#" class="toggle-pass" title="Show/hide password"><i class="fa fa-eye-slash"></i></a>
+              <input id="password2" type="password" name="password2" autocomplete="off" required />
+              <!-- ... -->
             </div>
           </div>
 
           <div class="user-reg-hook"></div>
-
-          <div id="anr_captcha_field_1"></div>
           <button type="submit" class="btn">Create account</button>
         </form>
       </div>
-  </div>
-  <section class="promo">
-    <div class="container">
-      <span>Are you a professional seller?</span>
-      <a href="https://epsilon.mb-themes.com/user/register" class="btn btn-transparent">Create an account</a>
-    </div>
-  </section>
+    </section>
 
-  {% include 'light_footer.html' %}
-  {% include 'mobile_sidemenu.html' %}
-  <style>
-    a.fi_img-link.fi-no-image>img {
-      content: url("https://epsilon.mb-themes.com//oc-content/themes/epsilon/images/no-image.png");
-    }
-  </style>
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $('input[name="s_name"]').attr('placeholder', 'First name, Last name').attr('required', true);
-      $('input[name="s_email"]').attr('placeholder', 'your.email@dot.com').attr('required', true).prop('type', 'email');
-      $('input[name="s_phone_mobile"]').attr('placeholder', '+XXX XXX XXX');
-      $('input[name="s_password"]').attr('placeholder', 'YourPass123!').attr('required', true);
-      $('input[name="s_password2"]').attr('placeholder', 'YourPass123!').attr('required', true);
-    });
-  </script>
+    <section class="promo">
+      <div class="container">
+        <span>Are you a professional seller?</span>
+        <a href="{% url 'register' %}" class="btn btn-transparent">Create an account</a>
+      </div>
+    </section>
+
+    {% include 'light_footer.html' %} {% include 'mobile_sidemenu.html' %}
+
+    <style>
+      a.fi_img-link.fi-no-image > img {
+        content: url("{% static 'images/no-image.png' %}");
+      }
+    </style>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('input[name="full_name"]').attr("placeholder", "First name, Last name").attr("required", true);
+        $('input[name="email"]').attr("placeholder", "your.email@dot.com").attr("required", false).prop("type", "email");
+        $('input[name="mobile"]').attr("placeholder", "+XXX XXX XXX").attr("required", true);
+        $('input[name="password1"]').attr("placeholder", "YourPass123!").attr("required", true);
+        $('input[name="password2"]').attr("placeholder", "YourPass123!").attr("required", true);
+
+        // Toggle password visibility
+        $(".toggle-pass").click(function (e) {
+          e.preventDefault();
+          let $password = $(this).prev("input");
+          if ($password.attr("type") === "password") {
+            $password.attr("type", "text");
+            $(this).find("i").removeClass("fa-eye-slash").addClass("fa-eye");
+          } else {
+            $password.attr("type", "password");
+            $(this).find("i").removeClass("fa-eye").addClass("fa-eye-slash");
+          }
+        });
+      });
+    </script>
+  </div>
 </body>
-</html>
 {% endblock %}

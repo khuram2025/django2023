@@ -1,90 +1,60 @@
 {% extends 'home/base.html' %} {% block content %}
+<body id="user-login" class="pre-account login">
+  {% include 'home/header.html' %}
 
+  <div class="content loc-login sec-default">
+    <!-- Breadcrumbs and other static content can stay the same as in your template -->
 
-  <body id="user-login" class="pre-account login">
-    {% include 'home/header.html' %}
+    <section class="container">
+      <div class="box">
+        <h1>Sign-in to your account</h1>
 
-    <div class="content loc-login sec-default">
-      <div id="breadcrumbs" class="container">
-        <div class="bread-text">
-          <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-            <meta itemprop="name" content="Breadcrumb" />
-            <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
-              <a href="https://epsilon.mb-themes.com/" itemprop="item"
-                ><span itemprop="name" class="home"
-                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" /></svg> <span>Home</span></span
-                ></a
-              ><meta itemprop="position" content="1" />
-            </li>
+        <a class="alt-action" href="{% url 'register' %}">No account yet? Register a new account &#8594;</a>
 
-            <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">> <span itemprop="name">Login</span><meta itemprop="position" content="2" /></li>
-          </ul>
-        </div>
-      </div>
+        <form action="{% url 'login' %}" method="post">
+          {% csrf_token %}
 
-      <div id="flashbox" class="container">
-        <div class="wrap"><div class="wrap2"></div></div>
-      </div>
-      <section class="container">
-        <div class="box">
-          <h1>Sign-in to your account</h1>
+          <div class="row">
+            <label for="mobile">Mobile Phone</label>
+            <span class="input-box">
+              <input id="mobile" type="text" name="mobile" value="" required placeholder="Your mobile number" />
+            </span>
+          </div>
 
-          <a class="alt-action" href="https://epsilon.mb-themes.com/user/register">No account yet? Register a new account &#8594;</a>
+          <div class="row">
+            <label for="password">Password</label>
+            <span class="input-box">
+              <input id="password" type="password" name="password" value="" autocomplete="off" required placeholder="Your password" />
+              <a href="#" class="toggle-pass" title="Show/hide password">
+                <i class="fa fa-eye-slash"></i>
+              </a>
+            </span>
+          </div>
 
-          <form action="https://epsilon.mb-themes.com/index.php" method="post">
-            <input type="hidden" name="octoken" value="fgqe9pghhrvr" />
-            <input type="hidden" name="page" value="login" />
-            <input type="hidden" name="action" value="login_post" />
+          <div class="input-box-check">
+            <input id="remember" type="checkbox" name="remember" value="1" />
+            <label for="remember">Remember me</label>
+          </div>
 
-            <div class="row">
-              <label for="email">E-mail</label>
-              <span class="input-box"><input id="email" type="text" name="email" value="demo@demo.com" /></span>
-            </div>
+          <button type="submit" class="btn">Log in</button>
 
-            <div class="row">
-              <label for="password">Password</label>
-              <span class="input-box">
-                <input id="password" type="password" name="password" value="demo123" autocomplete="off" /> <a href="#" class="toggle-pass" title="Show/hide password"><i class="fa fa-eye-slash"></i></a>
-              </span>
-            </div>
-
-            <div class="input-box-check"><input id="remember" type="checkbox" name="remember" value="1" /> <label for="remember">Remember me</label></div>
-
-            <div class="user-reg-hook"></div>
-
-            <div class="row fr"></div>
-
-            <button type="submit" class="btn">Log in</button>
-
-            <a class="alt-action2" href="https://epsilon.mb-themes.com/user/recover">I forgot my password</a>
-          </form>
-        </div>
-      </section>
-    </div>
-
-    <section class="promo">
-      <div class="container">
-        <span>Are you a professional seller?</span>
-        <a href="https://epsilon.mb-themes.com/user/register" class="btn btn-transparent">Create an account</a>
+          <a class="alt-action2" href="#">I forgot my password</a>
+        </form>
       </div>
     </section>
+  </div>
 
-    {% include 'mobile_sidemenu.html' %}
+  <section class="promo">
+    <!-- Promo section can stay the same as in your template -->
+  </section>
 
-    <style>
-      a.fi_img-link.fi-no-image > img {
-        content: url("https://epsilon.mb-themes.com//oc-content/themes/epsilon/images/no-image.png");
-      }
-    </style>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('input[name="email"]').attr("placeholder", "your.email@dot.com").attr("required", true);
-        $('input[name="password"]').attr("placeholder", "YourPass123!").attr("required", true);
-      });
-    </script>
-  </body>
+  {% include 'mobile_sidemenu.html' %}
 
-  <!-- Mirrored from epsilon.mb-themes.com/user/login by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Oct 2023 02:21:13 GMT -->
-</html>
-<!-- 0.0208270549774 seg. -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // Update placeholder attributes for mobile and password fields if needed
+      // Other jQuery functionality can stay the same as in your template
+    });
+  </script>
+</body>
 {% endblock %}
