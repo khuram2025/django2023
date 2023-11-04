@@ -1,0 +1,123 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<body id="body-item-post" class="item-publish">
+  {% include 'home/header.html' %}
+
+  <!-- ... [rest of the breadcrumbs and other static content] ... -->
+
+  <div class="container">
+    <div class="box">
+      <h1>Post your ad</h1>
+
+      <ul id="error_list" class="new-item"></ul>
+
+      <form name="item" action="#" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- ... [rest of the static content before the form] ... -->
+
+        <!-- Category selection form part -->
+        <!-- Assuming 'form' is your Django form and it has a 'category' field -->
+        <section class="s1">
+          <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
+          <div class="in">
+            <!-- CATEGORY -->
+            <div class="row category multi">
+              {{ form.category.label_tag }} <span class="req">*</span>
+              {{ form.category }}
+            </div>
+          </div>
+          <!-- ... [rest of the category section] ... -->
+        </section>
+
+        <!-- ... [location, seller's information sections] ... -->
+
+        <!-- Pricing options & status -->
+     
+        <section class="s4">
+            <h2>Pricing options & status <i class="show-tip fas fa-question-circle"></i></h2>
+          
+            <div class="in">
+              <!-- Use the form's price field but keep the structure -->
+              <label for="price">Price <span class="req">*</span></label>
+              <div class="enter">
+                <div class="input-box">
+                  {{ form.price }}
+                  <!-- The currency select is kept as is since it seems static -->
+                  <select class="currency" id="currency" name="currency">
+                    <option value="PKR" selected="selected">PKR</option>
+                    <!-- Add more options if needed -->
+                  </select>
+                </div>
+          
+                <div class="or"><span>or</span></div>
+              </div>
+          
+              <div class="selection">
+                <!-- These buttons can be linked to JavaScript functions to change the value of the price input if needed -->
+                <button type="button" data-price="0" class="btn btn-secondary" title="Item is offered for free">
+                  <i class="fas fa-hand-holding-usd"></i> Item for free
+                </button>
+                <button type="button" data-price="" class="btn btn-secondary" title="Based on agreement with seller">
+                  <i class="far fa-handshake"></i> Check with seller
+                </button>
+              </div>
+          
+              <!-- Use the form's transaction and condition fields but keep the structure -->
+              <div class="status-wrap">
+                <div class="transaction">
+                  {{ form.sTransaction.label_tag }}
+                  {{ form.sTransaction }}
+                </div>
+          
+                <div class="condition">
+                  {{ form.sCondition.label_tag }}
+                  {{ form.sCondition }}
+                </div>
+              </div>
+            </div>
+          
+            <div class="tip">
+              <!-- Tip content -->
+            </div>
+          </section>
+          
+        <!-- ... [photos section] ... -->
+
+        <!-- Listing description and attributes -->
+        <section class="info">
+          <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
+          <div class="in">
+            <div class="row title">
+              {{ form.title.label_tag }} *
+              <div class="input-box">
+                {{ form.title }}
+              </div>
+            </div>
+            <div class="row desc">
+              {{ form.description.label_tag }} *
+              <div class="input-box">
+                {{ form.description }}
+              </div>
+            </div>
+
+            <!-- ... [dynamic attributes if any] ... -->
+          </div>
+        </section>
+
+        <!-- ... [rest of the form sections] ... -->
+
+        <section class="buttons-block">
+          <!-- ... [captcha or any additional form fields] ... -->
+
+          <button type="submit" class="btn">Submit</button>
+        </section>
+      </form>
+    </div>
+  </div>
+
+  <!-- ... [footer and other content] ... -->
+
+  {% include 'mobile_sidemenu.html' %}
+</body>
+{% endblock %}

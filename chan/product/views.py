@@ -15,4 +15,4 @@ def create_product(request):
         form = ProductForm()
         formset = ProductImageFormSet()
 
-    return render(request, 'product/create_product.html', {'form': form, 'formset': formset})
+    return render(request, 'product/add_product.html', {'form': form, 'formset': formset})

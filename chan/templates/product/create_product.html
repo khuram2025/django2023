@@ -1,1132 +1,353 @@
 {% extends 'home/base.html' %} {% block content %}
+<body id="body-item-post" class="item-publish">
+  {% include 'home/header.html' %}
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $("#countryId").on("change", function () {
-        var pk_c_code = $(this).val();
-        var url = "https://epsilon.mb-themes.com/index.php?page=ajax&amp;action=regions&amp;countryId=" + pk_c_code;
-        var result = "";
+  <div class="content loc-item sec-item_add">
+    <div id="breadcrumbs" class="container">
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"><span itemprop="name" class="home"><svg
+                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
+                  <path
+                    d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" />
+                </svg> <span>Home</span></span></a>
+            <meta itemprop="position" content="1" />
+          </li>
 
-        if (pk_c_code != "") {
-          $("#regionId").attr("disabled", false);
-          $("#cityId").attr("disabled", true);
-
-          $.ajax({
-            type: "POST",
-            url: url,
-            dataType: "json",
-            success: function (data) {
-              var length = data.length;
-              var locationsNative = "0";
-
-              if (length > 0) {
-                result += '<option selected value="">Select a region...</option>';
-                for (key in data) {
-                  var vname = data[key].s_name;
-                  if (data[key].hasOwnProperty("s_name_native")) {
-                    if (data[key].s_name_native != "" && data[key].s_name_native != "null" && data[key].s_name_native != null && locationsNative == "1") {
-                      vname = data[key].s_name_native;
-                    }
-                  }
-                  result += '<option value="' + data[key].pk_i_id + '">' + vname + "</option>";
-                }
-
-                $("#region").before('<select name="regionId" id="regionId" ></select>');
-                $("#region").remove();
-                $("#city").before('<select name="cityId" id="cityId" ></select>');
-                $("#city").remove();
-                $("#regionId").val("");
-              } else {
-                $("#regionId").before('<input type="text" name="region" id="region" />');
-                $("#regionId").remove();
-                $("#cityId").before('<input type="text" name="city" id="city" />');
-                $("#cityId").remove();
-              }
-
-              $("#regionId").html(result);
-              $("#cityId").html('<option selected value="">Select a city...</option>');
-              $("#regionId").trigger("change");
-              $("#cityId").trigger("change");
-            },
-          });
-        } else {
-          // add empty select
-          $("#region").before('<select name="regionId" id="regionId" ><option value="">Select a region...</option></select>');
-          $("#region").remove();
-
-          $("#city").before('<select name="cityId" id="cityId" ><option value="">Select a city...</option></select>');
-          $("#city").remove();
-
-          if ($("#regionId").length > 0) {
-            $("#regionId").html('<option value="">Select a region...</option>');
-          } else {
-            $("#region").before('<select name="regionId" id="regionId" ><option value="">Select a region...</option></select>');
-            $("#region").remove();
-          }
-          if ($("#cityId").length > 0) {
-            $("#cityId").html('<option value="">Select a city...</option>');
-          } else {
-            $("#city").before('<select name="cityId" id="cityId" ><option value="">Select a city...</option></select>');
-            $("#city").remove();
-          }
-          $("#regionId").attr("disabled", true);
-          $("#cityId").attr("disabled", true);
-        }
-      });
-
-      $("#regionId").on("change", function () {
-        var pk_c_code = $(this).val();
-        var url = "https://epsilon.mb-themes.com/index.php?page=ajax&amp;action=cities&amp;regionId=" + pk_c_code;
-
-        var result = "";
-        if (pk_c_code != "") {
-          $("#cityId").attr("disabled", false);
-          $.ajax({
-            type: "POST",
-            url: url,
-            dataType: "json",
-            success: function (data) {
-              var length = data.length;
-              var locationsNative = "0";
-
-              if (length > 0) {
-                result += '<option selected value="">Select a city...</option>';
-                for (key in data) {
-                  var vname = data[key].s_name;
-                  if (data[key].hasOwnProperty("s_name_native")) {
-                    if (data[key].s_name_native != "" && data[key].s_name_native != "null" && data[key].s_name_native != null && locationsNative == "1") {
-                      vname = data[key].s_name_native;
-                    }
-                  }
-
-                  result += '<option value="' + data[key].pk_i_id + '">' + vname + "</option>";
-                }
-
-                $("#city").before('<select name="cityId" id="cityId" ></select>');
-                $("#city").remove();
-              } else {
-                result += '<option value="">No results</option>';
-                $("#cityId").before('<input type="text" name="city" id="city" />');
-                $("#cityId").remove();
-              }
-              $("#cityId").html(result);
-              $("#cityId").trigger("change");
-            },
-          });
-        } else {
-          $("#cityId").attr("disabled", true);
-        }
-      });
-
-      if ($("#regionId").attr("value") == "") {
-        $("#cityId").attr("disabled", true);
-      }
-
-      if ($("#countryId").length != 0) {
-        if (
-          $("#countryId")
-            .prop("type")
-            .match(/select-one/)
-        ) {
-          if ($("#countryId").attr("value") == "") {
-            $("#regionId").attr("disabled", true);
-          }
-        }
-      }
-    });
-  </script>
-
-  <body id="body-item-post" class="item-publish">
-    {% include 'home/header.html' %}
-
-    <div class="content loc-item sec-item_add">
-      <div id="breadcrumbs" class="container">
-        <div class="bread-text">
-          <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-            <meta itemprop="name" content="Breadcrumb" />
-            <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
-              <a href="https://epsilon.mb-themes.com/" itemprop="item"
-                ><span itemprop="name" class="home"
-                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" /></svg> <span>Home</span></span
-                ></a
-              ><meta itemprop="position" content="1" />
-            </li>
-
-            <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">> <span itemprop="name">Publish a listing</span><meta itemprop="position" content="2" /></li>
-          </ul>
-        </div>
+          <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">> <span
+              itemprop="name">Publish a listing</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        </ul>
       </div>
+    </div>
 
-      <div id="flashbox" class="container">
-        <div class="wrap"><div class="wrap2"></div></div>
+    <div id="flashbox" class="container">
+      <div class="wrap">
+        <div class="wrap2"></div>
       </div>
-      <div class="container">
-        <div class="box">
-          <h1>Post your ad</h1>
+    </div>
+    <div class="container">
+      <div class="box">
+        <h1>Post your ad</h1>
 
-          <ul id="error_list" class="new-item"></ul>
+        <ul id="error_list" class="new-item"></ul>
 
-          <form name="item" action="https://epsilon.mb-themes.com/index.php" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="octoken" value="fgqe9pghhrvr" />
-            <input type="hidden" name="action" value="item_add_post" />
-            <input type="hidden" name="page" value="item" />
+        <form name="item" action="https://epsilon.mb-themes.com/index.php" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="octoken" value="fgqe9pghhrvr" />
+          <input type="hidden" name="action" value="item_add_post" />
+          <input type="hidden" name="page" value="item" />
 
           <section class="s1">
-  <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
+            <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
 
-  <div class="in">
-    <!-- CATEGORY -->
-    <div class="row category multi">
-      <label for="catId">Select category for your listing <span class="req">*</span></label>
-      <select id="catId" name="catId">
-        <option value="">Select category</option>
-        <option value="for-sale">For sale</option>
-        <option value="vehicles">Vehicles</option>
-      </select>
+            <div class="in">
+              <!-- CATEGORY -->
+              <div class="row category multi">
+                <label for="catId">Select category for your listing <span class="req">*</span></label>
+                <select id="catId" name="catId">
+                  <option value="">Select category</option>
+                  <option value="for-sale">For sale</option>
+                  <option value="vehicles">Vehicles</option>
+                </select>
 
-      <div id="subcategory-select" style="display:none;">
-        <label for="subcatId">Select subcategory <span class="req">*</span></label>
-        <select id="subcatId" name="subcatId">
-          <option value="">Select subcategory</option>
-          <!-- Subcategories will be populated based on the main category selected -->
-        </select>
+                <div id="subcategory-select" style="display:none;">
+                  <label for="subcatId">Select subcategory <span class="req">*</span></label>
+                  <select id="subcatId" name="subcatId">
+                    <option value="">Select subcategory</option>
+                    <!-- Subcategories will be populated based on the main category selected -->
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Category selection is important!</strong></p>
+              <p>Selecting the correct category for your item is an essential part of the selling process.</p>
+              <p>If you select an improper category, potential buyers may not find your item, and it may take much
+                longer to sell.</p>
+            </div>
+          </section>
+
+          <section class="location">
+            <h2>Listing location <i class="show-tip fas fa-question-circle"></i></h2>
+
+            <div class="in">
+              <div class="row country">
+                <label for="countryId">Country</label>
+                <div class="input-box">
+                  <select name="countryId" id="countryId">
+                    <option value="">Select a country...</option>
+                    <option value="PK">Pakistan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row region">
+                <label for="regionId">Region</label>
+                <div class="input-box">
+                  <select name="regionId" id="regionId">
+                    <option value="">Select a region...</option>
+                    <option value="Sindh">Sindh</option>
+                    <option value="Punjab">Punjab</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row city">
+                <label for="cityId">City</label>
+                <div class="input-box">
+                  <select name="cityId" id="cityId">
+                    <option value="">Select a city...</option>
+                    <option value="Karachi">Karachi</option>
+                    <option value="Lahore">Lahore</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row address">
+                <label for="address">Address</label>
+                <div class="input-box"><input id="address" type="text" name="address" value="" /></div>
+              </div>
+
+              <div class="row zip">
+                <label for="zip">ZIP</label>
+                <div class="input-box"><input id="zip" type="text" name="zip" value="" /></div>
+              </div>
+
+              <!-- The location link can be adjusted or removed depending on your needs -->
+              <div class="row location-link">
+                <a class="link-update location" href="#">Set your preferred location &#8594;</a>
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Localize your item</strong></p>
+              <p>You should at least select a region & city for your listing, so customers searching only for offers in
+                their city or region can find your listings.</p>
+            </div>
+          </section>
+
+
+          <section class="about">
+            <h2>Seller's information <i class="show-tip fas fa-question-circle"></i></h2>
+
+            <div class="in">
+              <div class="seller">
+                <div class="row name">
+                  <label for="contactName">Contact Name</label>
+                  <div class="input-box">
+                    <input id="contactName" type="text" name="contactName" value="" />
+                  </div>
+                </div>
+
+                <div class="row phone">
+                  <label for="phone">Phone Number<span class="req">*</span></label>
+                  <div class="input-box">
+                    <input id="contactPhone" type="text" name="contactPhone" value="" />
+                  </div>
+                  <div class="mail-show">
+                    <div class="input-box-check">
+                      <input id="showPhone" type="checkbox" name="showPhone" value="1" checked="checked" />
+                      <label for="showPhone" class="label-mail-show">Phone visible on ad</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row user-email">
+                  <label for="contactEmail">E-mail <span class="req">*</span></label>
+                  <div class="input-box">
+                    <input id="contactEmail" type="text" name="contactEmail" value="" />
+                  </div>
+                  <div class="mail-show">
+                    <div class="input-box-check">
+                      <input id="showEmail" type="checkbox" name="showEmail" value="1" />
+                      <label for="showEmail" class="label-mail-show">Email visible on ad</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- This link can be adjusted or removed depending on your needs -->
+              <div class="row user-link">
+                <a class="link-update" href="#">Not registered yet? Create an account &#8594;</a>
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Trusted and open seller</strong></p>
+              <p>You should enter your phone number, as many customers prefer phone contact.</p>
+              <p>For faster listing publishing and contacting customers, it is recommended to create an account;
+                logged-in users are more trusted.</p>
+            </div>
+          </section>
+
+
+          <section class="s4">
+            <h2>Pricing options & status <i class="show-tip fas fa-question-circle"></i></h2>
+
+            <div class="in">
+              <label for="price">Price <span class="req">*</span></label>
+
+              <div class="enter">
+                <div class="input-box">
+                  <input id="price" type="text" name="price" value="" />
+                  <select class="currency" id="currency" name="currency">
+
+                    <option value="PKR" selected="selected">PKR</option>
+                  </select>
+                </div>
+
+                <div class="or"><span>or</span></div>
+              </div>
+
+              <div class="selection">
+                <!-- These buttons can be styled to change the price input when clicked, if desired -->
+                <button type="button" data-price="0" class="btn btn-secondary" title="Item is offered for free">
+                  <i class="fas fa-hand-holding-usd"></i> Item for free
+                </button>
+                <button type="button" data-price="" class="btn btn-secondary" title="Based on agreement with seller">
+                  <i class="far fa-handshake"></i> Check with seller
+                </button>
+              </div>
+
+              <!-- CONDITION & TRANSACTION -->
+              <div class="status-wrap">
+                <div class="transaction">
+                  <label for="sTransaction">Transaction</label>
+                  <select class="sTransaction mini" id="sTransaction" name="sTransaction">
+                    <option value="">Select a transaction...</option>
+                    <option value="1">Sell</option>
+                    <option value="2">Buy</option>
+                    <option value="3">Rent</option>
+                    <option value="4">Exchange</option>
+                  </select>
+                </div>
+
+                <div class="condition">
+                  <label for="sCondition">Condition</label>
+                  <select class="sCondition mini" id="sCondition" name="sCondition">
+                    <option value="">Select a condition...</option>
+                    <option value="1">New</option>
+                    <option value="2">Used</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Wisely select price</strong></p>
+              <p>Price should reflect the real status and properties of your listing. If you select too high a price, it
+                may take much longer to sell your product.</p>
+              <p>You can also select the transaction and condition to better describe the status of your item and the
+                transaction you are looking for.</p>
+            </div>
+          </section>
+
+
+          <section class="upload-photos">
+            <h2>Photos <i class="show-tip fas fa-question-circle"></i></h2>
+
+            <div class="box photos photoshow drag_drop in">
+              <div id="photos">
+                <div class="sub-label">You can upload up to 4 pictures per listing</div>
+
+                <!-- Photo Upload Container -->
+                <div class="photo-upload-container">
+                  <!-- You will need to implement a file upload mechanism here -->
+                  <!-- Example placeholder for file input -->
+                  <input type="file" name="photos" multiple="multiple" accept="image/*" />
+                  <!-- Display uploaded photos here -->
+                  <div class="uploaded-photos">
+                    <!-- Placeholder for uploaded photos -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Photos are selling!</strong></p>
+              <p>Did you know that listings with photos sell 7x faster than those without?</p>
+              <p>Real product photos are a key element for fast selling and help customers decide if the product is
+                really
+                what they are looking for.</p>
+            </div>
+          </section>
+
+          <section class="info">
+            <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
+
+            <div class="in">
+              <div class="row title">
+                <label for="titleen_US">Title *</label>
+                <div class="input-box">
+                  <input id="titleen_US" type="text" name="title[en_US]" value="" />
+                </div>
+              </div>
+
+              <div class="row desc">
+                <label for="descriptionen_US">Description *</label>
+                <div class="input-box">
+                  <textarea id="descriptionen_US" name="description[en_US]" rows="10"></textarea>
+                </div>
+              </div>
+
+              <!-- Placeholder for additional attributes -->
+              <div id="additional-attributes" class="attributes-block">
+                <!-- Static example data for demonstration -->
+                <div class="attribute">
+                  <label for="attribute1">Attribute 1</label>
+                  <input type="text" id="attribute1" name="attribute1" value="" />
+                </div>
+
+                <!-- Add more attributes as needed -->
+              </div>
+            </div>
+
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Additional description</strong></p>
+              <p>Title is used in search so it is recommended to use keywords of your listing in the title.</p>
+              <p>Detailed description will also provide customers all the information they need and reduce the need to
+                contact you.</p>
+            </div>
+          </section>
+
+
+          <section class="buttons-block">
+            <div class="row captcha">
+              <div id="anr_captcha_field_1"></div>
+            </div>
+
+            <button type="submit" class="btn">Submit</button>
+          </section>
+        </form>
       </div>
     </div>
+
+
   </div>
 
-  <div class="tip">
-    <i class="fas fa-times close-tip"></i>
-    <p><strong>Category selection is important!</strong></p>
-    <p>Selecting the correct category for your item is an essential part of the selling process.</p>
-    <p>If you select an improper category, potential buyers may not find your item, and it may take much longer to sell.</p>
-  </div>
-</section>
 
-            <section class="location">
-              <h2>Listing location <i class="show-tip fas fa-question-circle"></i></h2>
+  {% comment %} Footer is here {% endcomment %}
 
-              <div class="in">
-                <div class="row country">
-                  <label for="country">Country</label>
-                  <div class="input-box">
-                    <select name="countryId" id="countryId">
-                      <option value="">Select a country...</option>
-                      <option value="DE">Germany</option>
-                      <option value="PL">Poland</option>
-                      <option value="RO">Romania</option>
-                      <option value="RU">Russia</option>
-                      <option value="GB">United Kingdom</option>
-                      <option value="US">United States</option>
-                    </select>
-                  </div>
-                </div>
+  <a id="scroll-to-top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20">
+      <path
+        d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z" />
+    </svg></a>
 
-                <div class="row region">
-                  <label for="regionId">Region</label>
-                  <div class="input-box">
-                    <select name="regionId" id="regionId">
-                      <option value="">Select a region...</option>
-                      <option value="">No value</option>
-                    </select>
-                  </div>
-                </div>
+  {% include 'mobile_sidemenu.html' %}
 
-                <div class="row city">
-                  <label for="city">City</label>
-                  <div class="input-box">
-                    <select name="cityId" id="cityId">
-                      <option value="">Select a city...</option>
-                      <option value="">No value</option>
-                    </select>
-                  </div>
-                </div>
 
-                <div class="row address">
-                  <label for="address">Address</label>
-                  <div class="input-box"><input id="address" type="text" name="address" value="" /></div>
-                </div>
+</body>
 
-                <div class="row zip">
-                  <label for="zip">ZIP</label>
-                  <div class="input-box"><input id="zip" type="text" name="zip" value="" /></div>
-                </div>
-
-                <div class="row location-link">
-                  <a class="link-update location" href="#">Want to sell faster? Set your preferred location &#8594;</a>
-                </div>
-              </div>
-
-              <div class="tip">
-                <i class="fas fa-times close-tip"></i>
-                <p><strong>Localize item</strong></p>
-                <p>You should at least select region & city for your listing, so customers those search only offers in their city or region can find your listings.</p>
-              </div>
-            </section>
-
-            <section class="about">
-              <h2>Seller's information <i class="show-tip fas fa-question-circle"></i></h2>
-
-              <div class="in">
-                <div class="seller">
-                  <div class="row name">
-                    <a href="https://epsilon.mb-themes.com/user/login" class="img-container" target="_blank" title="Upload profile picture">
-                      <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/default-user-image.png" alt="Non-logged user" width="36" height="36" />
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 408c-66.2 0-120-53.8-120-120s53.8-120 120-120 120 53.8 120 120-53.8 120-120 120zm0-192c-39.7 0-72 32.3-72 72s32.3 72 72 72 72-32.3 72-72-32.3-72-72-72zm-24 72c0-13.2 10.8-24 24-24 8.8 0 16-7.2 16-16s-7.2-16-16-16c-30.9 0-56 25.1-56 56 0 8.8 7.2 16 16 16s16-7.2 16-16zm110.7-145H464v288H48V143h121.3l24-64h125.5l23.9 64zM324.3 31h-131c-20 0-37.9 12.4-44.9 31.1L136 95H48c-26.5 0-48 21.5-48 48v288c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V143c0-26.5-21.5-48-48-48h-88l-14.3-38c-5.8-15.7-20.7-26-37.4-26z" /></svg>
-                    </a>
-
-                    <label for="contactName">Contact Name</label>
-                    <div class="input-box"><input id="contactName" type="text" name="contactName" value="" /></div>
-                  </div>
-
-                  <div class="row phone">
-                    <label for="phone">Phone Number<span class="req">*</span></label>
-                    <div class="input-box">
-                      <input id="contactPhone" type="text" name="contactPhone" value="" />
-                    </div>
-
-                    <div class="mail-show">
-                      <div class="input-box-check"><input id="showPhone" type="checkbox" name="showPhone" value="1" checked="checked" /> <label for="showPhone" class="label-mail-show">Phone visible on ad</label></div>
-                    </div>
-                  </div>
-
-                  <div class="row user-email">
-                    <label for="contactEmail">E-mail <span class="req">*</span></label>
-                    <div class="input-box"><input id="contactEmail" type="text" name="contactEmail" value="" /></div>
-
-                    <div class="mail-show">
-                      <div class="input-box-check"><input id="showEmail" type="checkbox" name="showEmail" value="1" /> <label for="showEmail" class="label-mail-show">Email visible on ad</label></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row user-link">
-                  <a class="link-update" target="_blank" href="https://epsilon.mb-themes.com/user/register">Not registered yet? Create an account &#8594;</a>
-                </div>
-              </div>
-
-              <div class="tip">
-                <i class="fas fa-times close-tip"></i>
-                <p><strong>Trusted and open seller</strong></p>
-                <p>You should enter phone number, as most of solid customers prefer phone contact way.</p>
-                <p>For faster listing publishing and contacting with customers, it is recommended to create and account, logged-in users are more trusted.</p>
-              </div>
-            </section>
-
-            <section class="s4">
-              <h2>Pricing options & status <i class="show-tip fas fa-question-circle"></i></h2>
-
-              <div class="in">
-                <label for="price">Price <span class="req">*</span></label>
-
-                <div class="enter">
-                  <div class="input-box">
-                    <input id="price" type="text" name="price" value="" />
-                    <select class="currency" id="currency" name="currency">
-                      <option value="EUR">EUR (€)</option>
-                      <option value="GBP">GBP (£)</option>
-                      <option value="USD" selected="selected">USD ($)</option>
-                    </select>
-                  </div>
-
-                  <div class="or"><span>or</span></div>
-                </div>
-
-                <div class="selection">
-                  <a href="#" data-price="0" class="btn btn-secondary" title="Item is offered for free"><i class="fas fa-hand-holding-usd"></i> Item for free</a>
-                  <a href="#" data-price="" class="btn btn-secondary" title="Based on agreement with seller"><i class="far fa-handshake"></i> Check with seller</a>
-                </div>
-
-                <!-- CONDITION & TRANSACTION -->
-                <div class="status-wrap">
-                  <div class="transaction">
-                    <label for="sTransaction">Transaction</label>
-                    <select class="sTransaction mini" id="sTransaction" name="sTransaction">
-                      <option value="">Select a transaction...</option>
-                      <option value="1">Sell</option>
-                      <option value="2">Buy</option>
-                      <option value="3">Rent</option>
-                      <option value="4">Exchange</option>
-                    </select>
-                  </div>
-
-                  <div class="condition">
-                    <label for="sCondition">Condition</label>
-                    <select class="sCondition mini" id="sCondition" name="sCondition">
-                      <option value="">Select a condition...</option>
-                      <option value="1">New</option>
-                      <option value="2">Used</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="tip">
-                <i class="fas fa-times close-tip"></i>
-                <p><strong>Wisely select price</strong></p>
-                <p>Price should reflect real status and properties of your listing. If you select too high price, it may take much longer to sell your product.</p>
-                <p>You can also select transaction and condition to better describe status of your item and transaction you are looking for.</p>
-              </div>
-            </section>
-
-            <section class="upload-photos">
-              <h2>Photos <i class="show-tip fas fa-question-circle"></i></h2>
-
-              <div class="box photos photoshow drag_drop in">
-                <div id="photos">
-                  <div class="sub-label">You can upload up to 4 pictures per listing</div>
-
-                  <div id="restricted-fine-uploader"></div>
-                  <div style="clear: both"></div>
-                  <div style="clear: both"></div>
-
-                  <script>
-                    $(document).ready(function () {
-                      $(".qq-upload-delete").on("click", function (evt) {
-                        evt.preventDefault();
-                        var parent = $(this).parent();
-                        var result = confirm("This action can't be undone. Are you sure you want to continue?");
-                        var urlrequest = "";
-                        if ($(this).attr("ajaxfile") != undefined) {
-                          urlrequest = "ajax_photo=" + $(this).attr("ajaxfile");
-                        } else {
-                          urlrequest = "id=" + $(this).attr("photoid") + "&item=" + $(this).attr("itemid") + "&code=" + $(this).attr("photoname") + "&secret=" + $(this).attr("photosecret");
-                        }
-                        if (result) {
-                          $.ajax({
-                            type: "POST",
-                            url: "https://epsilon.mb-themes.com/index.php?page=ajax&action=delete_image&" + urlrequest,
-                            dataType: "json",
-                            success: function (data) {
-                              parent.remove();
-                            },
-                          });
-                        }
-                      });
-
-                      $("body").on("click", ".qq-upload-rotate-img", function (e) {
-                        e.preventDefault();
-
-                        var img = $(this).parent().find(".ajax_preview_img img");
-                        angle = parseInt(img.attr("data-angle"));
-
-                        var imgWidth = img.width();
-                        var imgHeight = img.height();
-                        var ratio = imgWidth / imgHeight;
-                        var boxWidth = img.parent().width();
-
-                        if (!img.hasClass("disabled")) {
-                          if (isNaN(angle)) {
-                            angle = 0;
-                          }
-
-                          angle += 90;
-
-                          img.addClass("disabled");
-
-                          img.rotate({
-                            animateTo: angle,
-                            duration: 300,
-                            callback: function () {
-                              $.ajax({
-                                url: "https://epsilon.mb-themes.com/index.php?page=ajax&action=rotate_image&file_name=" + img.attr("alt"),
-                                type: "POST",
-                                success: function (response) {
-                                  img.removeClass("disabled");
-                                  //console.log(response);
-                                },
-                                error: function (response) {
-                                  img.removeClass("disabled");
-                                  //console.log(response);
-                                },
-                              });
-                            },
-                          });
-                        }
-
-                        img.attr("data-angle", angle);
-                      });
-
-                      $("#restricted-fine-uploader").on("click", ".primary_image", function (event) {
-                        if (parseInt($("div.primary_image").index(this)) > 0) {
-                          var a_src = $(this).parent().find(".ajax_preview_img img").attr("src");
-                          var a_title = $(this).parent().find(".ajax_preview_img img").attr("alt");
-                          var a_input = $(this).parent().find("input").attr("value");
-                          // info
-                          var a1 = $(this).parent().find("span.qq-upload-file").text();
-                          var a2 = $(this).parent().find("span.qq-upload-size").text();
-
-                          var li_first = $("ul.qq-upload-list li").get(0);
-
-                          var b_src = $(li_first).find(".ajax_preview_img img").attr("src");
-                          var b_title = $(li_first).find(".ajax_preview_img img").attr("alt");
-                          var b_input = $(li_first).find("input").attr("value");
-                          var b1 = $(li_first).find("span.qq-upload-file").text();
-                          var b2 = $(li_first).find("span.qq-upload-size").text();
-
-                          $(li_first).find(".ajax_preview_img img").attr("src", a_src);
-                          $(li_first).find(".ajax_preview_img img").attr("alt", a_title);
-                          $(li_first).find("input").attr("value", a_input);
-                          $(li_first).find("span.qq-upload-file").text(a1);
-                          $(li_first).find("span.qq-upload-size").text(a2);
-
-                          $(this).parent().find(".ajax_preview_img img").attr("src", b_src);
-                          $(this).parent().find(".ajax_preview_img img").attr("alt", b_title);
-                          $(this).parent().find("input").attr("value", b_input);
-                          $(this).parent().find("span.qq-upload-file").text(b1);
-                          $(this).parent().find("span.qq-upload-file").text(b2);
-                        }
-                      });
-
-                      $("#restricted-fine-uploader").on("click", ".primary_image", function (event) {
-                        $(this).addClass("over primary");
-                      });
-
-                      $("#restricted-fine-uploader").on("mouseenter mouseleave", ".primary_image", function (event) {
-                        if (event.type == "mouseenter") {
-                          if (!$(this).hasClass("primary")) {
-                            $(this).addClass("primary");
-                          }
-                        } else {
-                          if (parseInt($("div.primary_image").index(this)) > 0) {
-                            $(this).removeClass("primary");
-                          }
-                        }
-                      });
-
-                      $("#restricted-fine-uploader").on("mouseenter mouseleave", "li.qq-upload-success", function (event) {
-                        if (parseInt($("li.qq-upload-success").index(this)) > 0) {
-                          if (event.type == "mouseenter") {
-                            $(this).find("div.primary_image").addClass("over");
-                          } else {
-                            $(this).find("div.primary_image").removeClass("over");
-                          }
-                        }
-                      });
-
-                      window.removed_images = 0;
-                      $("#restricted-fine-uploader").on("click", "a.qq-upload-delete", function (event) {
-                        window.removed_images = window.removed_images + 1;
-                        $("#restricted-fine-uploader .flashmessage-error").remove();
-                      });
-
-                      $("#restricted-fine-uploader")
-                        .fineUploader({
-                          request: {
-                            endpoint: "https://epsilon.mb-themes.com/index.php?page=ajax&action=ajax_upload",
-                          },
-                          multiple: true,
-                          validation: {
-                            allowedExtensions: ["png", "gif", "jpg", "jpeg"],
-                            sizeLimit: 4194304,
-                            itemLimit: 4,
-                          },
-                          messages: {
-                            tooManyItemsError: "Too many items ({netItems}) would be uploaded. Item limit is {itemLimit}.",
-                            onLeave: "The files are being uploaded, if you leave now the upload will be cancelled.",
-                            typeError: "{file} has an invalid extension. Valid extension(s): {extensions}.",
-                            sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
-                            emptyError: "{file} is empty, please select files again without it.",
-                          },
-                          deleteFile: {
-                            enabled: true,
-                            method: "POST",
-                            forceConfirm: false,
-                            endpoint: "https://epsilon.mb-themes.com/index.php?page=ajax&action=delete_ajax_upload",
-                          },
-                          retry: {
-                            showAutoRetryNote: true,
-                            showButton: true,
-                          },
-                          text: {
-                            uploadButton: "Click or Drop for upload images",
-                            waitingForResponse: "Processing...",
-                            rotateButton: "Rotate",
-                            retryButton: "Retry",
-                            cancelButton: "Cancel",
-                            failUpload: "Upload failed",
-                            deleteButton: "Delete",
-                            deletingStatusText: "Deleting...",
-                            formatProgress: "{percent}% of {total_size}",
-                          },
-                        })
-                        .on("error", function (event, id, name, errorReason, xhrOrXdr) {
-                          $("#restricted-fine-uploader .flashmessage-error").remove();
-                          $("#restricted-fine-uploader").append('<div class="flashmessage flashmessage-error">' + errorReason + '<a class="close" onclick="javascript:$(\'.flashmessage-error\').remove();" >X</a></div>');
-                        })
-                        .on("statusChange", function (event, id, old_status, new_status) {
-                          $(".alert.alert-error").remove();
-                        })
-                        .on("complete", function (event, id, fileName, responseJSON) {
-                          if (responseJSON.success) {
-                            var new_id = id - removed_images;
-                            var li = $(".qq-upload-list li")[new_id];
-                            $(li).append('<div class="qq-upload-rotate-img"><a title="Rotate"><span>Rotate image</span></a></div>');
-
-                            if (parseInt(new_id) == 0) {
-                              $(li).append('<div class="primary_image primary"></div>');
-                            } else {
-                              $(li).append('<div class="primary_image"><a title="Make primary image">Make primary image</a></div>');
-                            }
-                            $(li).append('<div class="ajax_preview_img"><img src="https://epsilon.mb-themes.com/oc-content/uploads/temp/' + responseJSON.uploadName + '" alt="' + responseJSON.uploadName + '"></div>');
-                            $(li).append('<input type="hidden" name="ajax_photos[]" value="' + responseJSON.uploadName + '"></input>');
-                          }
-                        });
-                    });
-                  </script>
-                </div>
-              </div>
-
-              <div class="tip">
-                <i class="fas fa-times close-tip"></i>
-                <p><strong>Photos are selling!</strong></p>
-                <p>Did you know that listing with photos sells 7x faster than one with no photo?</p>
-                <p>Real product photos are key element for fast selling and helps customer to decide if product is really what they are looking for.</p>
-              </div>
-            </section>
-
-            <section class="info">
-              <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
-
-              <div class="in">
-                <div class="row ttle">
-                  <label for="title[en_US]">Title *</label>
-                  <div class="input-box">
-                    <input id="titleen_US" type="text" name="title[en_US]" value="" />
-                  </div>
-                </div>
-
-                <div class="row dsc">
-                  <label for="description[en_US]">Description *</label>
-                  <div class="td-wrap d1 input-box">
-                    <textarea id="descriptionen_US" name="description[en_US]" rows="10"></textarea>
-                  </div>
-                </div>
-
-                <div id="post-hooks" class="hooks-block">
-                  <script type="text/javascript">
-                    var catPriceEnabled = new Array();
-                    catPriceEnabled[52] = 1;
-                    catPriceEnabled[1] = 1;
-                    catPriceEnabled[43] = 1;
-                    catPriceEnabled[38] = 1;
-                    catPriceEnabled[9] = 1;
-                    catPriceEnabled[31] = 1;
-                    catPriceEnabled[63] = 1;
-                    catPriceEnabled[69] = 0;
-                    catPriceEnabled[75] = 1;
-                    catPriceEnabled[2] = 1;
-                    catPriceEnabled[53] = 1;
-                    catPriceEnabled[44] = 1;
-                    catPriceEnabled[39] = 1;
-                    catPriceEnabled[32] = 1;
-                    catPriceEnabled[64] = 1;
-                    catPriceEnabled[70] = 0;
-                    catPriceEnabled[76] = 1;
-                    catPriceEnabled[10] = 1;
-                    catPriceEnabled[45] = 1;
-                    catPriceEnabled[40] = 1;
-                    catPriceEnabled[54] = 1;
-                    catPriceEnabled[33] = 1;
-                    catPriceEnabled[11] = 1;
-                    catPriceEnabled[65] = 1;
-                    catPriceEnabled[77] = 1;
-                    catPriceEnabled[71] = 0;
-                    catPriceEnabled[3] = 1;
-                    catPriceEnabled[66] = 1;
-                    catPriceEnabled[46] = 1;
-                    catPriceEnabled[12] = 1;
-                    catPriceEnabled[4] = 1;
-                    catPriceEnabled[34] = 1;
-                    catPriceEnabled[55] = 1;
-                    catPriceEnabled[72] = 0;
-                    catPriceEnabled[78] = 1;
-                    catPriceEnabled[41] = 1;
-                    catPriceEnabled[47] = 1;
-                    catPriceEnabled[73] = 0;
-                    catPriceEnabled[5] = 1;
-                    catPriceEnabled[42] = 1;
-                    catPriceEnabled[79] = 1;
-                    catPriceEnabled[35] = 1;
-                    catPriceEnabled[56] = 1;
-                    catPriceEnabled[13] = 1;
-                    catPriceEnabled[67] = 1;
-                    catPriceEnabled[80] = 1;
-                    catPriceEnabled[57] = 1;
-                    catPriceEnabled[68] = 1;
-                    catPriceEnabled[74] = 0;
-                    catPriceEnabled[48] = 1;
-                    catPriceEnabled[36] = 1;
-                    catPriceEnabled[14] = 1;
-                    catPriceEnabled[6] = 1;
-                    catPriceEnabled[49] = 1;
-                    catPriceEnabled[37] = 1;
-                    catPriceEnabled[15] = 1;
-                    catPriceEnabled[58] = 1;
-                    catPriceEnabled[7] = 0;
-                    catPriceEnabled[81] = 1;
-                    catPriceEnabled[50] = 1;
-                    catPriceEnabled[16] = 1;
-                    catPriceEnabled[8] = 1;
-                    catPriceEnabled[82] = 1;
-                    catPriceEnabled[59] = 1;
-                    catPriceEnabled[60] = 1;
-                    catPriceEnabled[83] = 1;
-                    catPriceEnabled[17] = 1;
-                    catPriceEnabled[51] = 1;
-                    catPriceEnabled[84] = 1;
-                    catPriceEnabled[18] = 1;
-                    catPriceEnabled[61] = 1;
-                    catPriceEnabled[19] = 1;
-                    catPriceEnabled[85] = 1;
-                    catPriceEnabled[62] = 1;
-                    catPriceEnabled[20] = 1;
-                    catPriceEnabled[86] = 1;
-                    catPriceEnabled[21] = 1;
-                    catPriceEnabled[87] = 1;
-                    catPriceEnabled[22] = 1;
-                    catPriceEnabled[88] = 1;
-                    catPriceEnabled[23] = 1;
-                    catPriceEnabled[89] = 1;
-                    catPriceEnabled[24] = 1;
-                    catPriceEnabled[90] = 1;
-                    catPriceEnabled[25] = 1;
-                    catPriceEnabled[91] = 1;
-                    catPriceEnabled[26] = 1;
-                    catPriceEnabled[92] = 1;
-                    catPriceEnabled[93] = 1;
-                    catPriceEnabled[27] = 1;
-                    catPriceEnabled[94] = 1;
-                    catPriceEnabled[28] = 1;
-                    catPriceEnabled[95] = 1;
-                    catPriceEnabled[29] = 1;
-                    catPriceEnabled[30] = 1;
-                    $("body").on("change", "#catId", function () {
-                      var cat_id = $(this).val();
-                      var url = "https://epsilon.mb-themes.com/index.php";
-                      var result = "";
-
-                      if (cat_id > 0) {
-                        if (catPriceEnabled[cat_id] == 1) {
-                          $("#price").closest("div").show();
-                          // trigger show-price event
-                          $("#price").trigger("show-price");
-                        } else {
-                          $("#price").closest("div").hide();
-                          $("#price").val("");
-                          // trigger hide-price event
-                          $("#price").trigger("hide-price");
-                        }
-
-                        $.ajax({
-                          type: "POST",
-                          url: url,
-                          data: "page=ajax&action=runhook&hook=item_form&catId=" + cat_id,
-                          dataType: "html",
-                          success: function (data) {
-                            $("#plugin-hook").html(data);
-                          },
-                        });
-                      }
-                    });
-
-                    $(document).ready(function () {
-                      var cat_id = $("#catId").val();
-                      var url = "https://epsilon.mb-themes.com/index.php";
-                      var result = "";
-
-                      if (cat_id > 0) {
-                        if (catPriceEnabled[cat_id] == 1) {
-                          $("#price").closest("div").show();
-                        } else {
-                          $("#price").closest("div").hide();
-                          $("#price").val("");
-                        }
-
-                        $.ajax({
-                          type: "POST",
-                          url: url,
-                          data: "page=ajax&action=runhook&hook=item_form&catId=" + cat_id,
-                          dataType: "html",
-                          success: function (data) {
-                            $("#plugin-hook").html(data);
-                          },
-                        });
-                      }
-                    });
-                  </script>
-
-                  <div id="plugin-hook"></div>
-                </div>
-              </div>
-
-              <div class="tip">
-                <i class="fas fa-times close-tip"></i>
-                <p><strong>Additional decription</strong></p>
-                <p>Title is used in search so it is recommended to use keywords of your listing in title.</p>
-                <p>Detail description will also provide customers all information they need and reduce need to contact you.</p>
-              </div>
-            </section>
-
-            <section class="buttons-block">
-              <div class="row captcha"><div id="anr_captcha_field_1"></div></div>
-
-              <button type="submit" class="btn">Submit</button>
-            </section>
-          </form>
-        </div>
-      </div>
-
-      <script type="text/javascript">
-        $(document).ready(function () {
-          if ($('select[name="countryId"]').val() == "") {
-            $('select[name="regionId"]').attr("disabled", "disabled");
-          }
-
-          if ($('select[name="regionId"]').val() == "") {
-            $('select[name="cityId"]').attr("disabled", "disabled");
-          }
-
-          $("body").on("click", ".qq-upload-rotate", function (e) {
-            e.preventDefault();
-
-            var img = $(this).parent().find(".ajax_preview_img img");
-            var url = "https://epsilon.mb-themes.com/oc-content/themes/epsilon/ajax-rotate.php",
-              angle = parseInt(img.attr("data-angle"));
-
-            var imgWidth = img.width();
-            var imgHeight = img.height();
-            var ratio = imgWidth / imgHeight;
-            var boxWidth = img.parent().width();
-
-            if (!img.hasClass("disabled")) {
-              if (isNaN(angle)) {
-                angle = 0;
-              }
-
-              angle += 90;
-
-              img.addClass("disabled");
-
-              img.rotate({
-                animateTo: angle,
-                duration: 300,
-                callback: function () {
-                  $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: {
-                      action: "rotate",
-                      file_name: img.attr("alt"),
-                    },
-                    success: function (response) {
-                      //console.log(response);
-                      img.removeClass("disabled");
-                    },
-                    error: function (response) {
-                      //console.log(response);
-                      img.removeClass("disabled");
-                    },
-                  });
-                },
-              });
-            }
-
-            img.attr("data-angle", angle);
-          });
-        });
-      </script>
-
-      <script type="text/javascript">
-        $(document).ready(function () {
-          $('.item-publish input[name^="title"]').attr("placeholder", "Summarize your offer");
-          $('.item-publish textarea[name^="description"]').attr("placeholder", "Detail description of your offer");
-          $('.item-publish input[name="contactPhone"]').prop("type", "tel");
-
-          // HIDE THEME EXTRA FIELDS (Transaction, Condition, Status) ON EXCLUDED CATEGORIES
-          var catExtraHide = new Array();
-          catExtraHide[5] = 1;
-          catExtraHide[52] = 1;
-          catExtraHide[53] = 1;
-          catExtraHide[54] = 1;
-          catExtraHide[55] = 1;
-          catExtraHide[56] = 1;
-          catExtraHide[57] = 1;
-          catExtraHide[58] = 1;
-          catExtraHide[59] = 1;
-          catExtraHide[60] = 1;
-          catExtraHide[61] = 1;
-          catExtraHide[62] = 1;
-          catExtraHide[6] = 1;
-          catExtraHide[63] = 1;
-          catExtraHide[64] = 1;
-          catExtraHide[65] = 1;
-          catExtraHide[66] = 1;
-          catExtraHide[67] = 1;
-          catExtraHide[68] = 1;
-          catExtraHide[7] = 1;
-          catExtraHide[69] = 1;
-          catExtraHide[70] = 1;
-          catExtraHide[71] = 1;
-          catExtraHide[72] = 1;
-          catExtraHide[73] = 1;
-          catExtraHide[74] = 1;
-          catExtraHide[8] = 1;
-          catExtraHide[75] = 1;
-          catExtraHide[76] = 1;
-          catExtraHide[77] = 1;
-          catExtraHide[78] = 1;
-          catExtraHide[79] = 1;
-          catExtraHide[80] = 1;
-          catExtraHide[81] = 1;
-          catExtraHide[82] = 1;
-          catExtraHide[83] = 1;
-          catExtraHide[84] = 1;
-          catExtraHide[85] = 1;
-          catExtraHide[86] = 1;
-          catExtraHide[87] = 1;
-          catExtraHide[88] = 1;
-          catExtraHide[89] = 1;
-          catExtraHide[90] = 1;
-          catExtraHide[91] = 1;
-          catExtraHide[92] = 1;
-          catExtraHide[93] = 1;
-          catExtraHide[94] = 1;
-          catExtraHide[95] = 1;
-          $('input[name="showPhone"]').prop("checked", true);
-
-          // JAVASCRIPT FOR PRICE ALTERNATIVES
-          $("input#price").attr("autocomplete", "off"); // Disable autocomplete for price field
-          $("input#price").attr("placeholder", "Price");
-
-          // LANGUAGE TABS
-          tabberAutomatic();
-
-          // Hide price on page load
-
-          // Trigger click when category selected via flat category select
-          $("body").on("click change", 'input[name="catId"], select#catId', function () {
-            var cat_id = $(this).val();
-            var url = "https://epsilon.mb-themes.com/index.php";
-            var result = "";
-
-            if (cat_id > 0) {
-              if (catPriceEnabled[cat_id] == 1) {
-                $(".item-publish section.s4").show(0).removeClass("hidden");
-              } else {
-                $(".item-publish section.s4").hide(0).addClass("hidden");
-                $("#price").val("");
-              }
-
-              if (catExtraHide[cat_id] == 1) {
-                $(".item-publish .status-wrap").fadeOut(200).addClass("hidden");
-                $('select[name="sTransaction"], select[name="sCondition"]').val("");
-                $('select[name="sTransaction"] option:selected, select[name="sCondition"] option:selected').prop("selected", false);
-              } else {
-                $(".item-publish .status-wrap").fadeIn(200).removeClass("hidden");
-              }
-
-              // Unify selected locale for plugin data
-              window.setTimeout(function () {
-                var locale = currentLocaleCode;
-                var localeText = currentLocale;
-
-                if ($("#plugin-hook .tabbertab").length > 0) {
-                  $("#plugin-hook .tabbertab").each(function () {
-                    if ($(this).find('[id*="' + locale + '"]').length || $(this).find("h2").text() == localeText) {
-                      $(this).removeClass("tabbertabhide").show(0);
-                    } else {
-                      $(this).addClass("tabbertabhide").hide(0);
-                    }
-                  });
-                }
-              }, 200);
-            }
-          });
-
-          // FIX QQ FANCY IMAGE UPLOADER BUGS
-          setInterval(function () {
-            $('input[name="qqfile"]').prop("accept", "image/*");
-            $("img[src$='uploads/temp/']").closest(".qq-upload-success").remove();
-
-            $("#restricted-fine-uploader li.qq-upload-success").each(function () {
-              if (!$(this).find(".qq-upload-rotate").length) {
-                $(this).append('<a class="qq-upload-rotate btn" href="#" title="Rotate image"><i class="fas fa-undo fa-flip-horizontal"></i></a>');
-              }
-            });
-
-            if (!$("#photos > .qq-upload-list > li").length) {
-              $("#photos > .qq-upload-list").remove();
-              $("#photos > h3").remove();
-            }
-
-            if ($("#post-hooks #plugin-hook").text().trim() == "") {
-              $("fieldset.hook-block").hide(0);
-            } else {
-              $("fieldset.hook-block").show(0);
-            }
-
-            $('#error_list li label[for="qqfile"]').each(function () {
-              if ($(this).text().trim() == "Please enter a value with a valid extension.") {
-                $(this).parent().remove();
-              }
-            });
-          }, 250);
-
-          // CATEGORY CHECK IF PARENT
-          if (typeof window["categories_" + $("#catId").val()] !== "undefined") {
-            if (eval("categories_" + $("#catId").val()) != "") {
-              $("#catId").val("");
-            }
-          }
-
-          $("body").on("change", "#catId", function () {
-            if (typeof window["categories_" + $(this).val()] !== "undefined") {
-              if (eval("categories_" + $(this).val()) != "") {
-                $(this).val("");
-              }
-            }
-          });
-
-          // Set forms to active language
-          var post_timer = setInterval(eps_check_lang, 250);
-
-          function eps_check_lang() {
-            if ($(".tabbertab").length > 1 && $(".tabbertab.tabbertabhide").length) {
-              var l_active = currentLocale;
-              l_active = l_active.trim();
-
-              $('.tabbernav > li > a:contains("' + l_active + '")').click();
-
-              clearInterval(post_timer);
-              return;
-            }
-          }
-
-          // Code for form validation
-          $("form[name=item]").validate({
-            rules: {
-              "title[en_US]": {
-                required: true,
-                minlength: 5,
-              },
-
-              "description[en_US]": {
-                required: true,
-                minlength: 10,
-              },
-
-              catId: {
-                required: true,
-                digits: true,
-              },
-
-              "photos[]": {
-                accept: "png,gif,jpg,jpeg",
-              },
-
-              contactPhone: {
-                required: true,
-                minlength: 6,
-              },
-
-              contactEmail: {
-                required: true,
-                email: true,
-              },
-            },
-
-            messages: {
-              "title[en_US]": {
-                required: "Title: this field is required.",
-                minlength: "Title: enter at least 5 characters.",
-              },
-
-              "description[en_US]": {
-                required: "Description: this field is required.",
-                minlength: "Description: enter at least 10 characters.",
-              },
-
-              catId: "Category: this field is required.",
-
-              "photos[]": {
-                accept: "Photo: must be png,gif,jpg,jpeg.",
-              },
-
-              contactPhone: {
-                required: "Phone: this field is required.",
-                minlength: "Phone: enter at least 6 characters.",
-              },
-
-              contactEmail: {
-                required: "Email: this field is required.",
-                email: "Email: invalid format of email address.",
-              },
-            },
-
-            ignore: ":disabled",
-            ignoreTitle: false,
-            errorLabelContainer: "#error_list",
-            wrapper: "li",
-            invalidHandler: function (form, validator) {
-              $("html,body").animate({ scrollTop: $("body").offset().top }, { duration: 250, easing: "swing" });
-            },
-            submitHandler: function (form) {
-              $("button[type=submit], input[type=submit]").attr("disabled", "disabled");
-              form.submit();
-            },
-          });
-        });
-      </script>
-    </div>
-
-    <section class="promo">
-      <div class="container">
-        <span>Are you a professional seller?</span>
-        <a href="https://epsilon.mb-themes.com/user/register" class="btn btn-transparent">Create an account</a>
-      </div>
-    </section>
-{% comment %} Footer is here {% endcomment %}
-
-    <a id="scroll-to-top"
-      ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20"><path d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z" /></svg
-    ></a>
-
-   {% include 'mobile_sidemenu.html' %}
-
-    <style>
-      a.fi_img-link.fi-no-image > img {
-        content: url("https://epsilon.mb-themes.com//oc-content/themes/epsilon/images/no-image.png");
-      }
-    </style>
-    <script type="text/javascript">
-  // Example JavaScript to dynamically change subcategories based on the main category selected.
-  // This is just a template and will not work without proper JavaScript code to handle the logic.
-  
-  document.getElementById('catId').addEventListener('change', function() {
-    var mainCategory = this.value;
-    var subcategorySelect = document.getElementById('subcategory-select');
-    var subcatIdSelect = document.getElementById('subcatId');
-
-    if (mainCategory === "for-sale") {
-      subcategorySelect.style.display = 'block';
-      subcatIdSelect.innerHTML = `
-        <option value="">Select subcategory</option>
-        <option value="electronics">Electronics</option>
-      `;
-    } else if (mainCategory === "vehicles") {
-      subcategorySelect.style.display = 'block';
-      subcatIdSelect.innerHTML = `
-        <option value="">Select subcategory</option>
-        <option value="cars">Cars</option>
-      `;
-    } else {
-      subcategorySelect.style.display = 'none';
-    }
-  });
-</script>
-  </body>
-
-  <!-- Mirrored from epsilon.mb-themes.com/item/new by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Oct 2023 02:21:13 GMT -->
 </html>
-<!-- 0.0525741577148 seg. -->
+
 {% endblock %}
