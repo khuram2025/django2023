@@ -1,8 +1,33 @@
 from django import forms
-from .models import Category, Product, ProductImage
+from .models import Product, ProductImage, Category, Country, Region, City
+from django.utils.translation import gettext_lazy as _
 
 class ProductForm(forms.ModelForm):
     
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.all(),
+        required=False,  # Set to False if geolocation is used
+        label=_("Country")
+    )
+    region = forms.ModelChoiceField(
+        queryset=Region.objects.none(),  # Initially empty, will be populated via JavaScript or geolocation
+        required=False,  # Set to False if geolocation is used
+        label=_("Region")
+    )
+    city = forms.ModelChoiceField(
+        queryset=City.objects.all(),  # This should contain all city objects
+        required=False,
+        label=_("City")
+    )
+    use_geolocation = forms.BooleanField(
+        required=False,
+        label=_("Use Geolocation")
+    )
+    address = forms.CharField(
+        required=False,  # Set to False if geolocation is used
+        label=_("Address"),
+        widget=forms.Textarea
+    )
     category = forms.ModelChoiceField(
         queryset=Category.objects.filter(parent__isnull=True),
         required=True,
@@ -14,19 +39,9 @@ class ProductForm(forms.ModelForm):
         required=False,
         label="Subcategory"
     )
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        subcategory = self.cleaned_data.get('subcategory')
-        if subcategory:
-            instance.category = subcategory
-        if commit:
-            instance.save()
-        return instance
-
     class Meta:
         model = Product
-        fields = ['category', 'subcategory', 'location', 'seller_information', 'price_unit', 'price', 'check_with_seller', 'item_for_free', 'condition', 'title', 'description', 'seo_title', 'seo_description', 'seo_keywords']
+        fields = ['category', 'subcategory', 'country', 'region', 'city', 'use_geolocation', 'address', 'seller_information', 'price_unit', 'price', 'check_with_seller', 'item_for_free', 'condition', 'title', 'description', 'seo_title', 'seo_description', 'seo_keywords']
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -34,7 +49,26 @@ class ProductForm(forms.ModelForm):
             instance = kwargs['instance']
             if instance.category:
                 self.fields['subcategory'].queryset = instance.category.get_descendants()
-                
+            if instance.country:
+                self.fields['region'].queryset = Region.objects.filter(country=instance.country)
+            if instance.region:
+                self.fields['city'].queryset = City.objects.filter(region=instance.region)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        subcategory = self.cleaned_data.get('subcategory')
+        city = self.cleaned_data.get('city')
+        if subcategory:
+            instance.category = subcategory
+        if city:
+            instance.city = city
+            instance.region = city.region
+            instance.country = city.region.country
+        if commit:
+            instance.save()
+        return instance
+
+
 class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage

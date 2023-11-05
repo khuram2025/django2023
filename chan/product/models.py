@@ -40,14 +40,39 @@ class Category(MPTTModel):
         super().save(*args, **kwargs)
 
 
-class Location(models.Model):
-    country = models.CharField(max_length=100, verbose_name=_("Country"))
-    region = models.CharField(max_length=100, verbose_name=_("Region"))
-    city = models.CharField(max_length=100, verbose_name=_("City"))
-    address = models.CharField(max_length=255, verbose_name=_("Address"))
+class Country(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("Country"))
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
+    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
+    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
+    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
 
     def __str__(self):
-        return f"{self.city}, {self.region}, {self.country}"
+        return self.name
+
+class Region(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name=_("Country"))
+    name = models.CharField(max_length=100, verbose_name=_("Region"))
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
+    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
+    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
+    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name}, {self.country.name}"
+
+class City(models.Model):
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name=_("Region"))
+    name = models.CharField(max_length=100, verbose_name=_("City"))
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
+    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
+    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
+    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name}, {self.region.name}"
+
+
 
 class SellerInformation(models.Model):
     contact_name = models.CharField(max_length=255, verbose_name=_("Contact Name"))
@@ -66,7 +91,12 @@ class Product(models.Model):
     ]
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name=_("Location"))
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, verbose_name=_("Country"))
+    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, verbose_name=_("Region"))
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
+    use_geolocation = models.BooleanField(default=False, verbose_name=_("Use Geolocation"))
+    address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
+
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, verbose_name=_("Seller Information"))
     
     # Price and Condition
@@ -91,6 +121,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        if self.use_geolocation:
+            # Here you would have logic to fill in the country, region, city,
+            # and address fields based on geolocation data.
+            # This is just a placeholder for demonstration purposes.
+            pass
+        super().save(*args, **kwargs)
+    
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')

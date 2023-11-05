@@ -1,6 +1,25 @@
 from django.contrib import admin
 from .models import Category
 from mptt.admin import MPTTModelAdmin
+from .models import Country, Region, City
+
+@admin.register(Country)
+class CountryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description', 'seo_title', 'seo_description', 'seo_keywords']
+    search_fields = ['name', 'seo_keywords']
+
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+    list_display = ['name', 'country', 'description', 'seo_title', 'seo_description', 'seo_keywords']
+    list_filter = ['country']
+    search_fields = ['name', 'country__name', 'seo_keywords']
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ['name', 'region', 'description', 'seo_title', 'seo_description', 'seo_keywords']
+    list_filter = ['region']
+    search_fields = ['name', 'region__name', 'region__country__name', 'seo_keywords']
+
 
 @admin.register(Category)
 class CategoryAdmin(MPTTModelAdmin):
@@ -25,3 +44,4 @@ class CategoryAdmin(MPTTModelAdmin):
    
 
     list_display = ('get_title', 'status', 'is_subcategory', 'is_root_category')
+
