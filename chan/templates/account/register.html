@@ -15,9 +15,9 @@
       <div class="box">
         <h1>Register a new account</h1>
 
-        <a class="alt-action" href="{% url 'login' %}">Already have an account? Login &#8594;</a>
+        <a class="alt-action" href="{% url 'account:login' %}">Already have an account? Login &#8594;</a>
 
-        <form name="register" id="register" action="{% url 'register' %}" method="post">
+        <form name="register" id="register" action="{% url 'account:register' %}" method="post">
           {% csrf_token %}
           <ul id="error_list"></ul>
 
@@ -67,7 +67,7 @@
     <section class="promo">
       <div class="container">
         <span>Are you a professional seller?</span>
-        <a href="{% url 'register' %}" class="btn btn-transparent">Create an account</a>
+        <a href="{% url 'account:register' %}" class="btn btn-transparent">Create an account</a>
       </div>
     </section>
 

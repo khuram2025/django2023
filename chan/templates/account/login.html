@@ -9,9 +9,9 @@
       <div class="box">
         <h1>Sign-in to your account</h1>
 
-        <a class="alt-action" href="{% url 'register' %}">No account yet? Register a new account &#8594;</a>
+        <a class="alt-action" href="{% url 'account:register' %}">No account yet? Register a new account &#8594;</a>
 
-        <form action="{% url 'login' %}" method="post">
+        <form action="{% url 'account:login' %}" method="post">
           {% csrf_token %}
 
           <div class="row">

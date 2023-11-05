@@ -3,6 +3,23 @@ from .models import Product, ProductImage, Category, Country, Region, City
 from django.utils.translation import gettext_lazy as _
 
 class ProductForm(forms.ModelForm):
+
+    price_unit = forms.ChoiceField(
+        choices=[('PKR', 'PKR')],  # Add more currency options as needed
+        required=True,
+        label=_("Price Unit")
+    )
+    price = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        required=True,
+        label=_("Price")
+    )
+    condition = forms.ChoiceField(
+        choices=Product.CONDITION_CHOICES,
+        required=True,
+        label=_("Condition")
+    )
     
     country = forms.ModelChoiceField(
         queryset=Country.objects.all(),
@@ -41,7 +58,12 @@ class ProductForm(forms.ModelForm):
     )
     class Meta:
         model = Product
-        fields = ['category', 'subcategory', 'country', 'region', 'city', 'use_geolocation', 'address', 'seller_information', 'price_unit', 'price', 'check_with_seller', 'item_for_free', 'condition', 'title', 'description', 'seo_title', 'seo_description', 'seo_keywords']
+        fields = ['category', 'subcategory', 
+                  'price_unit', 'price', 'condition',
+                  'country', 'region', 'city', 'use_geolocation', 'address', 
+                  'seller_information', 'price_unit', 'price', 'check_with_seller',
+                    'item_for_free', 'condition', 'title', 
+                    'description', 'seo_title', 'seo_description', 'seo_keywords']
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)

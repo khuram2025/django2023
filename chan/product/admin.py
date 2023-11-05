@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category
+from .models import Category, Product
 from mptt.admin import MPTTModelAdmin
 from .models import Country, Region, City
 
@@ -19,7 +19,21 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ['name', 'region', 'description', 'seo_title', 'seo_description', 'seo_keywords']
     list_filter = ['region']
     search_fields = ['name', 'region__name', 'region__country__name', 'seo_keywords']
+    
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'price', 'condition', 'country', 'region', 'city', 'seller_information', 'created_at']
+    list_filter = ['category', 'condition', 'country', 'region', 'city', 'price']
+    search_fields = ['title', 'description', 'category__name', 'seller_information__name', 'seo_keywords']
+    raw_id_fields = ['category', 'country', 'region', 'city', 'seller_information']
+    prepopulated_fields = {"seo_keywords": ("title",)}
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "city":
+            kwargs["queryset"] = City.objects.filter(region__isnull=False)
+        elif db_field.name == "region":
+            kwargs["queryset"] = Region.objects.filter(country__isnull=False)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(Category)
 class CategoryAdmin(MPTTModelAdmin):

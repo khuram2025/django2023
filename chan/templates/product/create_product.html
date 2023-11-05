@@ -43,9 +43,11 @@
             <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
             <div class="in">
               <div class="row category multi">
-                {{ form.category.label_tag }} <span class="req">*</span>
-                {{ form.category }} <!-- Let's assume this has a class that styles it, like "form-control" -->
+                {{ form.category.label_tag }} <!-- This will now include the asterisk -->
+                {{ form.category }} <!-- This assumes "form-control" class for styling -->
               </div>
+
+
               <!-- Subcategory Select - initially hidden and populated via JavaScript -->
               <div id="subcategory-select" class="row category multi" style="display:none;">
                 <label for="id_subcategory">Select subcategory <span class="req">*</span></label>
@@ -107,100 +109,91 @@
                 <div class="row name">
                   <label for="contactName">Contact Name</label>
                   <div class="input-box">
-                    <input id="contactName" type="text" name="contactName" value="" />
+                    <input id="contactName" type="text" name="contactName" value="{% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}" />
                   </div>
                 </div>
 
                 <div class="row phone">
-                  <label for="phone">Phone Number<span class="req">*</span></label>
+                  <label for="contactPhone">Phone Number<span class="req">*</span></label>
                   <div class="input-box">
-                    <input id="contactPhone" type="text" name="contactPhone" value="" />
+                    <input id="contactPhone" type="text" name="contactPhone" value="{% if user.is_authenticated %}{{ user.mobile }}{% endif %}" />
                   </div>
                   <div class="mail-show">
                     <div class="input-box-check">
-                      <input id="showPhone" type="checkbox" name="showPhone" value="1" checked="checked" />
+                      <input id="showPhone" type="checkbox" name="showPhone" value="1" {% if user.is_authenticated %}checked="checked" {% endif %} />
                       <label for="showPhone" class="label-mail-show">Phone visible on ad</label>
                     </div>
                   </div>
                 </div>
 
+
                 <div class="row user-email">
                   <label for="contactEmail">E-mail <span class="req">*</span></label>
                   <div class="input-box">
-                    <input id="contactEmail" type="text" name="contactEmail" value="" />
+                    <input id="contactEmail" type="email" name="contactEmail" value="{% if user.is_authenticated and user.email %}{{ user.email }}{% endif %}" />
                   </div>
                   <div class="mail-show">
                     <div class="input-box-check">
-                      <input id="showEmail" type="checkbox" name="showEmail" value="1" />
+                      <input id="showEmail" type="checkbox" name="showEmail" value="1" {% if user.is_authenticated and user.email %}checked="checked" {% endif %} />
                       <label for="showEmail" class="label-mail-show">Email visible on ad</label>
                     </div>
                   </div>
                 </div>
+
+
+
+                <!-- This link can be adjusted or removed depending on your needs -->
+                <div class="row user-link">
+                  <a class="link-update" href="{%url 'account:register' %}">Not registered yet? Create an account &#8594;</a>
+                </div>
               </div>
 
-              <!-- This link can be adjusted or removed depending on your needs -->
-              <div class="row user-link">
-                <a class="link-update" href="#">Not registered yet? Create an account &#8594;</a>
+              <div class="tip">
+                <i class="fas fa-times close-tip"></i>
+                <p><strong>Trusted and open seller</strong></p>
+                <p>You should enter your phone number, as many customers prefer phone contact.</p>
+                <p>For faster listing publishing and contacting customers, it is recommended to create an account;
+                  logged-in users are more trusted.</p>
               </div>
-            </div>
-
-            <div class="tip">
-              <i class="fas fa-times close-tip"></i>
-              <p><strong>Trusted and open seller</strong></p>
-              <p>You should enter your phone number, as many customers prefer phone contact.</p>
-              <p>For faster listing publishing and contacting customers, it is recommended to create an account;
-                logged-in users are more trusted.</p>
-            </div>
           </section>
 
 
           <section class="s4">
             <h2>Pricing options & status <i class="show-tip fas fa-question-circle"></i></h2>
-
             <div class="in">
+              <!-- Price Input -->
               <label for="price">Price <span class="req">*</span></label>
-
               <div class="enter">
                 <div class="input-box">
-                  <input id="price" type="text" name="price" value="" />
-                  <select class="currency" id="currency" name="currency">
-
-                    <option value="PKR" selected="selected">PKR</option>
+                  <input id="price" type="text" name="price" value="{{ form.price.value|default_if_none:"" }}" />
+                  <select class="currency" id="currency" name="price_unit">
+                    <option value="PKR" {% if form.price_unit.value == "PKR" %}selected{% endif %}>PKR</option>
+                    <!-- Add more currency options here if needed -->
                   </select>
                 </div>
-
                 <div class="or"><span>or</span></div>
               </div>
 
+              <!-- Selection for 'Item for free' and 'Check with seller' -->
               <div class="selection">
-                <!-- These buttons can be styled to change the price input when clicked, if desired -->
-                <button type="button" data-price="0" class="btn btn-secondary" title="Item is offered for free">
+                <button type="button" data-price="0" class="btn btn-secondary item-for-free" title="Item is offered for free">
                   <i class="fas fa-hand-holding-usd"></i> Item for free
                 </button>
-                <button type="button" data-price="" class="btn btn-secondary" title="Based on agreement with seller">
+                <button type="button" class="btn btn-secondary check-with-seller" title="Based on agreement with seller">
                   <i class="far fa-handshake"></i> Check with seller
                 </button>
               </div>
 
-              <!-- CONDITION & TRANSACTION -->
+              <!-- Condition Selection -->
               <div class="status-wrap">
-                <div class="transaction">
-                  <label for="sTransaction">Transaction</label>
-                  <select class="sTransaction mini" id="sTransaction" name="sTransaction">
-                    <option value="">Select a transaction...</option>
-                    <option value="1">Sell</option>
-                    <option value="2">Buy</option>
-                    <option value="3">Rent</option>
-                    <option value="4">Exchange</option>
-                  </select>
-                </div>
-
                 <div class="condition">
-                  <label for="sCondition">Condition</label>
-                  <select class="sCondition mini" id="sCondition" name="sCondition">
-                    <option value="">Select a condition...</option>
-                    <option value="1">New</option>
-                    <option value="2">Used</option>
+                  <label for="condition">Condition</label>
+                  <select class="sCondition mini" id="condition" name="condition">
+                    {% for value, name in form.fields.condition.choices %}
+                    <option value="{{ value }}" {% if form.condition.value == value %}selected{% endif %}>
+                      {{ name }}
+                    </option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>
@@ -217,22 +210,33 @@
           </section>
 
 
+
           <section class="upload-photos">
             <h2>Photos <i class="show-tip fas fa-question-circle"></i></h2>
 
             <div class="box photos photoshow drag_drop in">
               <div id="photos">
-                <div class="sub-label">You can upload up to 4 pictures per listing</div>
+                <div class="sub-label">You can upload up to 15 pictures per listing</div>
 
                 <!-- Photo Upload Container -->
-                <div class="photo-upload-container">
-                  <!-- You will need to implement a file upload mechanism here -->
-                  <!-- Example placeholder for file input -->
-                  <input type="file" name="photos" multiple="multiple" accept="image/*" />
-                  <!-- Display uploaded photos here -->
-                  <div class="uploaded-photos">
-                    <!-- Placeholder for uploaded photos -->
+                <div id="restricted-fine-uploader" class="photo-upload-container">
+                  <!-- File input for uploading photos, make sure to include 'id' and 'name' attributes correctly -->
+                  <input id="photo-upload" type="file" name="photos[]" multiple="multiple" accept="image/*" />
+
+                  <!-- Upload button which triggers file input -->
+                  <div class="qq-upload-button-selector qq-upload-button">
+                    <div>Click or Drop for upload images</div>
                   </div>
+
+                  <!-- Photo Preview Container -->
+                  <div id="photo-preview-container">
+                    <!-- Previews will be inserted here by JavaScript -->
+                  </div>
+
+                  <!-- Uploaded photos list -->
+                  <ul class="qq-upload-list-selector qq-upload-list">
+                    <!-- Dynamically added uploaded photo list items will go here -->
+                  </ul>
                 </div>
               </div>
             </div>
@@ -242,49 +246,50 @@
               <p><strong>Photos are selling!</strong></p>
               <p>Did you know that listings with photos sell 7x faster than those without?</p>
               <p>Real product photos are a key element for fast selling and help customers decide if the product is
-                really
-                what they are looking for.</p>
+                really what they are looking for.</p>
             </div>
           </section>
 
-          <section class="info">
-            <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
 
-            <div class="in">
-              <div class="row title">
-                <label for="titleen_US">Title *</label>
-                <div class="input-box">
-                  <input id="titleen_US" type="text" name="title[en_US]" value="" />
-                </div>
-              </div>
+         <section class="info">
+  <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
 
-              <div class="row desc">
-                <label for="descriptionen_US">Description *</label>
-                <div class="input-box">
-                  <textarea id="descriptionen_US" name="description[en_US]" rows="10"></textarea>
-                </div>
-              </div>
+  <div class="in">
+    <div class="row title">
+      <label for="id_title">Title *</label>
+      <div class="input-box">
+        <input id="id_title" type="text" name="title" value="{{ form.title.value|default:'' }}" />
+      </div>
+    </div>
 
-              <!-- Placeholder for additional attributes -->
-              <div id="additional-attributes" class="attributes-block">
-                <!-- Static example data for demonstration -->
-                <div class="attribute">
-                  <label for="attribute1">Attribute 1</label>
-                  <input type="text" id="attribute1" name="attribute1" value="" />
-                </div>
+    <div class="row desc">
+      <label for="id_description">Description *</label>
+      <div class="input-box">
+        <textarea id="id_description" name="description" rows="10">{{ form.description.value|default:'' }}</textarea>
+      </div>
+    </div>
 
-                <!-- Add more attributes as needed -->
-              </div>
-            </div>
+    <!-- Placeholder for additional attributes -->
+    <div id="additional-attributes" class="attributes-block">
+      <!-- You can add more dynamic attributes here as needed -->
+      {% for field in form.additional_attributes %}
+        <div class="attribute">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 
-            <div class="tip">
-              <i class="fas fa-times close-tip"></i>
-              <p><strong>Additional description</strong></p>
-              <p>Title is used in search so it is recommended to use keywords of your listing in the title.</p>
-              <p>Detailed description will also provide customers all the information they need and reduce the need to
-                contact you.</p>
-            </div>
-          </section>
+  <div class="tip">
+    <i class="fas fa-times close-tip"></i>
+    <p><strong>Additional description</strong></p>
+    <p>Title is used in search so it is recommended to use keywords of your listing in the title.</p>
+    <p>Detailed description will also provide customers all the information they need and reduce the need to
+      contact you.</p>
+  </div>
+</section>
+
 
 
           <section class="buttons-block">
@@ -340,7 +345,43 @@
         }
       });
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var photoInput = document.getElementById('photo-upload');
+      var previewContainer = document.getElementById('photo-preview-container');
+
+      photoInput.addEventListener('change', function (event) {
+        var files = event.target.files;
+        var existingPreviews = previewContainer.getElementsByClassName('photo-preview').length;
+
+        // Limit files to 15 minus what's already been selected
+        var allowedFilesCount = 15 - existingPreviews;
+
+        if (files.length > allowedFilesCount) {
+          alert('You can only add up to ' + allowedFilesCount + ' more photos.');
+          return;
+        }
+
+        Array.from(files).forEach(function (file) {
+          if (!file.type.match('image.*')) {
+            return;
+          }
+
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            var div = document.createElement('div');
+            div.className = 'photo-preview';
+            div.style.backgroundImage = 'url(' + e.target.result + ')';
+            previewContainer.appendChild(div);
+          };
+
+          reader.readAsDataURL(file);
+        });
+      });
+    });
   </script>
+
 </body>
 
 </html>
