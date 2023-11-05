@@ -1,95 +1,57 @@
 from django import forms
-from .models import Product, ProductImage, Category, Country, Region, City
-from django.utils.translation import gettext_lazy as _
+from .models import Product, SellerInformation, ProductImage, Category, City
 
 class ProductForm(forms.ModelForm):
+    # Add the seller information fields
+    contact_name = forms.CharField(max_length=255)
+    phone_number = forms.CharField(max_length=50)
+    phone_visible = forms.BooleanField(required=False)
+    email = forms.EmailField(required=False)
+    email_visible = forms.BooleanField(required=False)
 
-    price_unit = forms.ChoiceField(
-        choices=[('PKR', 'PKR')],  # Add more currency options as needed
-        required=True,
-        label=_("Price Unit")
-    )
-    price = forms.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        required=True,
-        label=_("Price")
-    )
-    condition = forms.ChoiceField(
-        choices=Product.CONDITION_CHOICES,
-        required=True,
-        label=_("Condition")
-    )
-    
-    country = forms.ModelChoiceField(
-        queryset=Country.objects.all(),
-        required=False,  # Set to False if geolocation is used
-        label=_("Country")
-    )
-    region = forms.ModelChoiceField(
-        queryset=Region.objects.none(),  # Initially empty, will be populated via JavaScript or geolocation
-        required=False,  # Set to False if geolocation is used
-        label=_("Region")
-    )
-    city = forms.ModelChoiceField(
-        queryset=City.objects.all(),  # This should contain all city objects
-        required=False,
-        label=_("City")
-    )
-    use_geolocation = forms.BooleanField(
-        required=False,
-        label=_("Use Geolocation")
-    )
-    address = forms.CharField(
-        required=False,  # Set to False if geolocation is used
-        label=_("Address"),
-        widget=forms.Textarea
-    )
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.filter(parent__isnull=True),
-        required=True,
-        label="Category"
-    )
-
-    subcategory = forms.ModelChoiceField(
-        queryset=Category.objects.none(),  # Initially empty, will be populated via JavaScript
-        required=False,
-        label="Subcategory"
-    )
     class Meta:
         model = Product
-        fields = ['category', 'subcategory', 
-                  'price_unit', 'price', 'condition',
-                  'country', 'region', 'city', 'use_geolocation', 'address', 
-                  'seller_information', 'price_unit', 'price', 'check_with_seller',
-                    'item_for_free', 'condition', 'title', 
-                    'description', 'seo_title', 'seo_description', 'seo_keywords']
+        fields = [
+            'category', 'city', 'address', 'price', 
+            'condition', 'title', 'description'
+            # 'seller_information' is not included because we handle it separately
+        ]
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(status=True)
+        self.fields['city'].queryset = City.objects.all()
+
+        # If the form is being used to update an existing instance,
+        # populate the seller information fields:
         if 'instance' in kwargs:
             instance = kwargs['instance']
-            if instance.category:
-                self.fields['subcategory'].queryset = instance.category.get_descendants()
-            if instance.country:
-                self.fields['region'].queryset = Region.objects.filter(country=instance.country)
-            if instance.region:
-                self.fields['city'].queryset = City.objects.filter(region=instance.region)
+            if instance.seller_information:
+                self.fields['contact_name'].initial = instance.seller_information.contact_name
+                self.fields['phone_number'].initial = instance.seller_information.phone_number
+                self.fields['phone_visible'].initial = instance.seller_information.phone_visible
+                self.fields['email'].initial = instance.seller_information.email
+                self.fields['email_visible'].initial = instance.seller_information.email_visible
 
     def save(self, commit=True):
-        instance = super().save(commit=False)
-        subcategory = self.cleaned_data.get('subcategory')
-        city = self.cleaned_data.get('city')
-        if subcategory:
-            instance.category = subcategory
-        if city:
-            instance.city = city
-            instance.region = city.region
-            instance.country = city.region.country
+        instance = super(ProductForm, self).save(commit=False)
+        # Handle the seller information
+        seller_info, created = SellerInformation.objects.update_or_create(
+            contact_name=self.cleaned_data.get('contact_name'),
+            defaults={
+                'phone_number': self.cleaned_data.get('phone_number'),
+                'phone_visible': self.cleaned_data.get('phone_visible'),
+                'email': self.cleaned_data.get('email'),
+                'email_visible': self.cleaned_data.get('email_visible'),
+            }
+        )
+        instance.seller_information = seller_info
+
         if commit:
             instance.save()
-        return instance
+            self.save_m2m()  # Save many-to-many data for the form.
 
+        return instance
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

@@ -2,31 +2,44 @@ from django.shortcuts import render, redirect
 from .forms import ProductForm, ProductImageFormSet
 from django.http import JsonResponse
 from .models import Category, City, SellerInformation
+from django.contrib import messages
 
 def create_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
         formset = ProductImageFormSet(request.POST, request.FILES)
+
         if form.is_valid() and formset.is_valid():
-            # Process the form data and save the models
-            # ...
-            return redirect('product_detail', pk=product.pk)
+            try:
+                product = form.save(commit=False)
+                product.save()  # Save the product to get an ID for the foreign key
+                
+                formset.instance = product
+                formset.save()  # Save the images associated with the product
+                
+                messages.success(request, 'Product added successfully!')
+                return redirect('product_detail', pk=product.pk)  # Assuming you have a view named 'product_detail'
+            except Exception as e:
+                messages.error(request, f"Error occurred during save process: {e}")
+                # Optionally, log the error here
         else:
-            # If the form is not valid, print the errors to the console
-            print(form.errors, formset.errors)
-            # You can also add messages to display the errors in the template using Django's messages framework
-            for error in form.errors:
-                messages.error(request, error)
-            for error in formset.errors:
-                messages.error(request, error)
+            messages.error(request, "There was an error with the form. Please check the details.")
     else:
         form = ProductForm()
         formset = ProductImageFormSet()
 
-    return render(request, 'product/create_product.html', {
+    return render(request, 'product/add_product.html', {
         'form': form,
         'formset': formset,
     })
+
+from django.http import JsonResponse
+
+def load_subcategories(request):
+    main_category_id = request.GET.get('category_id')
+    subcategories = Category.objects.filter(parent_id=main_category_id).order_by('name')
+    return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
+
 
 def search_cities(request):
     if 'searchTerm' in request.GET:

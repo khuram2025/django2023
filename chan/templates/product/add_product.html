@@ -1,123 +1,147 @@
 {% extends 'home/base.html' %}
+{% load static %}
 {% block content %}
+
 <body id="body-item-post" class="item-publish">
   {% include 'home/header.html' %}
-
-  <!-- ... [rest of the breadcrumbs and other static content] ... -->
 
   <div class="container">
     <div class="box">
       <h1>Post your ad</h1>
-
-      <ul id="error_list" class="new-item"></ul>
-
-      <form name="item" action="#" method="post" enctype="multipart/form-data">
+      <form name="item" action="{% url 'product:add_product' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- ... [rest of the static content before the form] ... -->
+        <!-- Main Category Field -->
+        <div class="form-section">
+          <label for="id_category">{{ form.category.label }}</label>
+          {{ form.category }}
+        </div>
 
-        <!-- Category selection form part -->
-        <!-- Assuming 'form' is your Django form and it has a 'category' field -->
-        <section class="s1">
-          <h2>Category <i class="show-tip fas fa-question-circle"></i></h2>
-          <div class="in">
-            <!-- CATEGORY -->
-            <div class="row category multi">
-              {{ form.category.label_tag }} <span class="req">*</span>
-              {{ form.category }}
-            </div>
+        <!-- Subcategory Field -->
+        <div class="form-section" id="subcategory-section" style="display: none;">
+          <label for="id_subcategory">Subcategory</label>
+          <select id="id_subcategory" name="subcategory" class="form-control">
+            <option value="">Select subcategory</option>
+            <!-- Options will be populated based on the main category selection -->
+          </select>
+        </div>
+
+
+        <!-- City Field -->
+        <div class="form-section">
+          <label for="id_city">{{ form.city.label }}</label>
+          {{ form.city }}
+        </div>
+
+
+        <!-- Address Field -->
+        <div class="form-section">
+          <label for="id_address">{{ form.address.label }}</label>
+          {{ form.address }}
+        </div>
+
+        <!-- Price Field -->
+        <div class="form-section">
+          <label for="id_price">{{ form.price.label }}</label>
+          {{ form.price }}
+        </div>
+
+        <!-- Condition Field -->
+        <div class="form-section">
+          <label for="id_condition">{{ form.condition.label }}</label>
+          {{ form.condition }}
+        </div>
+
+        <!-- Title Field -->
+        <div class="form-section">
+          <label for="id_title">{{ form.title.label }}</label>
+          {{ form.title }}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-section">
+          <label for="id_description">{{ form.description.label }}</label>
+          {{ form.description }}
+        </div>
+
+        <!-- Seller Information Fields -->
+        <div class="form-section">
+          <label for="id_contact_name">Contact Name</label>
+          {{ form.contact_name }}
+        </div>
+
+        <div class="form-section">
+          <label for="id_phone_number">Phone Number</label>
+          {{ form.phone_number }}
+          {{ form.phone_visible }} <label for="id_phone_visible">Phone visible on ad</label>
+        </div>
+
+        <div class="form-section">
+          <label for="id_email">Email</label>
+          {{ form.email }}
+          {{ form.email_visible }} <label for="id_email_visible">Email visible on ad</label>
+        </div>
+
+        <!-- Formset for images -->
+        <div class="form-section">
+          <h3>Product Images</h3>
+          {{ formset.management_form }}
+          {% for form in formset %}
+          <div class="inline-formset">
+            <!-- Display each field in the formset -->
+            <label>{{ form.image.label }}</label>
+            {{ form.image }}
+            <label>{{ form.alt_text.label }}</label>
+            {{ form.alt_text }}
           </div>
-          <!-- ... [rest of the category section] ... -->
-        </section>
+          {% endfor %}
+        </div>
 
-        <!-- ... [location, seller's information sections] ... -->
+        <!-- Messages -->
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
-        <!-- Pricing options & status -->
-     
-        <section class="s4">
-            <h2>Pricing options & status <i class="show-tip fas fa-question-circle"></i></h2>
-          
-            <div class="in">
-              <!-- Use the form's price field but keep the structure -->
-              <label for="price">Price <span class="req">*</span></label>
-              <div class="enter">
-                <div class="input-box">
-                  {{ form.price }}
-                  <!-- The currency select is kept as is since it seems static -->
-                  <select class="currency" id="currency" name="currency">
-                    <option value="PKR" selected="selected">PKR</option>
-                    <!-- Add more options if needed -->
-                  </select>
-                </div>
-          
-                <div class="or"><span>or</span></div>
-              </div>
-          
-              <div class="selection">
-                <!-- These buttons can be linked to JavaScript functions to change the value of the price input if needed -->
-                <button type="button" data-price="0" class="btn btn-secondary" title="Item is offered for free">
-                  <i class="fas fa-hand-holding-usd"></i> Item for free
-                </button>
-                <button type="button" data-price="" class="btn btn-secondary" title="Based on agreement with seller">
-                  <i class="far fa-handshake"></i> Check with seller
-                </button>
-              </div>
-          
-              <!-- Use the form's transaction and condition fields but keep the structure -->
-              <div class="status-wrap">
-                <div class="transaction">
-                  {{ form.sTransaction.label_tag }}
-                  {{ form.sTransaction }}
-                </div>
-          
-                <div class="condition">
-                  {{ form.sCondition.label_tag }}
-                  {{ form.sCondition }}
-                </div>
-              </div>
-            </div>
-          
-            <div class="tip">
-              <!-- Tip content -->
-            </div>
-          </section>
-          
-        <!-- ... [photos section] ... -->
-
-        <!-- Listing description and attributes -->
-        <section class="info">
-          <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
-          <div class="in">
-            <div class="row title">
-              {{ form.title.label_tag }} *
-              <div class="input-box">
-                {{ form.title }}
-              </div>
-            </div>
-            <div class="row desc">
-              {{ form.description.label_tag }} *
-              <div class="input-box">
-                {{ form.description }}
-              </div>
-            </div>
-
-            <!-- ... [dynamic attributes if any] ... -->
-          </div>
-        </section>
-
-        <!-- ... [rest of the form sections] ... -->
-
-        <section class="buttons-block">
-          <!-- ... [captcha or any additional form fields] ... -->
-
-          <button type="submit" class="btn">Submit</button>
-        </section>
+        <!-- Submit button -->
+        <button type="submit" class="btn">Submit</button>
       </form>
     </div>
   </div>
 
-  <!-- ... [footer and other content] ... -->
+  {% include 'home/footer.html' %}
 
-  {% include 'mobile_sidemenu.html' %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      function updateSubcategoryOptions() {
+        var mainCategory = $('#id_category').val();
+        $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
+        if (mainCategory) {
+          $.getJSON('/ajax/load-subcategories/', {
+            category_id: mainCategory
+          }, function (data) {
+            $.each(data, function (index, item) {
+              $('#id_subcategory').append($('<option>', {
+                value: item.id,
+                text: item.name
+              }));
+            });
+            $('#subcategory-section').show(); // This should match the ID of your subcategory div
+          });
+
+        } else {
+          $('#subcategory-select').hide();
+        }
+      }
+
+      $('#id_category').change(updateSubcategoryOptions);
+      updateSubcategoryOptions(); // Run on document ready to handle pre-selected categories
+    });
+  </script>
+
 </body>
+
 {% endblock %}

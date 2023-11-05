@@ -34,7 +34,8 @@
 
         <ul id="error_list" class="new-item"></ul>
 
-        <form name="item" action="https://epsilon.mb-themes.com/index.php" method="post" enctype="multipart/form-data">
+        <form name="item" action="{%url 'product:add_product' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
           <input type="hidden" name="octoken" value="fgqe9pghhrvr" />
           <input type="hidden" name="action" value="item_add_post" />
           <input type="hidden" name="page" value="item" />
@@ -251,44 +252,44 @@
           </section>
 
 
-         <section class="info">
-  <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
+          <section class="info">
+            <h2>Listing description and attributes <i class="show-tip fas fa-question-circle"></i></h2>
 
-  <div class="in">
-    <div class="row title">
-      <label for="id_title">Title *</label>
-      <div class="input-box">
-        <input id="id_title" type="text" name="title" value="{{ form.title.value|default:'' }}" />
-      </div>
-    </div>
+            <div class="in">
+              <div class="row title">
+                <label for="id_title">Title *</label>
+                <div class="input-box">
+                  <input id="id_title" type="text" name="title" value="{{ form.title.value|default:'' }}" />
+                </div>
+              </div>
 
-    <div class="row desc">
-      <label for="id_description">Description *</label>
-      <div class="input-box">
-        <textarea id="id_description" name="description" rows="10">{{ form.description.value|default:'' }}</textarea>
-      </div>
-    </div>
+              <div class="row desc">
+                <label for="id_description">Description *</label>
+                <div class="input-box">
+                  <textarea id="id_description" name="description" rows="10">{{ form.description.value|default:'' }}</textarea>
+                </div>
+              </div>
 
-    <!-- Placeholder for additional attributes -->
-    <div id="additional-attributes" class="attributes-block">
-      <!-- You can add more dynamic attributes here as needed -->
-      {% for field in form.additional_attributes %}
-        <div class="attribute">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-        </div>
-      {% endfor %}
-    </div>
-  </div>
+              <!-- Placeholder for additional attributes -->
+              <div id="additional-attributes" class="attributes-block">
+                <!-- You can add more dynamic attributes here as needed -->
+                {% for field in form.additional_attributes %}
+                <div class="attribute">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
 
-  <div class="tip">
-    <i class="fas fa-times close-tip"></i>
-    <p><strong>Additional description</strong></p>
-    <p>Title is used in search so it is recommended to use keywords of your listing in the title.</p>
-    <p>Detailed description will also provide customers all the information they need and reduce the need to
-      contact you.</p>
-  </div>
-</section>
+            <div class="tip">
+              <i class="fas fa-times close-tip"></i>
+              <p><strong>Additional description</strong></p>
+              <p>Title is used in search so it is recommended to use keywords of your listing in the title.</p>
+              <p>Detailed description will also provide customers all the information they need and reduce the need to
+                contact you.</p>
+            </div>
+          </section>
 
 
 

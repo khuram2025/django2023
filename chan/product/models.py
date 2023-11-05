@@ -40,29 +40,8 @@ class Category(MPTTModel):
         super().save(*args, **kwargs)
 
 
-class Country(models.Model):
-    name = models.CharField(max_length=100, verbose_name=_("Country"))
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
-    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
-    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-class Region(models.Model):
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, verbose_name=_("Country"))
-    name = models.CharField(max_length=100, verbose_name=_("Region"))
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
-    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
-    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.name}, {self.country.name}"
 
 class City(models.Model):
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, verbose_name=_("Region"))
     name = models.CharField(max_length=100, verbose_name=_("City"))
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
     seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
@@ -70,7 +49,7 @@ class City(models.Model):
     seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name}, {self.region.name}"
+        return f"{self.name}, {self.name}"
 
 
 
@@ -91,29 +70,20 @@ class Product(models.Model):
     ]
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, verbose_name=_("Country"))
-    region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, verbose_name=_("Region"))
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
-    use_geolocation = models.BooleanField(default=False, verbose_name=_("Use Geolocation"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
-
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, verbose_name=_("Seller Information"))
     
     # Price and Condition
-    price_unit = models.CharField(max_length=10, default='PKR', verbose_name=_("Price Unit"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
     check_with_seller = models.BooleanField(default=False, verbose_name=_("Check with Seller"))
-    item_for_free = models.BooleanField(default=False, verbose_name=_("Item for Free"))
     condition = models.CharField(max_length=50, choices=CONDITION_CHOICES, verbose_name=_("Condition"))
 
     # Listing Information
     title = models.CharField(max_length=255, verbose_name=_("Listing Title"))
     description = models.TextField(verbose_name=_("Listing Description"))
     
-    # SEO fields
-    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"))
-    seo_description = models.TextField(verbose_name=_("SEO Description"))
-    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
+   
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -123,11 +93,6 @@ class Product(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        if self.use_geolocation:
-            # Here you would have logic to fill in the country, region, city,
-            # and address fields based on geolocation data.
-            # This is just a placeholder for demonstration purposes.
-            pass
         super().save(*args, **kwargs)
     
 
