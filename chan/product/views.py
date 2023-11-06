@@ -4,6 +4,9 @@ from .forms import ProductForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
+from django.db.models import F
+from django.db.models import Count
+
 
 def create_product(request):
     if request.method == 'POST':
@@ -49,11 +52,12 @@ def load_subcategories(request):
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    Product.objects.filter(pk=pk).update(view_count=F('view_count') + 1)
     return render(request, 'product/product_detail.html', {'product': product})
 
 
 def product_list(request):
-    products = Product.objects.all()  # Get all products
+    products = Product.objects.annotate(images_count=Count('images')).all()
     return render(request, 'product/product_listing.html', {'products': products})
 
 
