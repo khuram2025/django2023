@@ -65,37 +65,44 @@
         </div>
 
         <!-- Seller Information Fields -->
-        <div class="form-section">
-          <label for="id_contact_name">Contact Name</label>
+         <div class="form-section">
+          <label for="id_phone_number">Contact Name</label>
           {{ form.contact_name }}
+          
         </div>
-
         <div class="form-section">
           <label for="id_phone_number">Phone Number</label>
           {{ form.phone_number }}
-          {{ form.phone_visible }} <label for="id_phone_visible">Phone visible on ad</label>
+          <label for="id_phone_visible" class="checkbox-label">
+            {{ form.phone_visible }} Phone visible on ad
+          </label>
         </div>
 
         <div class="form-section">
           <label for="id_email">Email</label>
           {{ form.email }}
-          {{ form.email_visible }} <label for="id_email_visible">Email visible on ad</label>
+          <label for="id_email_visible" class="checkbox-label">
+            {{ form.email_visible }} Email visible on ad
+          </label>
         </div>
-
         <!-- Formset for images -->
-        <div class="form-section">
-          <h3>Product Images</h3>
-          {{ formset.management_form }}
-          {% for form in formset %}
-          <div class="inline-formset">
-            <!-- Display each field in the formset -->
-            <label>{{ form.image.label }}</label>
-            {{ form.image }}
-            <label>{{ form.alt_text.label }}</label>
-            {{ form.alt_text }}
-          </div>
-          {% endfor %}
-        </div>
+      <div class="form-section">
+  <div class="image-upload-instructions">
+    You can upload up to 15 pictures
+  </div>
+  <div class="image-upload-box">
+    <label for="id_images">
+      <i class="fa fa-camera" aria-hidden="true"></i> <!-- Use your preferred icon library -->
+      <span>Click or Drop for Upload Image</span>
+      <input type="file" name="images" multiple id="id_images" class="form-control">
+    </label>
+  </div>
+  <!-- Image preview container -->
+  <div id="image-preview-container" class="image-preview-row">
+    <!-- Previews will be inserted here -->
+  </div>
+</div>
+
 
         <!-- Messages -->
         {% if messages %}
@@ -113,34 +120,71 @@
   </div>
 
   {% include 'home/footer.html' %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // Function to read and preview image
+      function readURL(input) {
+        if (input.files) {
+          var container = $("#image-preview-container");
+          // container.empty(); // Don't clear existing previews if you want to keep them
 
-   <script type="text/javascript">
-  $(document).ready(function () {
-    function updateSubcategoryOptions() {
-      var mainCategory = $('#id_category').val();
-      $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
-      if (mainCategory) {
-        $.getJSON('{% url 'product:ajax_load_subcategories' %}', {
-          category_id: mainCategory
-        }, function (data) {
-          $.each(data, function (index, item) {
-            $('#id_subcategory').append($('<option>', {
-              value: item.id,
-              text: item.title 
-            }));
+          $.each(input.files, function (index, file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              // Create an image element for preview
+              var img = $('<img>', {
+                src: e.target.result,
+                class: 'image-preview',
+                alt: 'Image preview',
+                style: 'max-width: 100px; max-height: 100px; margin: 10px;' // Adjust the size as necessary
+              });
+              container.append(img); // Append new images without clearing existing ones
+            }
+            reader.readAsDataURL(file);
           });
-          $('#subcategory-section').show(); // Show subcategory section only if main category is selected
-        });
-
-      } else {
-        $('#subcategory-section').hide(); // Hide the subcategory section if no main category is selected
+        }
       }
-    }
 
-    $('#id_category').change(updateSubcategoryOptions);
-    // No need to run on document ready if you want it to only show when a category is selected
-  });
-</script>
+      // Initialize previews for already selected files
+      readURL($('#id_images')[0]);
+
+      // Listen for changes in the image input
+      $('#id_images').on('change', function () {
+        readURL(this);
+      });
+    });
+  </script>
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      function updateSubcategoryOptions() {
+        var mainCategory = $('#id_category').val();
+        $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
+        if (mainCategory) {
+          $.getJSON('{% url 'product:ajax_load_subcategories' %}', {
+              category_id: mainCategory
+            },
+            function (data) {
+              $.each(data, function (index, item) {
+                $('#id_subcategory').append($('<option>', {
+                  value: item.id,
+                  text: item.title
+                }));
+              });
+              $('#subcategory-section').show(); // Show subcategory section only if main category is selected
+            });
+
+        } else {
+          $('#subcategory-section').hide(); // Hide the subcategory section if no main category is selected
+        }
+      }
+
+      $('#id_category').change(updateSubcategoryOptions);
+      // No need to run on document ready if you want it to only show when a category is selected
+    });
+  </script>
 
 
 

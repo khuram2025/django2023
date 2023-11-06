@@ -1,37 +1,41 @@
 from django.shortcuts import render, redirect
-from .forms import ProductForm, ProductImageFormSet
+from .forms import ProductForm
 from django.http import JsonResponse
-from .models import Category, City, SellerInformation
+from .models import Category, City, ProductImage, SellerInformation
 from django.contrib import messages
 
 def create_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST)
-        formset = ProductImageFormSet(request.POST, request.FILES)
-
-        if form.is_valid() and formset.is_valid():
+        form = ProductForm(request.POST, request.FILES)
+        print("Received POST data:", request.POST)  # Print submitted POST data
+        print("Received FILES data:", request.FILES)  # Print submitted FILES data
+        
+        if form.is_valid():
             try:
                 product = form.save(commit=False)
                 product.save()  # Save the product to get an ID for the foreign key
                 
-                formset.instance = product
-                formset.save()  # Save the images associated with the product
+                # Handle the images
+                images = request.FILES.getlist('images')
+                for image in images:
+                    ProductImage.objects.create(product=product, image=image)
                 
                 messages.success(request, 'Product added successfully!')
                 return redirect('product_detail', pk=product.pk)  # Assuming you have a view named 'product_detail'
             except Exception as e:
+                print("Error during save process:", e)  # Print exception message
                 messages.error(request, f"Error occurred during save process: {e}")
                 # Optionally, log the error here
         else:
+            print("Form errors:", form.errors)  # Print form errors
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
         form = ProductForm()
-        formset = ProductImageFormSet()
 
     return render(request, 'product/add_product.html', {
-        'form': form,
-        'formset': formset,
+        'form': form
     })
+
 
 from django.http import JsonResponse
 

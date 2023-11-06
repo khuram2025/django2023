@@ -58,6 +58,10 @@ class ProductForm(forms.ModelForm):
 class ProductImageForm(forms.ModelForm):
     class Meta:
         model = ProductImage
-        fields = ['image', 'alt_text']
+        fields = ['image']
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
 
-ProductImageFormSet = forms.inlineformset_factory(Product, ProductImage, form=ProductImageForm, extra=5)
+
+

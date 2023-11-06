@@ -247,3 +247,94 @@
     background: transparent;
   }
 }
+/* Add this to your CSS file or within a <style> tag in your HTML */
+.inline-formset {
+  width: 33.33%;
+  float: left;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+@media (max-width: 767px) {
+  .inline-formset {
+    width: 50%;
+  }
+}
+
+/* Clearfix for floating elements */
+#formset-container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.image-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview {
+  flex: 1;
+  max-width: calc(33.33% - 10px);
+  height: auto;
+}
+
+@media (max-width: 767px) {
+  .image-preview {
+    max-width: calc(50% - 10px);
+  }
+}
+.form-section {
+  margin-bottom: 20px; /* Add more space between form sections */
+}
+.checkbox-label {
+  display: block; /* Ensure the checkbox label appears below the input */
+  margin-top: 5px; /* Space between the input and the checkbox */
+}
+.image-upload-box {
+  border: 1px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.image-upload-instructions {
+  font-size: 0.85em;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.image-upload-box label {
+  width: 100%;
+  cursor: pointer;
+}
+.image-upload-box input[type="file"] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.image-upload-box i {
+  /* Adjust your icon styling as needed */
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+@media (max-width: 768px) {
+  .image-upload-box {
+    height: 85px; /* Fixed height for mobile */
+  }
+}
+@media (min-width: 769px) {
+  .image-upload-box {
+    /* Adjust width based on screen size for larger screens */
+    height: calc(100vw * 0.1);
+  }
+}
