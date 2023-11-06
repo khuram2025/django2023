@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<!-- Adjust 'base.html' to your project's base template. -->
+
+{% block content %}
+<div class="product-list">
+  <h1>Product List</h1>
+  <ul>
+    {% for product in products %}
+    <li>
+      <h2><a href="{% url 'product:product_detail' pk=product.pk %}">{{ product.title }}</a></h2>
+      <p>{{ product.description }}</p>
+      <p>Price: {{ product.price }}</p>
+      <!-- You can add more product fields here if needed -->
+    </li>
+    {% empty %}
+    <li>No products available.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

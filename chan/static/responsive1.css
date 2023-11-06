@@ -615,6 +615,9 @@
 }
 
 @media screen and (max-width: 540px) {
+  .upload-photos .qq-upload-list {
+    grid-template-columns: 1fr 1fr;
+  }
   .container {
     padding: 0 10px;
   }

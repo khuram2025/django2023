@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product
 from .forms import ProductForm
 from django.http import JsonResponse
-from .models import Category, City, ProductImage, SellerInformation
+from .models import Category, City, ProductImage
 from django.contrib import messages
 
 def create_product(request):
@@ -37,6 +38,7 @@ def create_product(request):
     })
 
 
+
 from django.http import JsonResponse
 
 def load_subcategories(request):
@@ -44,6 +46,15 @@ def load_subcategories(request):
     subcategories = Category.objects.filter(parent_id=main_category_id).order_by('title')  # Changed 'name' to 'title'
     return JsonResponse(list(subcategories.values('id', 'title')), safe=False)
 
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'product/product_detail.html', {'product': product})
+
+
+def product_list(request):
+    products = Product.objects.all()  # Get all products
+    return render(request, 'product/product_listing.html', {'products': products})
 
 
 
