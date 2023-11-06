@@ -19,7 +19,8 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.filter(status=True)
+        # Here we make sure to only show parent categories (those with no parents)
+        self.fields['category'].queryset = Category.objects.filter(parent__isnull=True, status=True)
         self.fields['city'].queryset = City.objects.all()
 
         # If the form is being used to update an existing instance,
@@ -46,6 +47,7 @@ class ProductForm(forms.ModelForm):
             }
         )
         instance.seller_information = seller_info
+       
 
         if commit:
             instance.save()

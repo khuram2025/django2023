@@ -37,8 +37,10 @@ from django.http import JsonResponse
 
 def load_subcategories(request):
     main_category_id = request.GET.get('category_id')
-    subcategories = Category.objects.filter(parent_id=main_category_id).order_by('name')
-    return JsonResponse(list(subcategories.values('id', 'name')), safe=False)
+    subcategories = Category.objects.filter(parent_id=main_category_id).order_by('title')  # Changed 'name' to 'title'
+    return JsonResponse(list(subcategories.values('id', 'title')), safe=False)
+
+
 
 
 def search_cities(request):
@@ -49,8 +51,3 @@ def search_cities(request):
     return JsonResponse([], safe=False)
 
 
-def load_subcategories(request):
-    category_id = request.GET.get('category_id')
-    subcategories = Category.objects.filter(parent_id=category_id).order_by('title')
-    subcategory_list = [{'id': sub.id, 'title': sub.title} for sub in subcategories]
-    return JsonResponse(subcategory_list, safe=False)

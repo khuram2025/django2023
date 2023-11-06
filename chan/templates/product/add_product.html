@@ -114,33 +114,35 @@
 
   {% include 'home/footer.html' %}
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      function updateSubcategoryOptions() {
-        var mainCategory = $('#id_category').val();
-        $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
-        if (mainCategory) {
-          $.getJSON('/ajax/load-subcategories/', {
-            category_id: mainCategory
-          }, function (data) {
-            $.each(data, function (index, item) {
-              $('#id_subcategory').append($('<option>', {
-                value: item.id,
-                text: item.name
-              }));
-            });
-            $('#subcategory-section').show(); // This should match the ID of your subcategory div
+   <script type="text/javascript">
+  $(document).ready(function () {
+    function updateSubcategoryOptions() {
+      var mainCategory = $('#id_category').val();
+      $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
+      if (mainCategory) {
+        $.getJSON('{% url 'product:ajax_load_subcategories' %}', {
+          category_id: mainCategory
+        }, function (data) {
+          $.each(data, function (index, item) {
+            $('#id_subcategory').append($('<option>', {
+              value: item.id,
+              text: item.title 
+            }));
           });
+          $('#subcategory-section').show(); // Show subcategory section only if main category is selected
+        });
 
-        } else {
-          $('#subcategory-select').hide();
-        }
+      } else {
+        $('#subcategory-section').hide(); // Hide the subcategory section if no main category is selected
       }
+    }
 
-      $('#id_category').change(updateSubcategoryOptions);
-      updateSubcategoryOptions(); // Run on document ready to handle pre-selected categories
-    });
-  </script>
+    $('#id_category').change(updateSubcategoryOptions);
+    // No need to run on document ready if you want it to only show when a category is selected
+  });
+</script>
+
+
 
 </body>
 
