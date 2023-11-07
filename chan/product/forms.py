@@ -1,10 +1,12 @@
 from django import forms
 from .models import Product, SellerInformation, ProductImage, Category, City
+from django import forms
+from .models import Product, SellerInformation, Category, City
 
 class ProductForm(forms.ModelForm):
     # Add the seller information fields
-    contact_name = forms.CharField(max_length=255)
-    phone_number = forms.CharField(max_length=50)
+    contact_name = forms.CharField(max_length=255, required=False)
+    phone_number = forms.CharField(max_length=50, required=False)
     phone_visible = forms.BooleanField(required=False)
     email = forms.EmailField(required=False)
     email_visible = forms.BooleanField(required=False)
@@ -13,47 +15,62 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             'category', 'city', 'address', 'price', 
-            'condition', 'title', 'description'
+            'condition', 'title', 'description',
             # 'seller_information' is not included because we handle it separately
         ]
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # Add a 'user' kwarg to pass the current user
         super(ProductForm, self).__init__(*args, **kwargs)
+
         # Here we make sure to only show parent categories (those with no parents)
         self.fields['category'].queryset = Category.objects.filter(parent__isnull=True, status=True)
         self.fields['city'].queryset = City.objects.all()
 
-        # If the form is being used to update an existing instance,
-        # populate the seller information fields:
-        if 'instance' in kwargs:
-            instance = kwargs['instance']
-            if instance.seller_information:
-                self.fields['contact_name'].initial = instance.seller_information.contact_name
-                self.fields['phone_number'].initial = instance.seller_information.phone_number
-                self.fields['phone_visible'].initial = instance.seller_information.phone_visible
-                self.fields['email'].initial = instance.seller_information.email
-                self.fields['email_visible'].initial = instance.seller_information.email_visible
+        # Populate fields if user is authenticated
+        if user and user.is_authenticated:
+            self.fields['contact_name'].initial = user.full_name
+            self.fields['phone_number'].initial = user.mobile
+            self.fields['email'].initial = user.email
 
     def save(self, commit=True):
-        instance = super(ProductForm, self).save(commit=False)
-        # Handle the seller information
-        seller_info, created = SellerInformation.objects.update_or_create(
-            contact_name=self.cleaned_data.get('contact_name'),
-            defaults={
-                'phone_number': self.cleaned_data.get('phone_number'),
-                'phone_visible': self.cleaned_data.get('phone_visible'),
-                'email': self.cleaned_data.get('email'),
-                'email_visible': self.cleaned_data.get('email_visible'),
-            }
-        )
-        instance.seller_information = seller_info
-       
+        product = super(ProductForm, self).save(commit=False)
 
+        # If there is a user, link the product to the user's seller information
+        if hasattr(self, '_user') and self._user.is_authenticated:
+            seller_info, created = SellerInformation.objects.get_or_create(
+                user=self._user,
+                defaults={
+                    'contact_name': self.cleaned_data.get('contact_name', self._user.full_name),
+                    'phone_number': self.cleaned_data.get('phone_number', self._user.mobile),
+                    'email': self.cleaned_data.get('email', self._user.email),
+                    'phone_visible': self.cleaned_data.get('phone_visible'),
+                    'email_visible': self.cleaned_data.get('email_visible'),
+                }
+            )
+            if not created:
+                seller_info.contact_name = self.cleaned_data.get('contact_name', self._user.full_name)
+                seller_info.phone_number = self.cleaned_data.get('phone_number', self._user.mobile)
+                seller_info.email = self.cleaned_data.get('email', self._user.email)
+                seller_info.phone_visible = self.cleaned_data.get('phone_visible')
+                seller_info.email_visible = self.cleaned_data.get('email_visible')
+                seller_info.save()
+        else:
+            # For guests or when user information is not provided, create new SellerInformation
+            seller_info = SellerInformation.objects.create(
+                contact_name=self.cleaned_data.get('contact_name'),
+                phone_number=self.cleaned_data.get('phone_number'),
+                email=self.cleaned_data.get('email'),
+                phone_visible=self.cleaned_data.get('phone_visible'),
+                email_visible=self.cleaned_data.get('email_visible'),
+            )
+
+        product.seller_information = seller_info
         if commit:
-            instance.save()
+            product.save()
             self.save_m2m()  # Save many-to-many data for the form.
 
-        return instance
+        return product
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

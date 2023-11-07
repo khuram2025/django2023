@@ -10,8 +10,9 @@ from django.http import Http404
 
 
 def create_product(request):
+    user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+        form = ProductForm(request.POST, request.FILES, user=user)
         print("Received POST data:", request.POST)  # Print submitted POST data
         print("Received FILES data:", request.FILES)  # Print submitted FILES data
         
@@ -35,7 +36,7 @@ def create_product(request):
             print("Form errors:", form.errors)  # Print form errors
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
-        form = ProductForm()
+        form = ProductForm(user=user)
 
     return render(request, 'product/add_product.html', {
         'form': form
