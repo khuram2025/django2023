@@ -6,12 +6,12 @@ from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('mobile', 'email', 'is_staff', 'is_superuser')  # Assuming these fields exist in your model
+    list_display = ('mobile','full_name', 'email', 'is_staff', 'is_superuser')  # Assuming these fields exist in your model
     list_filter = ('is_staff', 'is_superuser')  # Remove 'is_active' if it was previously included
     search_fields = ('mobile', 'email')
     ordering = ('mobile',)
     fieldsets = (
-        (None, {'fields': ('mobile', 'email', 'password')}),
+        (None, {'fields': ('mobile', 'full_name', 'email', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
