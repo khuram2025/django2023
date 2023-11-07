@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from account.models import CustomUser
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 
 class Category(MPTTModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"))
@@ -54,14 +56,26 @@ class City(models.Model):
 
 
 class SellerInformation(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, verbose_name=_("User Account"))
     contact_name = models.CharField(max_length=255, verbose_name=_("Contact Name"))
     phone_number = models.CharField(max_length=50, verbose_name=_("Phone Number"))
     phone_visible = models.BooleanField(default=False, verbose_name=_("Phone Visible on Ad"))
     email = models.EmailField(verbose_name=_("Email"), blank=True, null=True)
     email_visible = models.BooleanField(default=False, verbose_name=_("Email Visible on Ad"))
 
+    last_login = models.DateTimeField(verbose_name=_("Last Login"), default=timezone.now)
+    member_since = models.DateTimeField(verbose_name=_("Member Since"), auto_now_add=True)
+    status = models.BooleanField(default=False, verbose_name=_("Status (Online/Offline)"))
+
     def __str__(self):
         return self.contact_name
+    
+    @property
+    def number_of_listings(self):
+        if self.user:
+            return self.user.product_set.count()
+        return 0
+
 
 class Product(models.Model):
     CONDITION_CHOICES = [

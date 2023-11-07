@@ -50,20 +50,33 @@ def load_subcategories(request):
     subcategories = Category.objects.filter(parent_id=main_category_id).order_by('title')  # Changed 'name' to 'title'
     return JsonResponse(list(subcategories.values('id', 'title')), safe=False)
 
-
 def product_detail(request, pk):
     try:
         # Retrieve the Product instance
         product = get_object_or_404(Product, pk=pk)
+        
         # Update the view count for the product
         Product.objects.filter(pk=pk).update(view_count=F('view_count') + 1)
+        
+        # Check if the product is part of a subcategory
+        related_products_qs = Product.objects.filter(category__in=product.category.get_family()).exclude(pk=pk)
+
+        # Add the count of images for each related product
+        related_products_qs = related_products_qs.annotate(images_count=Count('images'))
+
+        # Fetch up to 10 related products
+        related_products = related_products_qs[:10]
+
         # Render the product details in the template with context
-        return render(request, 'product/product_detail.html', {'product': product})
+        context = {
+            'product': product,
+            'related_products': related_products
+        }
+        return render(request, 'product/product_detail.html', context)
     except Product.DoesNotExist:
         # If the product does not exist, raise a 404 error
         raise Http404("Product does not exist")
-
-
+    
 def product_list(request):
     products = Product.objects.annotate(images_count=Count('images')).all()
     return render(request, 'product/product_listing.html', {'products': products})
