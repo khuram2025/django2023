@@ -1,8 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 from django.core.exceptions import ValidationError
 
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = CustomUser
+        fields = ('mobile', 'email')  # Include the fields you want
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta(UserChangeForm.Meta):
+        model = CustomUser
+        fields = ('mobile', 'email')  # Include the fields you want
 class SignUpForm(UserCreationForm):
     full_name = forms.CharField(max_length=100, help_text='Enter your full name')
     email = forms.EmailField(max_length=150, required=False, help_text='Email (optional)')
