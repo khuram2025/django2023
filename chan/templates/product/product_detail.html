@@ -410,7 +410,7 @@
               </div>
 
               <div class="data">
-                <a class="name" href="../../user/profile/samhaghard.html">{{ product.seller_information.contact_name }}</a>
+                <a class="name" href="{% url 'product:user_product_list' user.pk %}">{{ product.seller_information.contact_name }}</a>
 
                 <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
 

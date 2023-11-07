@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from account.models import CustomUser
 from .models import Product
 from .forms import ProductForm
 from django.http import JsonResponse
@@ -82,7 +84,20 @@ def product_list(request):
     products = Product.objects.annotate(images_count=Count('images')).all()
     return render(request, 'product/product_listing.html', {'products': products})
 
+def user_product_list(request, user_pk):
+    # Get the user object, 404 if not found
+    user = get_object_or_404(CustomUser, pk=user_pk)
 
+    # Filter products for the specified user
+    products = Product.objects.filter(seller_information__user=user).annotate(images_count=Count('images'))
+
+    # Pass the user and products to the template
+    context = {
+        'user': user,
+        'products': products,
+    }
+
+    return render(request, 'product/users_listings.html', context)
 
 def search_cities(request):
     if 'searchTerm' in request.GET:
