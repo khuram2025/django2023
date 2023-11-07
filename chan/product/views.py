@@ -10,18 +10,15 @@ from django.db.models import F
 from django.db.models import Count
 from django.http import Http404
 
-
 def create_product(request):
-    user = request.user if request.user.is_authenticated else None
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, user=user)
-        print("Received POST data:", request.POST)  # Print submitted POST data
-        print("Received FILES data:", request.FILES)  # Print submitted FILES data
+        form = ProductForm(request.POST, request.FILES, user=request.user if request.user.is_authenticated else None)
         
         if form.is_valid():
             try:
-                product = form.save(commit=False)
-                product.save()  # Save the product to get an ID for the foreign key
+                # Attach the user to the form before saving.
+                form._user = request.user if request.user.is_authenticated else None
+                product = form.save()  # Save the product to get an ID for the foreign key
                 
                 # Handle the images
                 images = request.FILES.getlist('images')
@@ -29,21 +26,17 @@ def create_product(request):
                     ProductImage.objects.create(product=product, image=image)
                 
                 messages.success(request, 'Product added successfully!')
-                return redirect('product_detail', pk=product.pk)  # Assuming you have a view named 'product_detail'
+                return redirect('product_detail', pk=product.pk)
             except Exception as e:
-                print("Error during save process:", e)  # Print exception message
                 messages.error(request, f"Error occurred during save process: {e}")
-                # Optionally, log the error here
         else:
-            print("Form errors:", form.errors)  # Print form errors
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
-        form = ProductForm(user=user)
+        form = ProductForm(user=request.user if request.user.is_authenticated else None)
 
     return render(request, 'product/add_product.html', {
         'form': form
     })
-
 
 
 from django.http import JsonResponse
@@ -88,8 +81,17 @@ def user_product_list(request, user_pk):
     # Get the user object, 404 if not found
     user = get_object_or_404(CustomUser, pk=user_pk)
 
+    # Debug: Print the user's data
+    print(f"User: {user.full_name or user.mobile} (ID: {user.pk})")
+
     # Filter products for the specified user
     products = Product.objects.filter(seller_information__user=user).annotate(images_count=Count('images'))
+
+    # Debug: Print the number of products found
+    print(f"Number of products found: {products.count()}")
+
+    # Debug: Print the query that is executed (SQL statement)
+    print(f"Query: {products.query}")
 
     # Pass the user and products to the template
     context = {
@@ -98,6 +100,7 @@ def user_product_list(request, user_pk):
     }
 
     return render(request, 'product/users_listings.html', context)
+
 
 def search_cities(request):
     if 'searchTerm' in request.GET:

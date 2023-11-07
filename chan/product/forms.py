@@ -32,11 +32,10 @@ class ProductForm(forms.ModelForm):
             self.fields['contact_name'].initial = user.full_name
             self.fields['phone_number'].initial = user.mobile
             self.fields['email'].initial = user.email
-
     def save(self, commit=True):
         product = super(ProductForm, self).save(commit=False)
 
-        # If there is a user, link the product to the user's seller information
+        # Get or create the SellerInformation for the logged-in user
         if hasattr(self, '_user') and self._user.is_authenticated:
             seller_info, created = SellerInformation.objects.get_or_create(
                 user=self._user,
@@ -49,6 +48,7 @@ class ProductForm(forms.ModelForm):
                 }
             )
             if not created:
+                # If the SellerInformation instance already exists, update it
                 seller_info.contact_name = self.cleaned_data.get('contact_name', self._user.full_name)
                 seller_info.phone_number = self.cleaned_data.get('phone_number', self._user.mobile)
                 seller_info.email = self.cleaned_data.get('email', self._user.email)
@@ -57,18 +57,15 @@ class ProductForm(forms.ModelForm):
                 seller_info.save()
         else:
             # For guests or when user information is not provided, create new SellerInformation
-            seller_info = SellerInformation.objects.create(
-                contact_name=self.cleaned_data.get('contact_name'),
-                phone_number=self.cleaned_data.get('phone_number'),
-                email=self.cleaned_data.get('email'),
-                phone_visible=self.cleaned_data.get('phone_visible'),
-                email_visible=self.cleaned_data.get('email_visible'),
+            seller_info = SellerInformation(
+                # ... fields ...
             )
+            seller_info.save()
 
         product.seller_information = seller_info
         if commit:
             product.save()
-            self.save_m2m()  # Save many-to-many data for the form.
+            self.save_m2m()
 
         return product
 

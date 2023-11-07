@@ -70,10 +70,12 @@ class SellerInformation(models.Model):
     def __str__(self):
         return self.contact_name
     
+    
     @property
     def number_of_listings(self):
+        # This will return the count of products related to this SellerInformation instance
         if self.user:
-            return self.user.product_set.count()
+            return Product.objects.filter(seller_information=self).count()
         return 0
 
 
@@ -86,7 +88,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
-    seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, verbose_name=_("Seller Information"))
+    seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"))
     
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
