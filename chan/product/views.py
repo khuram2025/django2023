@@ -6,6 +6,7 @@ from .models import Category, City, ProductImage
 from django.contrib import messages
 from django.db.models import F
 from django.db.models import Count
+from django.http import Http404
 
 
 def create_product(request):
@@ -51,9 +52,16 @@ def load_subcategories(request):
 
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    Product.objects.filter(pk=pk).update(view_count=F('view_count') + 1)
-    return render(request, 'product/product_detail.html', {'product': product})
+    try:
+        # Retrieve the Product instance
+        product = get_object_or_404(Product, pk=pk)
+        # Update the view count for the product
+        Product.objects.filter(pk=pk).update(view_count=F('view_count') + 1)
+        # Render the product details in the template with context
+        return render(request, 'product/product_detail.html', {'product': product})
+    except Product.DoesNotExist:
+        # If the product does not exist, raise a 404 error
+        raise Http404("Product does not exist")
 
 
 def product_list(request):
