@@ -1,0 +1,58 @@
+<div class="box location" data-box="location">
+  <div class="nav">
+    <a href="#" class="back"><i class="fas fa-chevron-left"></i></a>
+    <span>Change location</span>
+  </div>
+
+  <div class="section">
+    <div class="head isDesktop isTablet">Default location</div>
+    <div class="subhead isDesktop isTablet">Select your preferred location to search and sell faster.</div>
+
+    <div class="row picker">
+      <div class="input-box picker location">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" /></svg>
+        <input name="location-pick" class="location-pick" type="text" placeholder="Search location..." autocomplete="off" />
+        <i class="clean fas fa-times-circle"></i>
+        <div class="results"></div>
+      </div>
+    </div>
+
+    <div class="row navigator">
+      <a href="#" class="locate-me">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 168c-48.6 0-88 39.4-88 88s39.4 88 88 88 88-39.4 88-88-39.4-88-88-88zm0 128c-22.06 0-40-17.94-40-40s17.94-40 40-40 40 17.94 40 40-17.94 40-40 40zm240-64h-49.66C435.49 145.19 366.81 76.51 280 65.66V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v49.66C145.19 76.51 76.51 145.19 65.66 232H16c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h49.66C76.51 366.81 145.19 435.49 232 446.34V496c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-49.66C366.81 435.49 435.49 366.8 446.34 280H496c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zM256 400c-79.4 0-144-64.6-144-144s64.6-144 144-144 144 64.6 144 144-64.6 144-144 144z" /></svg>
+        <strong data-alt-text="Click to refresh">Use current location</strong>
+        <span class="status">
+          <span class="init">Click to find closest city to your location</span>
+          <span class="not-supported" style="display: none">Geolocation is not supported by your browser</span>
+          <span class="failed" style="display: none">Unable to retrieve your location, it may be blocked</span>
+          <span class="failed-unfound" style="display: none">Unable to retrieve your location, no close city found</span>
+          <span class="loading" style="display: none">Locating...</span>
+          <span class="success" style="display: none"></span>
+          <span class="refresh" style="display: none">Refresh page to take effect</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="row recent">
+      <div class="lead">Recent locations</div>
+
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NjcwMjM0IiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkFsaWNlIiwic19uYW1lX25hdGl2ZSI6bnVsbCwic19uYW1lX3RvcCI6bnVsbCwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiMjcuNzUyMjUwMDAwMCIsImRfY29vcmRfbG9uZyI6Ii05OC4wNjk3MjAwMDAwIn0%253D" class="location-elem">Alice</a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI5NTMyNTE3IiwiZmtfaV9yZWdpb25faWQiOiIyODU4Nzg3IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJQTCIsInNfbmFtZSI6IkJvcmtvd2ljZSIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOm51bGwsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjUxLjMyMDAzMTIwMDAiLCJkX2Nvb3JkX2xvbmciOiIyMC42ODM2NTg0MDAwIn0%253D" class="location-elem">Borkowice</a>
+    </div>
+
+    <div class="row popular">
+      <div class="lead">Popular cities</div>
+
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2ODYyMjA0IiwiZmtfaV9yZWdpb25faWQiOiI2ODYyMTgyIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IklyZXRvbiIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJJb3dhIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNDIuOTc0NzA1MzAwMCIsImRfY29vcmRfbG9uZyI6Ii05Ni4zMTgzNDU3MDAwIn0%253D" class="location-elem">Ireton, Iowa <em>253 items</em></a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NzAzMDYzIiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IktlcmVucyIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJUZXhhcyIsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjMyLjEzMDkxNDcwMDAiLCJkX2Nvb3JkX2xvbmciOiItOTYuMjI4NTAyMTAwMCJ9" class="location-elem">Kerens, Texas <em>97 items</em></a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NTAwNTcyIiwiZmtfaV9yZWdpb25faWQiOiI3MTAxNzYwIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkF1ZHVib24iLCJzX25hbWVfbmF0aXZlIjpudWxsLCJzX25hbWVfdG9wIjoiTmV3IEplcnNleSIsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjQwLjIyMDg1OTkwMDAiLCJkX2Nvb3JkX2xvbmciOiItNzQuNzY4OTAwMjAwMCJ9" class="location-elem">Audubon, New Jersey <em>3 items</em></a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI3MDk1MzEyIiwiZmtfaV9yZWdpb25faWQiOiI3MTAxNzYwIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkF0bGFudGljIEhpZ2hsYW5kcyIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJOZXcgSmVyc2V5Iiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNDAuNDA3ODg2NTAwMCIsImRfY29vcmRfbG9uZyI6Ii03NC4wMzQzMDYwMDAwIn0%253D" class="location-elem">Atlantic Highlands, New Jersey <em>2 items</em></a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI5NTMyNTE3IiwiZmtfaV9yZWdpb25faWQiOiIyODU4Nzg3IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJQTCIsInNfbmFtZSI6IkJvcmtvd2ljZSIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJNYXpvdmlhIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNTEuMzIwMDMxMjAwMCIsImRfY29vcmRfbG9uZyI6IjIwLjY4MzY1ODQwMDAifQ%253D%253D" class="location-elem">Borkowice, Mazovia <em>1 item</em></a>
+      <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NjcwMjM0IiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkFsaWNlIiwic19uYW1lX25hdGl2ZSI6bnVsbCwic19uYW1lX3RvcCI6IlRleGFzIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiMjcuNzUyMjUwMDAwMCIsImRfY29vcmRfbG9uZyI6Ii05OC4wNjk3MjAwMDAwIn0%253D" class="location-elem">Alice, Texas <em>1 item</em></a>
+    </div>
+
+    <div class="row buttons">
+      <a class="btn btn-secondary" href="index.html?cleanCookieLocation=1">Clean default location</a>
+    </div>
+  </div>
+</div>

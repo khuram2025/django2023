@@ -30,368 +30,7 @@
       </div>
 
       <div class="container primary" class="default-font font-size-14">
-        <div id="search-menu" class="filter-menu" class="default-font font-size-14">
-          <div class="wrap" class="default-font font-size-14">
-            <form action="https://epsilon.mb-themes.com/index.php" method="GET" class="search-side-form nocsrf" class="default-font font-size-14">
-              <input type="hidden" class="ajaxRun" value="" class="default-font font-size-15" />
-              <input type="hidden" name="page" value="search" class="default-font font-size-15" />
-              <input type="hidden" name="sOrder" value="dt_pub_date" class="default-font font-size-15" />
-              <input type="hidden" name="iOrderType" value="desc" class="default-font font-size-15" />
-              <input type="hidden" name="sCountry" id="sCountry" value="" class="default-font font-size-15" />
-              <input type="hidden" name="sRegion" id="sRegion" value="" class="default-font font-size-15" />
-              <input type="hidden" name="sCity" id="sCity" value="" class="default-font font-size-15" />
-              <input type="hidden" name="iPage" id="iPage" value="" class="default-font font-size-15" />
-              <input type="hidden" name="sShowAs" id="sShowAs" value="" class="default-font font-size-15" />
-              <input type="hidden" name="userId" value="" class="default-font font-size-15" />
-              <input type="hidden" name="notFromUserId" value="" class="default-font font-size-15" />
-
-              <div class="row" class="default-font font-size-14">
-                <label for="sPattern" class="default-font font-size-14">Keyword</label>
-
-                <div class="input-box" class="default-font font-size-14">
-                  <input type="text" name="sPattern" id="sPattern" placeholder="Keyword..." value="" autocomplete="off" class="default-font font-size-15" />
-                  <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
-                </div>
-              </div>
-
-              <div class="row isMobile" class="default-font font-size-14">
-                <label for="sCategory" class="default-font font-size-14">Category</label>
-
-                <div class="input-box" class="default-font font-size-14">
-                  <select name="sCategory" id="sCategory" class="default-font font-size-15">
-                    <option value="" class="default-font font-size-15">Category...</option>
-                    <option value="1" class="default-font font-size-15">For sale</option>
-                    <option value="9" class="default-font font-size-15">&nbsp;&nbsp;Animals</option>
-                    <option value="10" class="default-font font-size-15">&nbsp;&nbsp;Art - Collectibles</option>
-                    <option value="11" class="default-font font-size-15">&nbsp;&nbsp;Barter</option>
-                    <option value="12" class="default-font font-size-15">&nbsp;&nbsp;Books - Magazines</option>
-                    <option value="13" class="default-font font-size-15">&nbsp;&nbsp;Cameras - Camera Accessories</option>
-                    <option value="14" class="default-font font-size-15">&nbsp;&nbsp;CDs - Records</option>
-                    <option value="15" class="default-font font-size-15">&nbsp;&nbsp;Cell Phones - Accessories</option>
-                    <option value="16" class="default-font font-size-15">&nbsp;&nbsp;Clothing</option>
-                    <option value="17" class="default-font font-size-15">&nbsp;&nbsp;Computers - Hardware</option>
-                    <option value="18" class="default-font font-size-15">&nbsp;&nbsp;DVD</option>
-                    <option value="19" class="default-font font-size-15">&nbsp;&nbsp;Electronics</option>
-                    <option value="20" class="default-font font-size-15">&nbsp;&nbsp;For Babies - Infants</option>
-                    <option value="21" class="default-font font-size-15">&nbsp;&nbsp;Garage Sale</option>
-                    <option value="22" class="default-font font-size-15">&nbsp;&nbsp;Health - Beauty</option>
-                    <option value="23" class="default-font font-size-15">&nbsp;&nbsp;Home - Furniture - Garden Supplies</option>
-                    <option value="24" class="default-font font-size-15">&nbsp;&nbsp;Jewelry - Watches</option>
-                    <option value="25" class="default-font font-size-15">&nbsp;&nbsp;Musical Instruments</option>
-                    <option value="26" class="default-font font-size-15">&nbsp;&nbsp;Sporting Goods - Bicycles</option>
-                    <option value="27" class="default-font font-size-15">&nbsp;&nbsp;Tickets</option>
-                    <option value="28" class="default-font font-size-15">&nbsp;&nbsp;Toys - Games - Hobbies</option>
-                    <option value="29" class="default-font font-size-15">&nbsp;&nbsp;Video Games - Consoles</option>
-                    <option value="30" class="default-font font-size-15">&nbsp;&nbsp;Everything Else</option>
-                    <option value="2" class="default-font font-size-15">Vehicles</option>
-                    <option value="31" class="default-font font-size-15">&nbsp;&nbsp;Cars</option>
-                    <option value="32" class="default-font font-size-15">&nbsp;&nbsp;Car Parts</option>
-                    <option value="33" class="default-font font-size-15">&nbsp;&nbsp;Motorcycles</option>
-                    <option value="34" class="default-font font-size-15">&nbsp;&nbsp;Boats - Ships</option>
-                    <option value="35" class="default-font font-size-15">&nbsp;&nbsp;RVs - Campers - Caravans</option>
-                    <option value="36" class="default-font font-size-15">&nbsp;&nbsp;Trucks - Commercial Vehicles</option>
-                    <option value="37" class="default-font font-size-15">&nbsp;&nbsp;Other Vehicles</option>
-                    <option value="3" class="default-font font-size-15">Classes</option>
-                    <option value="38" class="default-font font-size-15">&nbsp;&nbsp;Computer - Multimedia Classes</option>
-                    <option value="39" class="default-font font-size-15">&nbsp;&nbsp;Language Classes</option>
-                    <option value="40" class="default-font font-size-15">&nbsp;&nbsp;Music - Theatre - Dance Classes</option>
-                    <option value="41" class="default-font font-size-15">&nbsp;&nbsp;Tutoring - Private Lessons</option>
-                    <option value="42" class="default-font font-size-15">&nbsp;&nbsp;Other Classes</option>
-                    <option value="4" class="default-font font-size-15">Real estate</option>
-                    <option value="43" class="default-font font-size-15">&nbsp;&nbsp;Houses - Apartments for Sale</option>
-                    <option value="44" class="default-font font-size-15">&nbsp;&nbsp;Houses - Apartments for Rent</option>
-                    <option value="45" class="default-font font-size-15">&nbsp;&nbsp;Rooms for Rent - Shared</option>
-                    <option value="46" class="default-font font-size-15">&nbsp;&nbsp;Housing Swap</option>
-                    <option value="47" class="default-font font-size-15">&nbsp;&nbsp;Vacation Rentals</option>
-                    <option value="48" class="default-font font-size-15">&nbsp;&nbsp;Parking Spots</option>
-                    <option value="49" class="default-font font-size-15">&nbsp;&nbsp;Land</option>
-                    <option value="50" class="default-font font-size-15">&nbsp;&nbsp;Office - Commercial Space</option>
-                    <option value="51" class="default-font font-size-15">&nbsp;&nbsp;Shops for Rent - Sale</option>
-                    <option value="5" class="default-font font-size-15">Services</option>
-                    <option value="52" class="default-font font-size-15">&nbsp;&nbsp;Babysitter - Nanny</option>
-                    <option value="53" class="default-font font-size-15">&nbsp;&nbsp;Casting - Auditions</option>
-                    <option value="54" class="default-font font-size-15">&nbsp;&nbsp;Computer</option>
-                    <option value="55" class="default-font font-size-15">&nbsp;&nbsp;Event Services</option>
-                    <option value="56" class="default-font font-size-15">&nbsp;&nbsp;Health - Beauty - Fitness</option>
-                    <option value="57" class="default-font font-size-15">&nbsp;&nbsp;Horoscopes - Tarot</option>
-                    <option value="58" class="default-font font-size-15">&nbsp;&nbsp;Household - Domestic Help</option>
-                    <option value="59" class="default-font font-size-15">&nbsp;&nbsp;Moving - Storage</option>
-                    <option value="60" class="default-font font-size-15">&nbsp;&nbsp;Repair</option>
-                    <option value="61" class="default-font font-size-15">&nbsp;&nbsp;Writing - Editing - Translating</option>
-                    <option value="62" class="default-font font-size-15">&nbsp;&nbsp;Other Services</option>
-                    <option value="6" class="default-font font-size-15">Community</option>
-                    <option value="63" class="default-font font-size-15">&nbsp;&nbsp;Carpool</option>
-                    <option value="64" class="default-font font-size-15">&nbsp;&nbsp;Community Activities</option>
-                    <option value="65" class="default-font font-size-15">&nbsp;&nbsp;Events</option>
-                    <option value="66" class="default-font font-size-15">&nbsp;&nbsp;Musicians - Artists - Bands</option>
-                    <option value="67" class="default-font font-size-15">&nbsp;&nbsp;Volunteers</option>
-                    <option value="68" class="default-font font-size-15">&nbsp;&nbsp;Lost And Found</option>
-                    <option value="7" class="default-font font-size-15">Personals</option>
-                    <option value="69" class="default-font font-size-15">&nbsp;&nbsp;Women looking for Men</option>
-                    <option value="70" class="default-font font-size-15">&nbsp;&nbsp;Men looking for Women</option>
-                    <option value="71" class="default-font font-size-15">&nbsp;&nbsp;Men looking for Men</option>
-                    <option value="72" class="default-font font-size-15">&nbsp;&nbsp;Women looking for Women</option>
-                    <option value="73" class="default-font font-size-15">&nbsp;&nbsp;Friendship - Activity Partners</option>
-                    <option value="74" class="default-font font-size-15">&nbsp;&nbsp;Missed Connections</option>
-                    <option value="8" class="default-font font-size-15">Jobs</option>
-                    <option value="75" class="default-font font-size-15">&nbsp;&nbsp;Accounting - Finance</option>
-                    <option value="76" class="default-font font-size-15">&nbsp;&nbsp;Advertising - Public Relations</option>
-                    <option value="77" class="default-font font-size-15">&nbsp;&nbsp;Arts - Entertainment - Publishing</option>
-                    <option value="78" class="default-font font-size-15">&nbsp;&nbsp;Clerical - Administrative</option>
-                    <option value="79" class="default-font font-size-15">&nbsp;&nbsp;Customer Service</option>
-                    <option value="80" class="default-font font-size-15">&nbsp;&nbsp;Education - Training</option>
-                    <option value="81" class="default-font font-size-15">&nbsp;&nbsp;Engineering - Architecture</option>
-                    <option value="82" class="default-font font-size-15">&nbsp;&nbsp;Healthcare</option>
-                    <option value="83" class="default-font font-size-15">&nbsp;&nbsp;Human Resource</option>
-                    <option value="84" class="default-font font-size-15">&nbsp;&nbsp;Internet</option>
-                    <option value="85" class="default-font font-size-15">&nbsp;&nbsp;Legal</option>
-                    <option value="86" class="default-font font-size-15">&nbsp;&nbsp;Manual Labor</option>
-                    <option value="87" class="default-font font-size-15">&nbsp;&nbsp;Manufacturing - Operations</option>
-                    <option value="88" class="default-font font-size-15">&nbsp;&nbsp;Marketing</option>
-                    <option value="89" class="default-font font-size-15">&nbsp;&nbsp;Non-profit - Volunteer</option>
-                    <option value="90" class="default-font font-size-15">&nbsp;&nbsp;Real Estate</option>
-                    <option value="91" class="default-font font-size-15">&nbsp;&nbsp;Restaurant - Food Service</option>
-                    <option value="92" class="default-font font-size-15">&nbsp;&nbsp;Retail</option>
-                    <option value="93" class="default-font font-size-15">&nbsp;&nbsp;Sales</option>
-                    <option value="94" class="default-font font-size-15">&nbsp;&nbsp;Technology</option>
-                    <option value="95" class="default-font font-size-15">&nbsp;&nbsp;Other Jobs</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row" class="default-font font-size-14">
-                <label for="sLocation" class="default-font font-size-14">Location</label>
-
-                <div class="input-box picker location only-search" class="default-font font-size-14">
-                  <input name="sLocation" type="text" class="location-pick" id="sLocation" placeholder="Region, city..." value="" autocomplete="off" class="default-font font-size-15" />
-                  <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
-                  <div class="results" class="default-font font-size-14"></div>
-                </div>
-              </div>
-
-              <!-- CONDITION -->
-              <div class="row condition" class="default-font font-size-14">
-                <label for="" class="default-font font-size-14">Condition</label>
-                <div class="input-box" class="default-font font-size-14">
-                  <select class="sCondition" id="sCondition" name="sCondition" class="default-font font-size-15">
-                    <option value="" class="default-font font-size-15">All</option>
-                    <option value="1" class="default-font font-size-15">New</option>
-                    <option value="2" class="default-font font-size-15">Used</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- TRANSACTION -->
-              <div class="row transaction" class="default-font font-size-14">
-                <label for="" class="default-font font-size-14">Transaction</label>
-                <div class="input-box" class="default-font font-size-14">
-                  <select class="sTransaction" id="sTransaction" name="sTransaction" class="default-font font-size-15">
-                    <option value="" class="default-font font-size-15">All</option>
-                    <option value="1" class="default-font font-size-15">Sell</option>
-                    <option value="2" class="default-font font-size-15">Buy</option>
-                    <option value="3" class="default-font font-size-15">Rent</option>
-                    <option value="4" class="default-font font-size-15">Exchange</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- PRICE -->
-              <div class="row price" class="default-font font-size-14">
-                <label for="sPriceMin" class="default-font font-size-14">Price range ($)</label>
-
-                <div class="line input-box" class="default-font font-size-14">
-                  <input type="number" class="priceMin" name="sPriceMin" id="sPriceMin" value="" size="6" maxlength="6" placeholder="Min" class="default-font font-size-15" />
-                  <span class="delim" class="default-font font-size-14"></span>
-                  <input type="number" class="priceMax" name="sPriceMax" id="sPriceMax" value="" size="6" maxlength="6" placeholder="Max" class="default-font font-size-15" />
-                </div>
-
-                <div class="row check-only checkboxes" class="default-font font-size-14">
-                  <div class="input-box-check" class="default-font font-size-14">
-                    <input type="checkbox" name="bPriceCheckWithSeller" id="bPriceCheckWithSeller" value="1" class="default-font font-size-15" />
-                    <label for="bPriceCheckWithSeller" class="only-check-label" class="default-font font-size-13">Check with seller</label>
-                  </div>
-                </div>
-
-                <div class="row free-only checkboxes" class="default-font font-size-14">
-                  <div class="input-box-check" class="default-font font-size-14">
-                    <input type="checkbox" name="bPriceFree" id="bPriceFree" value="1" class="default-font font-size-15" />
-                    <label for="bPriceFree" class="only-free-label" class="default-font font-size-13">Free</label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- PERIOD-->
-              <div class="row period" class="default-font font-size-14">
-                <label for="sPriceMin" class="default-font font-size-14">Period</label>
-                <div class="input-box" class="default-font font-size-14">
-                  <select class="sPeriod" id="sPeriod" name="sPeriod" class="default-font font-size-15">
-                    <option value="" class="default-font font-size-15">All</option>
-                    <option value="1" class="default-font font-size-15">Yesterday</option>
-                    <option value="7" class="default-font font-size-15">Last week</option>
-                    <option value="14" class="default-font font-size-15">Last 2 weeks</option>
-                    <option value="31" class="default-font font-size-15">Last month</option>
-                    <option value="365" class="default-font font-size-15">Last year</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- COMPANY -->
-              <div class="row company isMobile" class="default-font font-size-14">
-                <label for="sCompany" class="default-font font-size-14">Seller type</label>
-                <div class="input-box" class="default-font font-size-14">
-                  <select class="sCompany" id="sCompany" name="sCompany" class="default-font font-size-15">
-                    <option value="" selected="selected" class="default-font font-size-15">All sellers</option>
-                    <option value="0" class="default-font font-size-15">Personal</option>
-                    <option value="1" class="default-font font-size-15">Company</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="row with-picture checkboxes" class="default-font font-size-14">
-                <div class="input-box-check" class="default-font font-size-14">
-                  <input type="checkbox" name="bPic" id="bPic" value="1" class="default-font font-size-15" />
-                  <label for="bPic" class="only-picture-label" class="default-font font-size-14">With picture only</label>
-                </div>
-              </div>
-
-              <div class="row premiums-only checkboxes" class="default-font font-size-14">
-                <div class="input-box-check" class="default-font font-size-14">
-                  <input type="checkbox" name="bPremium" id="bPremium" value="1" class="default-font font-size-15" />
-                  <label for="bPremium" class="only-premium-label" class="default-font font-size-14">Premium items only</label>
-                </div>
-              </div>
-
-              <div class="row phone-only checkboxes" class="default-font font-size-14">
-                <div class="input-box-check" class="default-font font-size-14">
-                  <input type="checkbox" name="bPhone" id="bPhone" value="1" class="default-font font-size-15" />
-                  <label for="bPhone" class="only-phone-label" class="default-font font-size-14">With phone number</label>
-                </div>
-              </div>
-
-              <div class="row sidebar-hooks" class="default-font font-size-14">
-                <fieldset class="default-font font-size-14">
-                  <div class="row osm-row" class="default-font font-size-14">
-                    <label for="osmRadius" class="default-font font-size-14">Radius</label
-                    ><select id="osmRadius" name="osmRadius" class="default-font font-size-15">
-                      <option value="" selected="selected" class="default-font font-size-15">Select radius</option>
-                      <option value="1" class="default-font font-size-15">1 km</option>
-                      <option value="5" class="default-font font-size-15">5 km</option>
-                      <option value="10" class="default-font font-size-15">10 km</option>
-                      <option value="50" class="default-font font-size-15">50 km</option>
-                      <option value="100" class="default-font font-size-15">100 km</option>
-                      <option value="500" class="default-font font-size-15">500 km</option>
-                      <option value="2000" class="default-font font-size-15">2000 km</option>
-                    </select>
-                  </div>
-                </fieldset>
-              </div>
-
-              <div class="row buttons srch" class="default-font font-size-14">
-                <button type="submit" class="btn mbBg init-search" id="search-button" class="default-font font-size-16">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" class="default-font font-size-16"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class="default-font font-size-16"></path></svg>
-                  <span class="default-font font-size-16">Search</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div id="search-category-box" class="default-font font-size-14">
-            <h3 class="default-font font-size-16">Select category</h3>
-            <div class="wrap nice-scroll-nothave-overflow" class="default-font font-size-14">
-              <div class="catbox root nice-scroll" class="default-font font-size-14">
-                <a href="https://epsilon.mb-themes.com/for-sale" class="child" data-name="sCategory" data-val="1" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/1.png" alt="For sale" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">For sale</span>
-                    <em speechify-initial-font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' speechify-initial-font-size="11px">422</em>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/vehicles" class="child" data-name="sCategory" data-val="2" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/2.png" alt="Vehicles" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Vehicles</span>
-                    <em speechify-initial-font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' speechify-initial-font-size="11px">136</em>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/classes" class="child" data-name="sCategory" data-val="3" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/3.png" alt="Classes" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Classes</span>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/real-estate" class="child" data-name="sCategory" data-val="4" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/4.png" alt="Real estate" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Real estate</span>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/services" class="child" data-name="sCategory" data-val="5" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/5.png" alt="Services" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Services</span>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/community" class="child" data-name="sCategory" data-val="6" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/6.png" alt="Community" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Community</span>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/personals" class="child" data-name="sCategory" data-val="7" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/7.png" alt="Personals" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Personals</span>
-                  </div>
-                </a>
-
-                <a href="https://epsilon.mb-themes.com/jobs" class="child" data-name="sCategory" data-val="8" class="default-font font-size-14">
-                  <div class="icon" class="default-font font-size-14">
-                    <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/small_cat/8.png" alt="Jobs" class="default-font font-size-14" />
-                  </div>
-
-                  <div class="default-font font-size-14">
-                    <span class="name" class="default-font font-size-14">Jobs</span>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div id="banner-theme" class="banner-theme banner-search_sidebar not767 is-demo" class="default-font font-size-14">
-            <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
-              <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
-                <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=8fc96e08" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/banners/8fc96e08.jpg" alt="A2 Hosting Springing Into Summer Sale" title="A2 Hosting Springing Into Summer Sale" width="250" height="250" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=8fc96e08" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
-              </div>
-            </div>
-          </div>
-        </div>
+        {% include 'home/search_filter.html' %}
 
         <div id="search-main" class="grid" class="default-font font-size-14">
           <div class="top-bar" class="default-font font-size-14">
@@ -408,14 +47,13 @@
                 {% for product in products %}
                 <div class="simple-prod o1 is-premium premium-loop verytall" class="default-font font-size-14">
                   <div class="simple-wrap" title="" class="default-font font-size-14">
-
                     <div class="img-wrap" class="default-font font-size-14">
                       <a class="img" href="{% url 'product:product_detail' pk=product.pk %}" class="default-font font-size-14">
                         <img class="lazy loaded" src="{{ product.images.all.0.image.url }}" alt="CTM s8 2019" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
                       </a>
 
                       <a class="bar" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/ctm-s8-2019_i75" class="default-font font-size-17">
-                        <div class="price isGrid isDetail" class="default-font font-size-17"><span class="default-font font-size-17">Check with seller</span></div>
+                        <div class="price isGrid isDetail" class="default-font font-size-17"><span class="default-font font-size-17">{{product.price}} Rs.</span></div>
 
                         <div class="image-counter" class="default-font font-size-13"><i class="fas fa-camera" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="11px"></i> {{ product.images_count }}</div>
                       </a>
@@ -472,9 +110,9 @@
 
                     <div class="labels isGrid" class="default-font font-size-14"></div>
                   </div>
-                </div>   
-                {% endfor %}             
-              
+                </div>
+                {% endfor %}
+
                 <a href="https://osclasspoint.com" class="simple-prod placeholder o18 premium-loop verytall" class="default-font font-size-14">
                   <div class="simple-wrap" class="default-font font-size-14">
                     <div class="dx" class="default-font font-size-14">
@@ -621,66 +259,66 @@
                     <a class="img" href="{% url 'product:product_detail' pk=product.pk %}" class="default-font font-size-14">
                       <img class="lazy loaded" src="{{ product.images.all.0.image.url }}" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
                     </a>
-            
+
                     <a class="bar" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313" class="default-font font-size-17">
                       <div class="price isGrid isDetail" class="default-font font-size-17"><span class="default-font font-size-17">{{ product.price }} Rs.</span></div>
-            
+
                       <div class="image-counter" class="default-font font-size-13"><i class="fas fa-camera" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="11px"></i> {{ product.images_count }}</div>
                     </a>
-            
+
                     <a href="https://epsilon.mb-themes.com/user/profile/peterclark" class="user-image isGrid isDetail" class="default-font font-size-14">
                       <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/4_BN8aL_20220323.png" alt="Peter Clark" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
-            
+
                       <span class="business" title="Professional seller" speechify-initial-font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' speechify-initial-font-size="8px">Pro</span>
                     </a>
-            
+
                     <div class="isGrid isDetail" class="default-font font-size-14">
                       <div class="favorite" class="default-font font-size-14">
                         <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite" class="default-font font-size-14"><i class="far fa-star" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="17px"></i><span class="default-font font-size-14">Save to favorite</span></a>
                       </div>
                     </div>
                   </div>
-            
+
                   <div class="data" class="default-font font-size-14">
                     <div class="info" class="default-font font-size-12">{{ product.city }}</div>
-            
+
                     <a class="title" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313" class="default-font font-size-17">{{ product.title }}</a>
-            
+
                     <div class="description isDetail" class="default-font font-size-13">{{ product.description}}</div>
-            
+
                     <div class="price standalone isList" class="default-font font-size-14"><span class="default-font font-size-14">{{ product.price }}</span></div>
-            
+
                     <div class="extra" class="default-font font-size-14">
                       <span class="default-font font-size-14">1 year ago</span>
                       <span class="default-font font-size-14">Cameras - Camera Accessories</span>
-            
+
                       <span class="default-font font-size-14">{{ product.view_count }} people viewed</span>
                     </div>
-            
+
                     <div class="action isDetail" class="default-font font-size-14">
                       <div class="price" class="default-font font-size-16"><span class="default-font font-size-16">{{ product.price }} Rs.</span></div>
                     </div>
-            
+
                     <div class="contact isDetail" class="default-font font-size-14">
                       <a class="contact" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313#contact" class="default-font font-size-14"><i class="fas fa-envelope-open" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="14px"></i> <span class="default-font font-size-14">Send message</span></a>
                     </div>
                   </div>
-            
+
                   <div class="right isList" class="default-font font-size-14">
                     <div class="price" class="default-font font-size-17"><span class="default-font font-size-17">{{ product.price }} Rs.</span></div>
-            
+
                     <div class="favorite" class="default-font font-size-14">
                       <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite" class="default-font font-size-14"><i class="far fa-star" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="17px"></i><span class="default-font font-size-14">Save to favorite</span></a>
                     </div>
                   </div>
-            
+
                   <div class="labels isGrid" class="default-font font-size-14"></div>
                 </div>
               </div>
               {% empty %}
               <li>No products available.</li>
               {% endfor %}
-            
+
               <div class="simple-prod o3 st-sold" class="default-font font-size-14">
                 <div class="simple-wrap" title="Sold" class="default-font font-size-14">
                   <div class="img-wrap" class="default-font font-size-14">
@@ -757,7 +395,7 @@
                     <a href="https://www.a2hosting.com/wordpress-hosting/managed?aid=5ff74858d3bac&amp;bid=0ffde563" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/0ffde563.jpg" alt="managed osclass hosting" title="managed osclass hosting" width="728" height="90" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=0ffde563" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
                   </div>
                 </div>
-              </div>  
+              </div>
             </div>
 
             <div id="banner-theme" class="banner-theme banner-search_bottom not767 is-demo blank" title="You can define your own banner code from theme settings" class="default-font font-size-14">
@@ -939,151 +577,7 @@
         <a href="user/register.html" class="btn btn-transparent">Create an account</a>
       </div>
     </section>
-
-    <footer>
-      <div class="container">
-        <section class="one">
-          <div class="col contact">
-            <h4>About us</h4>
-
-            <p class="logo"><img src="oc-content/themes/epsilon/images/logo-default.png" alt="Epsilon Premium Osclass Classifieds Theme" /></p>
-            <p class="company"><strong>EpsilonTheme</strong></p>
-            <p>Phone: +1 (800) 228-5651</p>
-            <p>Email: support@dot.com</p>
-            <p>Roling st.59/18 New York 22123 Nebraska US</p>
-            <div class="quick-links">
-              <a class="btn-mini" href="user/login.html">Messages</a>
-
-              <a class="btn-mini" href="user/login.html">Favorite</a>
-
-              <a class="btn-mini" href="companies.html">Companies</a>
-
-              <a class="btn-mini" href="blog/index.html">Blog</a>
-
-              <a class="btn-mini" href="faq/index.html">FAQ</a>
-            </div>
-          </div>
-
-          <div class="col socialx">
-            <h4>Social media</h4>
-
-            <a class="whatsapp" href="whatsapp://send?text=https%3A%2F%2Fepsilon.mb-themes.com%2F" data-action="share/whatsapp/share"><i class="fab fa-whatsapp"></i> Whatsapp</a>
-            <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fepsilon.mb-themes.com%2F" title="Share us on Facebook" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
-            <a class="pinterest" href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fepsilon.mb-themes.com%2F&amp;media=https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/logo.jpg&amp;description=" title="Share us on Pinterest" target="_blank"><i class="fab fa-pinterest-p"></i> Pinterest</a>
-            <a class="twitter" href="https://twitter.com/home?status=https%3A%2F%2Fepsilon.mb-themes.com%2F%20-%20your%20classifieds" title="Tweet us" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-            <a class="linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fepsilon.mb-themes.com%2F&amp;title=My%20classifieds&amp;summary=&amp;source=" title="Share us on LinkedIn" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-          </div>
-
-          <div class="col pages">
-            <h4>Information</h4>
-
-            <a href="terms-and-conditions-p24.html">Terms and Conditions</a>
-            <a href="privacy-policy-p25.html">Privacy Policy</a>
-            <a href="legal-p26.html">Legal Notice</a>
-            <a href="promotion-p27.html">How promotion works</a>
-
-            <a href="https://osclass-classifieds.com/">Osclass Classifieds</a>
-          </div>
-
-          <div class="col locale">
-            <h4>Change language</h4>
-
-            <a class="lang" href="vehicles.html">
-              <img src="oc-content/themes/epsilon/images/country_flags/large/sy.png" alt="Country flag" />
-              <span>Arabic&#x200E;</span>
-            </a>
-            <a class="lang" href="vehicles.html">
-              <img src="oc-content/themes/epsilon/images/country_flags/large/cn.png" alt="Country flag" />
-              <span>Chinese (China)&#x200E;</span>
-            </a>
-            <a class="lang active" href="vehicles.html">
-              <img src="oc-content/themes/epsilon/images/country_flags/large/us.png" alt="Country flag" />
-              <span>English (US)&#x200E;</span>
-            </a>
-            <a class="lang" href="vehicles.html">
-              <img src="oc-content/themes/epsilon/images/country_flags/large/ro.png" alt="Country flag" />
-              <span>Romanian&#x200E;</span>
-            </a>
-            <a class="lang" href="vehicles.html">
-              <img src="oc-content/themes/epsilon/images/country_flags/large/ru.png" alt="Country flag" />
-              <span>Russian&#x200E;</span>
-            </a>
-          </div>
-
-          <div class="footer-hook">
-            <script type="application/ld+json">
-              {
-                "@context": "http://schema.org/",
-                "@type": "Organization",
-                "name": "Vehicles - Epsilon Premium Osclass Classifieds Theme",
-                "url": "https://epsilon.mb-themes.com/vehicles"
-              }
-            </script>
-
-            <script type="text/javascript">
-              var fi_favorite_url = "index440f.html?page=ajax&amp;action=custom&amp;ajaxfile=favorite_items/ajax.php";
-              var fi_empty = "You do not have any favorite listings";
-            </script>
-            <script type="text/javascript">
-              $(".flashmessage .ico-close").click(function () {
-                $(this).parent().hide();
-              });
-            </script>
-            <script type="text/javascript">
-              var faqBaseUrl = "index.html";
-            </script>
-            <div style="display: none" id="mo-fancy-dialog"></div>
-            <div style="display: none" id="mo-fancy-overlay"></div>
-            <script type="text/javascript">
-              var moValidPriceReq = "Price: This field is required.";
-              var moValidNameReq = "Name: This field is required.";
-              var moValidNameShort = "Name: Name is too short.";
-              var moValidEmailReq = "Email: This field is required.";
-              var moValidEmailShort = "Email: Not valid email format.";
-              var moYourReply = "Your reply";
-            </script>
-          </div>
-          <div class="footer-widgets"></div>
-        </section>
-
-        <section class="two">
-          <a href="contact.html">Contact us</a>
-
-          <a href="https://osclasspoint.com/">Osclass Market</a>
-
-          <span>Copyright &copy; 2023 EpsilonTheme All rights reserved.</span>
-        </section>
-      </div>
-    </footer>
-
-    <div id="navi-bar" class="isMobile">
-      <a href="index.html" class="l1">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="20" height="20"><path d="M570.24 247.41L323.87 45a56.06 56.06 0 0 0-71.74 0L5.76 247.41a16 16 0 0 0-2 22.54L14 282.25a16 16 0 0 0 22.53 2L64 261.69V448a32.09 32.09 0 0 0 32 32h128a32.09 32.09 0 0 0 32-32V344h64v104a32.09 32.09 0 0 0 32 32h128a32.07 32.07 0 0 0 32-31.76V261.67l27.53 22.62a16 16 0 0 0 22.53-2L572.29 270a16 16 0 0 0-2.05-22.59zM463.85 432H368V328a32.09 32.09 0 0 0-32-32h-96a32.09 32.09 0 0 0-32 32v104h-96V222.27L288 77.65l176 144.56z" /></svg>
-        <span>Home</span>
-      </a>
-
-      <a href="user/login.html" class="l2">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20"><path d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288zm-96-216H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h224c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16zm-96 96H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z" /></svg>
-
-        <span>Messages</span>
-      </a>
-
-      <a href="item/new.html" class="post l3">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="20" height="20"><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" /></svg>
-      </a>
-
-      <a href="user/login.html" class="l4 favorite">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="20" width="20"><path d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" /></svg>
-
-        <span>Favorite</span>
-      </a>
-
-      <a class="l6 location" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="18" height="18"><path d="M347.94 129.86L203.6 195.83a31.938 31.938 0 0 0-15.77 15.77l-65.97 144.34c-7.61 16.65 9.54 33.81 26.2 26.2l144.34-65.97a31.938 31.938 0 0 0 15.77-15.77l65.97-144.34c7.61-16.66-9.54-33.81-26.2-26.2zm-77.36 148.72c-12.47 12.47-32.69 12.47-45.16 0-12.47-12.47-12.47-32.69 0-45.16 12.47-12.47 32.69-12.47 45.16 0 12.47 12.47 12.47 32.69 0 45.16zM248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 448c-110.28 0-200-89.72-200-200S137.72 56 248 56s200 89.72 200 200-89.72 200-200 200z" /></svg>
-
-        <span> Location </span>
-      </a>
-    </div>
+    {% include 'home/footer.html' %} {% include 'mobile_sidemenu.html' %}
 
     <div id="body-banner" class="bleft">
       <div id="banner-theme" class="banner-theme banner-body_left not767 is-demo">
@@ -1112,226 +606,7 @@
     <div id="menu-cover" class="mobile-box">
       <svg class="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="32px" height="32px"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
     </div>
-
-    <div id="side-menu" class="mobile-box">
-      <div class="wrap">
-        <div class="section lead">
-          <a href="user/login.html" class="img-container" target="_blank" title="Upload profile picture">
-            <img src="oc-content/themes/epsilon/images/default-user-image.png" alt="Non-logged user" width="36" height="36" />
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 408c-66.2 0-120-53.8-120-120s53.8-120 120-120 120 53.8 120 120-53.8 120-120 120zm0-192c-39.7 0-72 32.3-72 72s32.3 72 72 72 72-32.3 72-72-32.3-72-72-72zm-24 72c0-13.2 10.8-24 24-24 8.8 0 16-7.2 16-16s-7.2-16-16-16c-30.9 0-56 25.1-56 56 0 8.8 7.2 16 16 16s16-7.2 16-16zm110.7-145H464v288H48V143h121.3l24-64h125.5l23.9 64zM324.3 31h-131c-20 0-37.9 12.4-44.9 31.1L136 95H48c-26.5 0-48 21.5-48 48v288c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V143c0-26.5-21.5-48-48-48h-88l-14.3-38c-5.8-15.7-20.7-26-37.4-26z" /></svg>
-          </a>
-
-          <div class="line1">Hello <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAV1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/yD3UjQH3wDcw0fbemg4jGwfjsjbtsCUln7uvgx8acIMFEBJKOhEtweMJKjHHmy5sUxcOPUiRcB9IUWvxAAAACnRSTlMAMRr/81Lhpcd5+GBt8QAAAwBJREFUWMPtmNd2pSAUhqOiWOCIvb7/cw7tKCItOncz+yJxmfCt3YB/+/Pz3/6SpTlIQA6L+CWnSL4Go1f+JIrBF17lKigB6WMQoMtbPLX9LFDFOxCzlqNA8Sq0YesnjHv+/Nvo0gJCmJ7JHnrq1EAfsl9lPJJJzs7qJ/OEW167p0U/bJhEdEH9FME8y+EV0OK2H7hPGM9hLsUKYuy69QvCeNrYUy+C82Ypyk5OV1IjtUwPZW0iuDmkcApnLUuVRH2ZBv6rD4itEBGRZZUOqaSWIzYRG8icO5g5NCK2vEu6j0YSiAFPxw62+sNbh4jl3V5pJInA+Ig+N9dLdGDdyOVLpZPa9vxp9ymWeR6rL6mpjscjT8LqDqGutnSm9KeuKy+p5llE9BWA5i0x0vyQzkuS9eyMWWINPYp/+FQVcpLkXxHrAmPhlzKMVJ6g5AZiL4/lHpITxA7U6hNGcoJY0dZAkhPEd1kXRnKCYsAbLYjkBAmXrKQviJPcIHnWm0mKUZITxDt7JUjZqhZSVXuTzTsbeUj0nRMEjz2EPi7S5wzdB9JJKgYpHF9oGqlpbBwLKFIujgvJEpen/G6S9tICEkft6CA1WuZNIKpbgTizR2QlnRvFClKUi0pCmkMa+Q66SpiDdOugxge66taDdEs18oGAdvmZSZUfdF7E8jquiRFUhng04YELjtlKCggt54jt1GNGkjHZ4LZhhX76ik0TCenlJ0zz3so/Cz22MX0/mEl6Qy63Kzs+9ViyTWxWMJL0jtzvugYKX2ah79tJJKpetNi0XTPeJ5xIEZuqPF9cWSImfQRFcNOsKf2ltNtuUjX8ehyolO4PpzIPiZhnt1RKaTz1m2DlhSqq7jbeiq+eJLOc8HirOUm7dZiUZ9JMiyZBLlJnV8c/KbjkOT/gu8UfEAcMRnJsEalbtd1KRt+8HZ2oQi3CsCsosiYBk22cQv79ItUDHveFIESWfXw6/6sTnJLBJx83CqBjsoejf1xcvMoff4tgARY8d3RqLl59sfmH7Q97YGQsT2rqKAAAAABJRU5ErkJggg==" alt="wave" /></div>
-          <strong class="line2">Welcome!</strong>
-
-          <a class="line3" href="user/login.html">Sign in or register</a>
-        </div>
-
-        <div class="section delim-top">
-          <a href="item/new.html" class="publish">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M352 240v32c0 6.6-5.4 12-12 12h-88v88c0 6.6-5.4 12-12 12h-32c-6.6 0-12-5.4-12-12v-88h-88c-6.6 0-12-5.4-12-12v-32c0-6.6 5.4-12 12-12h88v-88c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v88h88c6.6 0 12 5.4 12 12zm96-160v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V80c0-26.5 21.5-48 48-48h352c26.5 0 48 21.5 48 48zm-48 346V86c0-3.3-2.7-6-6-6H54c-3.3 0-6 2.7-6 6v340c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z" /></svg>
-            Post an ad
-          </a>
-
-          <a href="search.html" class="search">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" /></svg>
-            Search
-          </a>
-        </div>
-
-        <div class="section delim-top">
-          <a href="user/login.html" class="login">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M144 112v51.6H48c-26.5 0-48 21.5-48 48v88.6c0 26.5 21.5 48 48 48h96v51.6c0 42.6 51.7 64.2 81.9 33.9l144-143.9c18.7-18.7 18.7-49.1 0-67.9l-144-144C195.8 48 144 69.3 144 112zm192 144L192 400v-99.7H48v-88.6h144V112l144 144zm80 192h-84c-6.6 0-12-5.4-12-12v-24c0-6.6 5.4-12 12-12h84c26.5 0 48-21.5 48-48V160c0-26.5-21.5-48-48-48h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96z" /></svg>
-            Log in
-          </a>
-
-          <a href="user/register.html" class="register">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96zm89.6 256c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zm224-248h-72v-72c0-8.8-7.2-16-16-16h-16c-8.8 0-16 7.2-16 16v72h-72c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h72v72c0 8.8 7.2 16 16 16h16c8.8 0 16-7.2 16-16v-72h72c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z" /></svg>
-            Register account
-          </a>
-        </div>
-
-        <div class="section delim-top">
-          <a href="user/login.html" class="favorite">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="18" width="18"><path d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" /></svg>
-            Favorite listings
-          </a>
-        </div>
-
-        <div class="section delim-top">
-          <a href="#" class="open-box language" data-box="language">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm-32 50.8v11.3c0 11.9-12.5 19.6-23.2 14.3l-24-12c14.9-6.4 30.7-10.9 47.2-13.6zm32 369.8V456c-110.3 0-200-89.7-200-200 0-29.1 6.4-56.7 17.6-81.7 9.9 14.7 25.2 37.4 34.6 51.1 5.2 7.6 11.2 14.6 18.1 20.7l.8.7c9.5 8.6 20.2 16 31.6 21.8 14 7 34.4 18.2 48.8 26.1 10.2 5.6 16.5 16.3 16.5 28v32c0 8.5 3.4 16.6 9.4 22.6 15 15.1 24.3 38.7 22.6 51.3zm42.7 22.7l17.4-46.9c2-5.5 3.3-11.2 4.8-16.9 1.1-4 3.2-7.7 6.2-10.7l11.3-11.3c8.8-8.7 13.7-20.6 13.7-33 0-8.1-3.2-15.9-8.9-21.6l-13.7-13.7c-6-6-14.1-9.4-22.6-9.4H232c-9.4-4.7-21.5-32-32-32s-20.9-2.5-30.3-7.2l-11.1-5.5c-4-2-6.6-6.2-6.6-10.7 0-5.1 3.3-9.7 8.2-11.3l31.2-10.4c5.4-1.8 11.3-.6 15.5 3.1l9.3 8.1c1.5 1.3 3.3 2 5.2 2h5.6c6 0 9.8-6.3 7.2-11.6l-15.6-31.2c-1.6-3.1-.9-6.9 1.6-9.3l9.9-9.6c1.5-1.5 3.5-2.3 5.6-2.3h9c2.1 0 4.2-.8 5.7-2.3l8-8c3.1-3.1 3.1-8.2 0-11.3l-4.7-4.7c-3.1-3.1-3.1-8.2 0-11.3L264 112l4.7-4.7c6.2-6.2 6.2-16.4 0-22.6l-28.3-28.3c2.5-.1 5-.4 7.6-.4 78.2 0 145.8 45.2 178.7 110.7l-13 6.5c-3.7 1.9-6.9 4.7-9.2 8.1l-19.6 29.4c-5.4 8.1-5.4 18.6 0 26.6l18 27c3.3 5 8.4 8.5 14.1 10l29.2 7.3c-10.8 84-73.9 151.9-155.5 169.7z" /></svg>
-            Select language <svg class="indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" width="20px" height="20px"><path d="M24.707 38.101L4.908 57.899c-4.686 4.686-4.686 12.284 0 16.971L185.607 256 4.908 437.13c-4.686 4.686-4.686 12.284 0 16.971L24.707 473.9c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L41.678 38.101c-4.687-4.687-12.285-4.687-16.971 0z" /></svg>
-          </a>
-
-          <a href="#" class="open-box location" data-box="location">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M347.94 129.86L203.6 195.83a31.938 31.938 0 0 0-15.77 15.77l-65.97 144.34c-7.61 16.65 9.54 33.81 26.2 26.2l144.34-65.97a31.938 31.938 0 0 0 15.77-15.77l65.97-144.34c7.61-16.66-9.54-33.81-26.2-26.2zm-77.36 148.72c-12.47 12.47-32.69 12.47-45.16 0-12.47-12.47-12.47-32.69 0-45.16 12.47-12.47 32.69-12.47 45.16 0 12.47 12.47 12.47 32.69 0 45.16zM248 8C111.03 8 0 119.03 0 256s111.03 248 248 248 248-111.03 248-248S384.97 8 248 8zm0 448c-110.28 0-200-89.72-200-200S137.72 56 248 56s200 89.72 200 200-89.72 200-200 200z" /></svg>
-            Change location <svg class="indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" width="20px" height="20px"><path d="M24.707 38.101L4.908 57.899c-4.686 4.686-4.686 12.284 0 16.971L185.607 256 4.908 437.13c-4.686 4.686-4.686 12.284 0 16.971L24.707 473.9c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L41.678 38.101c-4.687-4.687-12.285-4.687-16.971 0z" /></svg>
-          </a>
-
-          <a href="#" class="open-box pages" data-box="pages">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm0-338c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z" /></svg>
-            Help <svg class="indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" width="20px" height="20px"><path d="M24.707 38.101L4.908 57.899c-4.686 4.686-4.686 12.284 0 16.971L185.607 256 4.908 437.13c-4.686 4.686-4.686 12.284 0 16.971L24.707 473.9c4.686 4.686 12.284 4.686 16.971 0l209.414-209.414c4.686-4.686 4.686-12.284 0-16.971L41.678 38.101c-4.687-4.687-12.285-4.687-16.971 0z" /></svg>
-          </a>
-        </div>
-
-        <div class="section delim-top dark-mode">
-          <a href="#" class="disable-dark-mode">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M494.2 221.9l-59.8-40.5 13.7-71c2.6-13.2-1.6-26.8-11.1-36.4-9.6-9.5-23.2-13.7-36.2-11.1l-70.9 13.7-40.4-59.9c-15.1-22.3-51.9-22.3-67 0l-40.4 59.9-70.8-13.7C98 60.4 84.5 64.5 75 74.1c-9.5 9.6-13.7 23.1-11.1 36.3l13.7 71-59.8 40.5C6.6 229.5 0 242 0 255.5s6.7 26 17.8 33.5l59.8 40.5-13.7 71c-2.6 13.2 1.6 26.8 11.1 36.3 9.5 9.5 22.9 13.7 36.3 11.1l70.8-13.7 40.4 59.9C230 505.3 242.6 512 256 512s26-6.7 33.5-17.8l40.4-59.9 70.9 13.7c13.4 2.7 26.8-1.6 36.3-11.1 9.5-9.5 13.6-23.1 11.1-36.3l-13.7-71 59.8-40.5c11.1-7.5 17.8-20.1 17.8-33.5-.1-13.6-6.7-26.1-17.9-33.7zm-112.9 85.6l17.6 91.2-91-17.6L256 458l-51.9-77-90.9 17.6 17.6-91.2-76.8-52 76.8-52-17.6-91.2 91 17.6L256 53l51.9 76.9 91-17.6-17.6 91.1 76.8 52-76.8 52.1zM256 152c-57.3 0-104 46.7-104 104s46.7 104 104 104 104-46.7 104-104-46.7-104-104-104zm0 160c-30.9 0-56-25.1-56-56s25.1-56 56-56 56 25.1 56 56-25.1 56-56 56z" /></svg>
-            Disable dark mode
-          </a>
-
-          <a href="#" class="enable-dark-mode" style="display: none">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M279.135 512c78.756 0 150.982-35.804 198.844-94.775 28.27-34.831-2.558-85.722-46.249-77.401-82.348 15.683-158.272-47.268-158.272-130.792 0-48.424 26.06-92.292 67.434-115.836 38.745-22.05 28.999-80.788-15.022-88.919A257.936 257.936 0 0 0 279.135 0c-141.36 0-256 114.575-256 256 0 141.36 114.576 256 256 256zm0-464c12.985 0 25.689 1.201 38.016 3.478-54.76 31.163-91.693 90.042-91.693 157.554 0 113.848 103.641 199.2 215.252 177.944C402.574 433.964 344.366 464 279.135 464c-114.875 0-208-93.125-208-208s93.125-208 208-208z" /></svg>
-            Enable dark mode
-          </a>
-        </div>
-      </div>
-
-      <div class="box pages" data-box="pages">
-        <div class="nav">
-          <a href="#" class="back"><i class="fas fa-chevron-left"></i></a>
-          <span>Support pages</span>
-        </div>
-
-        <div class="section">
-          <a href="terms-and-conditions-p24.html">Terms and Conditions</a>
-          <a href="privacy-policy-p25.html">Privacy Policy</a>
-          <a href="legal-p26.html">Legal Notice</a>
-          <a href="promotion-p27.html">How promotion works</a>
-        </div>
-      </div>
-
-      <div class="box location" data-box="location">
-        <div class="nav">
-          <a href="#" class="back"><i class="fas fa-chevron-left"></i></a>
-          <span>Change location</span>
-        </div>
-
-        <div class="section">
-          <div class="head isDesktop isTablet">Default location</div>
-          <div class="subhead isDesktop isTablet">Select your preferred location to search and sell faster.</div>
-
-          <div class="row picker">
-            <div class="input-box picker location">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" /></svg>
-              <input name="location-pick" class="location-pick" type="text" placeholder="Search location..." autocomplete="off" />
-              <i class="clean fas fa-times-circle"></i>
-              <div class="results"></div>
-            </div>
-          </div>
-
-          <div class="row navigator">
-            <a href="#" class="locate-me">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 168c-48.6 0-88 39.4-88 88s39.4 88 88 88 88-39.4 88-88-39.4-88-88-88zm0 128c-22.06 0-40-17.94-40-40s17.94-40 40-40 40 17.94 40 40-17.94 40-40 40zm240-64h-49.66C435.49 145.19 366.81 76.51 280 65.66V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v49.66C145.19 76.51 76.51 145.19 65.66 232H16c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h49.66C76.51 366.81 145.19 435.49 232 446.34V496c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-49.66C366.81 435.49 435.49 366.8 446.34 280H496c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zM256 400c-79.4 0-144-64.6-144-144s64.6-144 144-144 144 64.6 144 144-64.6 144-144 144z" /></svg>
-              <strong data-alt-text="Click to refresh">Use current location</strong>
-              <span class="status">
-                <span class="init">Click to find closest city to your location</span>
-                <span class="not-supported" style="display: none">Geolocation is not supported by your browser</span>
-                <span class="failed" style="display: none">Unable to retrieve your location, it may be blocked</span>
-                <span class="failed-unfound" style="display: none">Unable to retrieve your location, no close city found</span>
-                <span class="loading" style="display: none">Locating...</span>
-                <span class="success" style="display: none"></span>
-                <span class="refresh" style="display: none">Refresh page to take effect</span>
-              </span>
-            </a>
-          </div>
-
-          <div class="row recent">
-            <div class="lead">Recent locations</div>
-
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NjcwMjM0IiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkFsaWNlIiwic19uYW1lX25hdGl2ZSI6bnVsbCwic19uYW1lX3RvcCI6bnVsbCwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiMjcuNzUyMjUwMDAwMCIsImRfY29vcmRfbG9uZyI6Ii05OC4wNjk3MjAwMDAwIn0%253D" class="location-elem">Alice</a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI5NTMyNTE3IiwiZmtfaV9yZWdpb25faWQiOiIyODU4Nzg3IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJQTCIsInNfbmFtZSI6IkJvcmtvd2ljZSIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOm51bGwsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjUxLjMyMDAzMTIwMDAiLCJkX2Nvb3JkX2xvbmciOiIyMC42ODM2NTg0MDAwIn0%253D" class="location-elem">Borkowice</a>
-          </div>
-
-          <div class="row popular">
-            <div class="lead">Popular cities</div>
-
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2ODYyMjA0IiwiZmtfaV9yZWdpb25faWQiOiI2ODYyMTgyIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IklyZXRvbiIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJJb3dhIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNDIuOTc0NzA1MzAwMCIsImRfY29vcmRfbG9uZyI6Ii05Ni4zMTgzNDU3MDAwIn0%253D" class="location-elem">Ireton, Iowa <em>253 items</em></a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NzAzMDYzIiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IktlcmVucyIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJUZXhhcyIsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjMyLjEzMDkxNDcwMDAiLCJkX2Nvb3JkX2xvbmciOiItOTYuMjI4NTAyMTAwMCJ9" class="location-elem">Kerens, Texas <em>97 items</em></a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NTAwNTcyIiwiZmtfaV9yZWdpb25faWQiOiI3MTAxNzYwIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkF1ZHVib24iLCJzX25hbWVfbmF0aXZlIjpudWxsLCJzX25hbWVfdG9wIjoiTmV3IEplcnNleSIsInNfbmFtZV90b3BfbmF0aXZlIjpudWxsLCJkX2Nvb3JkX2xhdCI6IjQwLjIyMDg1OTkwMDAiLCJkX2Nvb3JkX2xvbmciOiItNzQuNzY4OTAwMjAwMCJ9" class="location-elem">Audubon, New Jersey <em>3 items</em></a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI3MDk1MzEyIiwiZmtfaV9yZWdpb25faWQiOiI3MTAxNzYwIiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkF0bGFudGljIEhpZ2hsYW5kcyIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJOZXcgSmVyc2V5Iiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNDAuNDA3ODg2NTAwMCIsImRfY29vcmRfbG9uZyI6Ii03NC4wMzQzMDYwMDAwIn0%253D" class="location-elem">Atlantic Highlands, New Jersey <em>2 items</em></a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI5NTMyNTE3IiwiZmtfaV9yZWdpb25faWQiOiIyODU4Nzg3IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJQTCIsInNfbmFtZSI6IkJvcmtvd2ljZSIsInNfbmFtZV9uYXRpdmUiOm51bGwsInNfbmFtZV90b3AiOiJNYXpvdmlhIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiNTEuMzIwMDMxMjAwMCIsImRfY29vcmRfbG9uZyI6IjIwLjY4MzY1ODQwMDAifQ%253D%253D" class="location-elem">Borkowice, Mazovia <em>1 item</em></a>
-            <a href="index.html?manualCookieLocation=1&amp;hash=eyJma19pX2NpdHlfaWQiOiI2NjcwMjM0IiwiZmtfaV9yZWdpb25faWQiOiI2NzM2Mjg2IiwiZmtfY19jb3VudHJ5X2NvZGUiOiJVUyIsInNfbmFtZSI6IkFsaWNlIiwic19uYW1lX25hdGl2ZSI6bnVsbCwic19uYW1lX3RvcCI6IlRleGFzIiwic19uYW1lX3RvcF9uYXRpdmUiOm51bGwsImRfY29vcmRfbGF0IjoiMjcuNzUyMjUwMDAwMCIsImRfY29vcmRfbG9uZyI6Ii05OC4wNjk3MjAwMDAwIn0%253D" class="location-elem">Alice, Texas <em>1 item</em></a>
-          </div>
-
-          <div class="row buttons">
-            <a class="btn btn-secondary" href="index.html?cleanCookieLocation=1">Clean default location</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="box language" data-box="language">
-        <div class="nav">
-          <a href="#" class="back"><i class="fas fa-chevron-left"></i></a>
-          <span>Select language</span>
-        </div>
-
-        <div class="section">
-          <a class="lang" href="vehicles.html">
-            <img src="oc-content/themes/epsilon/images/country_flags/large/sy.png" alt="Country flag" />
-            <span>Arabic&#x200E;</span>
-          </a>
-          <a class="lang" href="vehicles.html">
-            <img src="oc-content/themes/epsilon/images/country_flags/large/cn.png" alt="Country flag" />
-            <span>Chinese (China)&#x200E;</span>
-          </a>
-          <a class="lang active" href="vehicles.html">
-            <img src="oc-content/themes/epsilon/images/country_flags/large/us.png" alt="Country flag" />
-            <span>English (US)&#x200E;</span>
-          </a>
-          <a class="lang" href="vehicles.html">
-            <img src="oc-content/themes/epsilon/images/country_flags/large/ro.png" alt="Country flag" />
-            <span>Romanian&#x200E;</span>
-          </a>
-          <a class="lang" href="vehicles.html">
-            <img src="oc-content/themes/epsilon/images/country_flags/large/ru.png" alt="Country flag" />
-            <span>Russian&#x200E;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="box filter" data-box="filter">
-        <div class="nav">
-          <a href="#" class="back close"><i class="fas fa-chevron-left"></i></a>
-          <span>Filter results</span>
-        </div>
-
-        <div class="section filter-menu"></div>
-      </div>
-    </div>
-
-    <a id="showcase-button" href="#" class="isMobile">
-      <i class="fas fa-cogs"></i>
-      <span>CONFIG</span>
-    </a>
-
-    <div id="showcase-box">
-      <div class="container nice-scroll no-visible-scroll">
-        <a target="_blank" href="oc-admin/index6f31.html?page=appearance&amp;action=render&amp;file=oc-content/themes/epsilon/admin/configure.php">Backoffice</a>
-        <a href="#" class="show-banners" data-alt-text="Hide Banners">Show Banners</a>
-
-        <div class="switch-color">
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=3b49df" style="background-color: #3b49df" class="active"></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=3bdfc0" style="background-color: #3bdfc0" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=ad3bdf" style="background-color: #ad3bdf" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=df3b54" style="background-color: #df3b54" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=5dcd0b" style="background-color: #5dcd0b" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=d99f0c" style="background-color: #d99f0c" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=171717" style="background-color: #171717" class=""></a>
-          <a href="vehicles.html?setCustomColor=1&amp;customColor=c3c400" style="background-color: #c3c400" class=""></a>
-        </div>
-      </div>
-    </div>
-
-    <style>
-      a.fi_img-link.fi-no-image > img {
-        content: url("oc-content/themes/epsilon/images/no-image.png");
-      }
-    </style>
   </body>
-
-  <!-- Mirrored from epsilon.mb-themes.com/vehicles by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Oct 2023 02:24:43 GMT -->
 </html>
-<!-- 0.0640389919281 seg. -->
+
 {% endblock %}
