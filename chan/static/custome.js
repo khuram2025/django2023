@@ -150,5 +150,19 @@ $(document).ready(function () {
       subcategorySelect.style.display = 'none';
     }
   });
-}); <
-/script>
+});
+
+
+function toggleDescription() {
+  var visibleText = document.querySelector('.desc-text .visible');
+  var hiddenText = document.querySelector('.desc-text .hidden');
+  if (visibleText.style.display === 'none') {
+    visibleText.style.display = 'block';
+    hiddenText.style.display = 'none';
+  } else {
+    visibleText.style.display = 'none';
+    hiddenText.style.display = 'block';
+  }
+}
+
+</script>

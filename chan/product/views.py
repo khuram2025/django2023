@@ -32,6 +32,8 @@ def create_product(request):
         form = ProductForm(user=request.user)
 
     return render(request, 'product/add_product.html', {'form': form})
+
+
 from django.http import JsonResponse
 
 def load_subcategories(request):
