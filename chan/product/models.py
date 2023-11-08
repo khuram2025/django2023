@@ -4,6 +4,8 @@ from account.models import CustomUser
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django.contrib.postgres.fields import JSONField as PostgresJSONField
+from django.db.models import JSONField as DefaultJSONField
 
 class Category(MPTTModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"))
@@ -41,8 +43,6 @@ class Category(MPTTModel):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-
-
 class City(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("City"))
     description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
@@ -52,8 +52,6 @@ class City(models.Model):
 
     def __str__(self):
         return f"{self.name}, {self.name}"
-
-
 
 class SellerInformation(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, verbose_name=_("User Account"))
@@ -103,6 +101,8 @@ class Product(models.Model):
     youtube_video_url = models.URLField(verbose_name=_("YouTube Video URL"), blank=True, null=True)
     facebook_video_url = models.URLField(verbose_name=_("Facebook Video URL"), blank=True, null=True)
     web_link = models.URLField(verbose_name=_("Web Link"), blank=True, null=True)
+
+    custom_fields = DefaultJSONField(blank=True, null=True)
    
     
     # Timestamps
@@ -124,3 +124,54 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.alt_text if self.alt_text else f"Image for {self.product.title}"
+    
+class CustomField(models.Model):
+    FIELD_TYPES = [
+        ('number', _('Number')),
+        ('email', _('Email')),
+        ('phone', _('Phone')),
+        ('url', _('URL')),
+        ('color', _('Color')),
+        ('textarea', _('Textarea')),
+        ('select', _('Select Box')),
+        ('checkbox', _('Checkbox')),
+        ('radio', _('Radio Button')),
+        ('date', _('Date')),
+        ('date_interval', _('Date Interval')),
+    ]
+    
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    field_type = models.CharField(max_length=50, choices=FIELD_TYPES, verbose_name=_("Type"))
+    
+    # For select, checkbox, and radio fields, store options as comma-separated values
+    options = models.TextField(verbose_name=_("Options"), blank=True, help_text=_("Comma-separated values"))
+
+    categories = models.ManyToManyField(
+        Category,
+        related_name='custom_fields',
+        verbose_name=_('Categories'),
+        blank=True,
+    )
+    
+    def __str__(self):
+        return self.name
+
+class CategoryCustomField(models.Model):
+    category = models.ForeignKey(
+        Category,
+        related_name='category_custom_fields',  # Unique related_name
+        on_delete=models.CASCADE
+    )
+    custom_field = models.ForeignKey(CustomField, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.category.title} - {self.custom_field.name}"
+
+
+class CustomFieldValue(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='custom_field_values')
+    custom_field = models.ForeignKey(CustomField, on_delete=models.CASCADE)
+    value = models.TextField(verbose_name=_("Value"))
+
+    def __str__(self):
+        return f"{self.custom_field.name}: {self.value}"
