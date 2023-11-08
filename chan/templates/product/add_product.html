@@ -47,10 +47,12 @@
         </div>
 
         <!-- Condition Field -->
+        
         <div class="form-section">
           <label for="id_condition">{{ form.condition.label }}</label>
           {{ form.condition }}
         </div>
+      
 
         <!-- Title Field -->
         <div class="form-section">
@@ -107,6 +109,23 @@
             {{ form.email_visible }} Email visible on ad
           </label>
         </div>
+        
+        <div  id="custom-fields-container" class="form-section">
+          <h2>Additional Information</h2>
+          {% for field in form.custom_fields %}
+              <div class="id="custom-fields-container" form-group">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}
+                      <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                  {% for error in field.errors %}
+                      <div class="alert alert-danger">{{ error }}</div>
+                  {% endfor %}
+              </div>
+          {% endfor %}
+      </div>
+
         <!-- Formset for images -->
         <div class="form-section">
           <div class="image-upload-instructions">
@@ -204,6 +223,45 @@
       $('#id_category').change(updateSubcategoryOptions);
       // No need to run on document ready if you want it to only show when a category is selected
     });
+    
+  </script>
+  <script>
+  // The rest of your code...
+
+$('#id_category').change(function () {
+  var categoryId = $(this).val();
+  loadCustomFields(categoryId);
+  // No need to call updateSubcategoryOptions() here if it's already called inside loadCustomFields()
+});
+
+function loadCustomFields(categoryId) {
+  if (!categoryId) {
+      $('#custom-fields-container').empty();
+      return;
+  }
+  $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
+      $('#custom-fields-container').empty();
+      $.each(data.custom_fields, function (index, field) {
+          // You'll need to adjust this part based on the actual data returned from your view
+          // Create form elements based on field type
+          // For example, if field.type is 'text':
+          var input = $('<input>', {
+              type: 'text', // Use field.field_type to determine the correct type
+              class: 'form-control',
+              name: 'custom_field_' + field.id,
+              id: 'id_custom_field_' + field.id,
+              placeholder: field.name // Use field.name or another property for the placeholder
+          });
+          var label = $('<label>', {
+              for: 'id_custom_field_' + field.id,
+              text: field.name // Use field.name or another property for the label
+          });
+          var div = $('<div>', {class: 'form-group'}).append(label).append(input);
+          $('#custom-fields-container').append(div);
+      });
+  });
+}
+
   </script>
 
 

@@ -9,6 +9,16 @@ from django.contrib import messages
 from django.db.models import F
 from django.db.models import Count
 from django.http import Http404
+from .models import CustomField
+
+def ajax_load_custom_fields(request):
+    category_id = request.GET.get('category_id')
+    if category_id:
+        fields = CustomField.objects.filter(categories__id=category_id).values('id', 'name', 'field_type', 'options')
+        fields_data = list(fields)
+        return JsonResponse({'custom_fields': fields_data})
+    else:
+        return JsonResponse({'custom_fields': []})
 
 def create_product(request):
     if request.method == 'POST':
