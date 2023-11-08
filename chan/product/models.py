@@ -99,6 +99,10 @@ class Product(models.Model):
     title = models.CharField(max_length=255, verbose_name=_("Listing Title"))
     description = models.TextField(verbose_name=_("Listing Description"))
     
+    # Optional link fields
+    youtube_video_url = models.URLField(verbose_name=_("YouTube Video URL"), blank=True, null=True)
+    facebook_video_url = models.URLField(verbose_name=_("Facebook Video URL"), blank=True, null=True)
+    web_link = models.URLField(verbose_name=_("Web Link"), blank=True, null=True)
    
     
     # Timestamps

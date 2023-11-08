@@ -64,11 +64,33 @@
           {{ form.description }}
         </div>
 
+        <!-- YouTube Video URL Field -->
+        <div class="form-section">
+          <label for="id_youtube_video_url">{{ form.youtube_video_url.label }}</label>
+          {{ form.youtube_video_url }}
+        </div>
+
+        <!-- Facebook Video URL Field -->
+        <div class="form-section">
+          <label for="id_facebook_video_url">{{ form.facebook_video_url.label }}</label>
+          {{ form.facebook_video_url }}
+        </div>
+
+        <!-- Web Link Field -->
+        <div class="form-section">
+          <label for="id_web_link">{{ form.web_link.label }}</label>
+          {{ form.web_link }}
+        </div>
+
+        <!-- Rest of your form fields go here -->
+
+
+
         <!-- Seller Information Fields -->
-         <div class="form-section">
+        <div class="form-section">
           <label for="id_phone_number">Contact Name</label>
           {{ form.contact_name }}
-          
+
         </div>
         <div class="form-section">
           <label for="id_phone_number">Phone Number</label>
@@ -86,22 +108,22 @@
           </label>
         </div>
         <!-- Formset for images -->
-      <div class="form-section">
-  <div class="image-upload-instructions">
-    You can upload up to 15 pictures
-  </div>
-  <div class="image-upload-box">
-    <label for="id_images">
-      <i class="fa fa-camera" aria-hidden="true"></i> <!-- Use your preferred icon library -->
-      <span>Click or Drop for Upload Image</span>
-      <input type="file" name="images" multiple id="id_images" class="form-control">
-    </label>
-  </div>
-  <!-- Image preview container -->
-  <div id="image-preview-container" class="image-preview-row">
-    <!-- Previews will be inserted here -->
-  </div>
-</div>
+        <div class="form-section">
+          <div class="image-upload-instructions">
+            You can upload up to 15 pictures
+          </div>
+          <div class="image-upload-box">
+            <label for="id_images">
+              <i class="fa fa-camera" aria-hidden="true"></i> <!-- Use your preferred icon library -->
+              <span>Click or Drop for Upload Image</span>
+              <input type="file" name="images" multiple id="id_images" class="form-control">
+            </label>
+          </div>
+          <!-- Image preview container -->
+          <div id="image-preview-container" class="image-preview-row">
+            <!-- Previews will be inserted here -->
+          </div>
+        </div>
 
 
         <!-- Messages -->
@@ -163,9 +185,7 @@
         var mainCategory = $('#id_category').val();
         $('#id_subcategory').empty().append('<option value="">Select subcategory</option>');
         if (mainCategory) {
-          $.getJSON('{% url 'product:ajax_load_subcategories' %}', {
-              category_id: mainCategory
-            },
+          $.getJSON('{% url 'product:ajax_load_subcategories' %}', {category_id: mainCategory},
             function (data) {
               $.each(data, function (index, item) {
                 $('#id_subcategory').append($('<option>', {

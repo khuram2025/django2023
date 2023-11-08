@@ -12,33 +12,26 @@ from django.http import Http404
 
 def create_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, user=request.user if request.user.is_authenticated else None)
+        form = ProductForm(request.POST, request.FILES, user=request.user)
         
         if form.is_valid():
-            try:
-                # Attach the user to the form before saving.
-                form._user = request.user if request.user.is_authenticated else None
-                product = form.save()  # Save the product to get an ID for the foreign key
-                
-                # Handle the images
-                images = request.FILES.getlist('images')
-                for image in images:
-                    ProductImage.objects.create(product=product, image=image)
-                
-                messages.success(request, 'Product added successfully!')
-                return redirect('product_detail', pk=product.pk)
-            except Exception as e:
-                messages.error(request, f"Error occurred during save process: {e}")
+            product = form.save(commit=False)
+            product.seller_information.user = form.user if form.user.is_authenticated else None
+            product.save()
+            
+            # Handle the images
+            images = request.FILES.getlist('images')
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
+            
+            messages.success(request, 'Product added successfully!')
+            return redirect('product:product_detail', pk=product.pk)
         else:
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
-        form = ProductForm(user=request.user if request.user.is_authenticated else None)
+        form = ProductForm(user=request.user)
 
-    return render(request, 'product/add_product.html', {
-        'form': form
-    })
-
-
+    return render(request, 'product/add_product.html', {'form': form})
 from django.http import JsonResponse
 
 def load_subcategories(request):
