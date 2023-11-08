@@ -163,7 +163,7 @@
                 </a>
 
                 <a class="bar" href="../../for-sale/electronics/samsung-s7-with-cover_i249.html">
-                  <div class="price isGrid isDetail"><span>620.00 $</span></div>
+                  <div class="price isGrid isDetail"><span>{{product.price}} Rs.</span></div>
 
                   <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
                 </a>
@@ -188,30 +188,26 @@
                 <div class="info">
 
 
-                  Ireton, United States </div>
+                  {{product.city}} </div>
 
-                <a class="title" href="../../for-sale/electronics/samsung-s7-with-cover_i249.html">Samsung S7 with
-                  cover</a>
+                <a class="title" href="../../for-sale/electronics/samsung-s7-with-cover_i249.html">{{product.title}}r</a>
 
-                <div class="description isDetail">a imperdiet, sapien quis vehicula malesuada, sem massa porttitor eros,
-                  sed vulputate ipsum dui et massa. Vivamus imperdiet pulvinar massa, sed gravida dui. Class aptent
-                  taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent volutpat a et
-                  sapien vehicula, at facilisis felis malesuada. Sed condimentum porttitor massa, convallis...</div>
+                <div class="description isDetail">{{product.description}}.</div>
 
-                <div class="price standalone isList"><span>620.00 $</span></div>
+                <div class="price standalone isList"><span>{{product.price}} Rs.</span></div>
 
                 <div class="extra">
                   <span>1 year ago</span>
-                  <span>Electronics</span>
+                  <span>{{product.category}}</span>
 
 
 
 
-                  <span>1092 people viewed</span>
+                  <span>{{ product.view_count }} people viewed</span>
                 </div>
 
                 <div class="action isDetail">
-                  <div class="price"><span>620.00 $</span></div>
+                  <div class="price"><span>{{product.price}} Rs.</span></div>
                 </div>
 
 
@@ -224,7 +220,7 @@
               </div>
 
               <div class="right isList">
-                <div class="price"><span>620.00 $</span></div>
+                <div class="price"><span>{{product.price}} Rs.</span></div>
 
                 <div class="favorite"><a href="javascript://" class="fi_save_favorite fi_save fi_fav_249" rel="249"
                     title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a></div>
@@ -268,12 +264,7 @@
   </div>
 
 
-  <section class="promo">
-    <div class="container">
-      <span>Are you a professional seller?</span>
-      <a href="../register.html" class="btn btn-transparent">Create an account</a>
-    </div>
-  </section>
+  {% include 'home/pro_seller.html' %}
   {% include 'home/footer.html' %}
 
   <div id="navi-bar" class="isMobile">
