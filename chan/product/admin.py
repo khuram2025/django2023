@@ -1,11 +1,32 @@
 from django.contrib import admin
-from .models import Product, ProductImage, CustomFieldValue
+from .models import City, Product, ProductImage, CustomFieldValue, SellerInformation
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils.html import escape
 from django.utils.html import format_html
+from mptt.admin import MPTTModelAdmin  # Import this if you are using django-mptt for Category
+
+# Category Admin
+class CategoryAdmin(MPTTModelAdmin):  # Use MPTTModelAdmin for hierarchical models like Category
+    list_display = ['title', 'status', 'created_at', 'updated_at']
+    prepopulated_fields = {'slug': ('title',)}
+
+# City Admin
+class CityAdmin(admin.ModelAdmin):
+    list_display = ['name', 'seo_title']
+    search_fields = ['name']
+
+# SellerInformation Admin
+class SellerInformationAdmin(admin.ModelAdmin):
+    list_display = ['contact_name', 'phone_number', 'email', 'status', 'member_since']
+    search_fields = ['contact_name', 'phone_number', 'email']
+
+# Register your models here.
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(City, CityAdmin)
+admin.site.register(SellerInformation, SellerInformationAdmin)
 
 class CustomFieldForm(forms.ModelForm):
     class Meta:

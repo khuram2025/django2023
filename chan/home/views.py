@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 
+from product.models import Category
+
 
 def product_detail(request, product_id):
     # Dummy product data
@@ -13,6 +15,8 @@ def product_detail(request, product_id):
     return render(request, 'product/product_detail.html', {'product': product})
 
 def index(request):
-    return render(request, 'home/index.html')
+    root_categories = Category.objects.filter(parent__isnull=True, status=True)
+    return render(request, 'home/index.html', {'categories': root_categories})
+
 def test(request):
     return render(request, 'product/product_detail.html')

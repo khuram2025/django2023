@@ -338,3 +338,17 @@
     height: calc(100vw * 0.1);
   }
 }
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Makes the div circular */
+  overflow: hidden; /* Ensures the image stays within the circle */
+  width: 64px; /* Adjust as needed */
+  height: 64px; /* Adjust as needed */
+}
+
+.category-icon img {
+  max-width: 100%; /* Ensures the image scales properly */
+  max-height: 100%;
+}
