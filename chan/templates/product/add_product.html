@@ -242,30 +242,67 @@ function loadCustomFields(categoryId) {
   $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
       $('#custom-fields-container').empty();
       $.each(data.custom_fields, function (index, field) {
-          // You'll need to adjust this part based on the actual data returned from your view
-          // Create form elements based on field type
-          // For example, if field.type is 'text':
-          var input = $('<input>', {
-              type: 'text', // Use field.field_type to determine the correct type
-              class: 'form-control',
-              name: 'custom_field_' + field.id,
-              id: 'id_custom_field_' + field.id,
-              placeholder: field.name // Use field.name or another property for the placeholder
-          });
+          var input;
+          switch(field.field_type) {
+              case 'text':
+              case 'number':
+              case 'email':
+              case 'url':
+              case 'date':
+                  input = $('<input>', {
+                      type: field.field_type,
+                      class: 'form-control',
+                      name: 'custom_field_' + field.id,
+                      id: 'id_custom_field_' + field.id
+                  });
+                  break;
+              case 'textarea':
+                  input = $('<textarea>', {
+                      class: 'form-control',
+                      name: 'custom_field_' + field.id,
+                      id: 'id_custom_field_' + field.id
+                  });
+                  break;
+              case 'select':
+                  input = $('<select>', {
+                      class: 'form-control',
+                      name: 'custom_field_' + field.id,
+                      id: 'id_custom_field_' + field.id
+                  });
+                  field.options.split(',').forEach(function(option) {
+                      input.append($('<option>', { value: option, text: option }));
+                  });
+                  break;
+              case 'radio':
+              case 'checkbox':
+                  input = $('<div>');
+                  field.options.split(',').forEach(function(option) {
+                      var singleOption = $('<input>', {
+                          type: field.field_type,
+                          name: 'custom_field_' + field.id,
+                          id: 'id_custom_field_' + field.id + '_' + option,
+                          value: option
+                      });
+                      var label = $('<label>', {
+                          text: option,
+                          'for': 'id_custom_field_' + field.id + '_' + option
+                      });
+                      input.append(singleOption).append(label);
+                  });
+                  break;
+              // Add cases for other types if necessary
+          }
+
           var label = $('<label>', {
-              for: 'id_custom_field_' + field.id,
-              text: field.name // Use field.name or another property for the label
+              'for': 'id_custom_field_' + field.id,
+              text: field.name
           });
+
           var div = $('<div>', {class: 'form-group'}).append(label).append(input);
           $('#custom-fields-container').append(div);
       });
   });
 }
-
   </script>
-
-
-
 </body>
-
 {% endblock %}

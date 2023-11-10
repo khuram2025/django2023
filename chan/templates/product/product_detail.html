@@ -102,6 +102,11 @@
 
 
               <span>ID: {{ product.id }}</span>
+
+              {% for field_name, field_value in custom_fields.items %}
+        <span>{{ field_name }}: {{ field_value }}</span>
+    {% endfor %}
+              
             </div>
 
             <div class="row price under-header p-1100000000x">{{ product.price }}</div>

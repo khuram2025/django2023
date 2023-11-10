@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, SellerInformation, ProductImage, Category, City, CustomField
+from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField
 from django import forms
 from .models import Product, SellerInformation, Category, City
 
@@ -104,12 +104,12 @@ class ProductForm(forms.ModelForm):
             product.seller_information = seller_info
         else:
             seller_info = SellerInformation(
-                contact_name=self.cleaned_data['contact_name'],
-                phone_number=self.cleaned_data['phone_number'],
-                email=self.cleaned_data['email'],
-                phone_visible=self.cleaned_data['phone_visible'],
-                email_visible=self.cleaned_data['email_visible'],
-            )
+                    contact_name=self.cleaned_data['contact_name'],
+                    phone_number=self.cleaned_data['phone_number'],
+                    email=self.cleaned_data['email'],
+                    phone_visible=self.cleaned_data['phone_visible'],
+                    email_visible=self.cleaned_data['email_visible'],
+                )
             seller_info.save()
             product.seller_information = seller_info
 
@@ -120,10 +120,11 @@ class ProductForm(forms.ModelForm):
         if commit:
             product.save()
 
-            for custom_field in CustomField.objects.filter(categories=product.category):
-                field_name = f"custom_field_{custom_field.pk}"
-                value = self.cleaned_data.get(field_name)
-                if value is not None:
+            # After saving the product, now save custom fields
+            for field_name, value in self.cleaned_data.items():
+                if field_name.startswith('custom_field_'):
+                    field_id = int(field_name.split('_')[-1])
+                    custom_field = CustomField.objects.get(id=field_id)
                     CustomFieldValue.objects.update_or_create(
                         product=product,
                         custom_field=custom_field,
@@ -133,7 +134,6 @@ class ProductForm(forms.ModelForm):
             self.save_m2m()
 
         return product
-
 
 
 class ProductImageForm(forms.ModelForm):

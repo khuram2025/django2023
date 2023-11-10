@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.models import CustomUser
-from .models import Product
+from .models import CustomFieldValue, Product
 from .forms import ProductForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
@@ -19,16 +19,27 @@ def ajax_load_custom_fields(request):
         return JsonResponse({'custom_fields': fields_data})
     else:
         return JsonResponse({'custom_fields': []})
-
 def create_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, user=request.user)
+        print("FORM DATA:", request.POST)
         
         if form.is_valid():
             product = form.save(commit=False)
             product.seller_information.user = form.user if form.user.is_authenticated else None
             product.save()
-            
+
+            # Handle custom fields
+            for key, value in request.POST.items():
+                if key.startswith('custom_field_'):
+                    field_id = int(key.split('_')[-1])
+                    custom_field = CustomField.objects.get(id=field_id)
+                    CustomFieldValue.objects.update_or_create(
+                        product=product,
+                        custom_field=custom_field,
+                        defaults={'value': value}
+                    )
+
             # Handle the images
             images = request.FILES.getlist('images')
             for image in images:
@@ -43,7 +54,6 @@ def create_product(request):
 
     return render(request, 'product/add_product.html', {'form': form})
 
-
 from django.http import JsonResponse
 
 def load_subcategories(request):
@@ -55,6 +65,10 @@ def product_detail(request, pk):
     try:
         # Retrieve the Product instance
         product = get_object_or_404(Product, pk=pk)
+        custom_field_values = CustomFieldValue.objects.filter(product=product)
+
+        custom_fields_dict = {cfv.custom_field.name: cfv.value for cfv in custom_field_values}
+        
         
         # Update the view count for the product
         Product.objects.filter(pk=pk).update(view_count=F('view_count') + 1)
@@ -71,7 +85,8 @@ def product_detail(request, pk):
         # Render the product details in the template with context
         context = {
             'product': product,
-            'related_products': related_products
+            'related_products': related_products,
+            'custom_fields': custom_fields_dict,
         }
         return render(request, 'product/product_detail.html', context)
     except Product.DoesNotExist:

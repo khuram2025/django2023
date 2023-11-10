@@ -5,6 +5,7 @@ from django import forms
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils.html import escape
+from django.utils.html import format_html
 
 class CustomFieldForm(forms.ModelForm):
     class Meta:
@@ -90,19 +91,22 @@ class CustomFieldValueInline(admin.TabularInline):
     extra = 1
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'price', 'condition', 'created_at', 'owner_status', 'custom_fields_list')
+    list_display = ('title', 'category', 'price', 'condition', 'created_at', 'owner_status', 'view_custom_fields')
     list_filter = ('category', 'condition')
     search_fields = ('title', 'description')
     inlines = [ProductImageInline, CustomFieldValueInline]
 
     def owner_status(self, obj):
         return "Registered" if obj.seller_information.user else "Guest"
-    owner_status.short_description = 'Owner Status'
 
-    def custom_fields_list(self, obj):
-        # This method would display a list of custom fields and their values
-        return ", ".join([f"{cfv.custom_field.name}: {cfv.value}" for cfv in obj.custom_field_values.all()])
-    custom_fields_list.short_description = 'Custom Fields'
+    def view_custom_fields(self, obj):
+        custom_field_values = obj.custom_field_values.all()
+        if custom_field_values:
+            return format_html('<br>'.join([f'{cfv.custom_field.name}: {cfv.value}' for cfv in custom_field_values]))
+        return "No Custom Fields"
+
+    view_custom_fields.short_description = 'Custom Fields'
 
 admin.site.register(Product, ProductAdmin)
+
 
