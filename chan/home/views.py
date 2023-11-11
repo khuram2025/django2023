@@ -44,5 +44,9 @@ def index(request):
     }
     return render(request, 'home/index.html', context)
 
-def test(request):
-    return render(request, 'product/product_detail.html')
+def privacy_policy(request):
+    return render(request, 'home/privacy_policy.html')
+def terms_conditions(request):
+    return render(request, 'home/terms_conditions.html')
+def legal_notice(request):
+    return render(request, 'home/legal_notice.html')
