@@ -4,6 +4,8 @@ from django_elasticsearch_dsl_drf.filter_backends import (
     OrderingFilterBackend,
     SearchFilterBackend,
 )
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .documents import ProductDocument
 from .serializers import ProductDocumentSerializer
 
@@ -29,3 +31,5 @@ class ProductSearchViewSet(DocumentViewSet):
         'price': 'price',
     }
     ordering = ('id',)
+
+  
