@@ -93,9 +93,15 @@ def product_detail(request, pk):
         # If the product does not exist, raise a 404 error
         raise Http404("Product does not exist")
     
-def product_list(request):
-    products = Product.objects.annotate(images_count=Count('images')).all()
-    return render(request, 'product/product_listing.html', {'products': products})
+def product_list(request, category_slug=None):
+    category = None
+    products = Product.objects.annotate(images_count=Count('images'))
+
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        products = products.filter(category=category)
+
+    return render(request, 'product/product_listing.html', {'category': category, 'products': products})
 
 def user_product_list(request, user_pk):
     # Get the user object, 404 if not found

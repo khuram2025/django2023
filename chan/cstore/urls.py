@@ -8,4 +8,5 @@ urlpatterns = [
     path('', include('home.urls', namespace='home')),  # Assuming you have a home app with its own urls
     path('account/', include('account.urls')), 
     path('product/', include('product.urls')),  
+    path('search/', include('search.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

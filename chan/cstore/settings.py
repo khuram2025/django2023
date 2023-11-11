@@ -41,7 +41,16 @@ INSTALLED_APPS = [
     'account',
     'mptt',
     'product',
+    'search',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
+    'rest_framework',
 ]
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'  # or the appropriate URL of your Elasticsearch instance
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
