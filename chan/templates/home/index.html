@@ -33,7 +33,7 @@
             </div>
           </h1>
 
-          <form action="{%url 'search:productsearch' %}" method="GET" class="nocsrf" class="default-font font-size-14">
+          <form action="#" method="GET" class="nocsrf" class="default-font font-size-14">
             <input type="hidden" name="page" value="search" class="default-font font-size-15" />
 
             <div class="input-box picker pattern" class="default-font font-size-14">
@@ -66,31 +66,24 @@
           <div id="home-cat" class="default-font font-size-14">
             <!-- Loop through each category -->
             {% for category in categories %}
-                <a href="{% url 'product:product_list_by_category' category.slug %}" data-id="{{ category.id }}" class="default-font font-size-14">
-                    <div class="category-icon">
-                        <!-- Display category image if available -->
-                        {% if category.icon %}
-                            <img src="{{ category.icon.url }}" alt="{{ category.title }}" class="lazy" class="default-font font-size-14" />
-                        {% else %}
-                            <!-- Fallback icon or image -->
-                        {% endif %}
-                    </div>
-                    <h3 class="default-font font-size-18"><span class="default-font font-size-14">{{ category.title }}</span></h3>
-                </a>
+            <a href="{% url 'product:product_list_by_category' category.slug %}" data-id="{{ category.id }}" class="default-font font-size-14">
+              <div class="category-icon">
+                <!-- Display category image if available -->
+                {% if category.icon %}
+                <img src="{{ category.icon.url }}" alt="{{ category.title }}" class="lazy" class="default-font font-size-14" />
+                {% else %}
+                <!-- Fallback icon or image -->
+                {% endif %}
+              </div>
+              <h3 class="default-font font-size-18"><span class="default-font font-size-14">{{ category.title }}</span></h3>
+            </a>
             {% endfor %}
-        </div>
-        
-        
+          </div>
         </div>
       </div>
     </section>
-    
 
-   
-    {% include 'home/today_most_viewd.html' %}
-    {% include 'home/latest_listings.html' %}
-
-    {% comment %} {% include 'home/blog.html' %} {% endcomment %}
+    {% include 'home/today_most_viewd.html' %} {% include 'home/latest_listings.html' %} {% comment %} {% include 'home/blog.html' %} {% endcomment %}
 
     <div class="container banner-box is-demo" class="default-font font-size-14">
       <div class="inside" class="default-font font-size-14">
@@ -104,9 +97,7 @@
       </div>
     </div>
 
-    {% comment %} {% include 'home/most_favorite_list.html' %} {% endcomment %}
-
-    {% include 'home/rec_companies.html' %} {% include 'home/best_sellers.html' %} 
+    {% comment %} {% include 'home/most_favorite_list.html' %} {% endcomment %} {% include 'home/rec_companies.html' %} {% include 'home/best_sellers.html' %}
 
     <div class="container banner-box is-demo" class="default-font font-size-14">
       <div class="inside" class="default-font font-size-14">

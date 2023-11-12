@@ -48,9 +48,15 @@ INSTALLED_APPS = [
 ]
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://localhost:9200'  # Include the http:// scheme
+        'hosts': 'https://127.0.0.1:9200',
+        
+        'verify_certs': False,
+        'ssl_show_warn': False
     },
 }
+
+
+
 
 
 MIDDLEWARE = [

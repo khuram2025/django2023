@@ -12,6 +12,7 @@ urlpatterns = [
     path('products/', views.product_list, name='product_list'),
     path('products/<slug:category_slug>/', views.product_list, name='product_list_by_category'),
     path('product/<int:pk>/', views.product_detail, name='product_detail'),
+    path('search/', views.product_search, name='product_search'),
 
     path('user/<int:user_pk>/products/', views.user_product_list, name='user_product_list'),
     path('ajax/load-custom-fields/', views.ajax_load_custom_fields, name='ajax_load_custom_fields'),

@@ -10,6 +10,7 @@ from django.db.models import F
 from django.db.models import Count
 from django.http import Http404
 from .models import CustomField
+from .documents import ProductDocument
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -127,7 +128,6 @@ def user_product_list(request, user_pk):
 
     return render(request, 'product/users_listings.html', context)
 
-
 def search_cities(request):
     if 'searchTerm' in request.GET:
         query = request.GET.get('searchTerm')
@@ -135,4 +135,12 @@ def search_cities(request):
         return JsonResponse(list(cities), safe=False)
     return JsonResponse([], safe=False)
 
+def product_search(request):
+    query = request.GET.get('q', '')
+    if query:
+        search = ProductDocument.search().query("multi_match", query=query, fields=['title', 'description'])
+        products = search.to_queryset()
+    else:
+        products = Product.objects.none()
+    return render(request, 'home/search_results.html', {'products': products, 'query': query})
 

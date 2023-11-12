@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+<!-- Extend your base template -->
+
+{% block content %}
+<div class="search-results">
+  <h2>Search Results</h2>
+
+  <!-- Display the search query -->
+  <p>Showing results for: <strong>{{ query }}</strong></p>
+
+  <!-- Check if there are any products -->
+  {% if products %}
+  <ul class="product-list">
+    <!-- Loop through the products -->
+    {% for product in products %}
+    <li class="product-item">
+      <h3>{{ product.title }}</h3>
+      <!-- Include other product details you wish to display -->
+      <p>{{ product.description|truncatewords:20 }}</p>
+      <!-- Optionally, link to the product detail page -->
+      <a href="{% url 'product:product_detail' product.id %}">View details</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No products found for your query.</p>
+  {% endif %}
+</div>
+{% endblock %}
