@@ -37,6 +37,7 @@ def index(request):
         products_query = Product.objects.all()
 
     products_list = products_query.annotate(images_count=Count('images')).order_by('-created_at')[:10]
+    selected_city = request.session.get('selected_city', 'Location')
 
     # Apply the same city filter for the most viewed products
     products = products_query.filter(created_at__gte=date_7_days_ago).order_by('-view_count')[:10]
@@ -51,6 +52,7 @@ def index(request):
         'products_list': products_list,
         'categories': root_categories,
         'products': products,
+        'selected_city': selected_city,
         'top_cities': top_cities,
     }
     return render(request, 'home/index.html', context)
@@ -58,19 +60,21 @@ def index(request):
 @require_POST
 @csrf_exempt
 def update_city(request):
-    print("update_city called")  # Added print statement
     try:
         data = json.loads(request.body)
-        print(f"Received data: {data}")  # Print the received data
 
         selected_city = data.get('city')
-        print(f"Selected city: {selected_city}")  # Print the selected city
+        if selected_city == 'None':  # Check for the 'None' or similar value
+            del request.session['selected_city']  # Remove the city from the session
+        else:
+            request.session['selected_city'] = selected_city
 
-        request.session['selected_city'] = selected_city  # Save the city in the session
         return JsonResponse({'success': True})
     except Exception as e:
-        print(f"Error: {e}")  # Print any error that occurs
         return JsonResponse({'success': False, 'error': str(e)})
+
+
+
 
 def privacy_policy(request):
     return render(request, 'home/privacy_policy.html')

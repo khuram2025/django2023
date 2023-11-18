@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM fully loaded and parsed");
 
+    // Event listener for city selection
     document.body.addEventListener('click', function (event) {
         if (event.target.matches('.location-elem')) {
             console.log("City element clicked:", event.target.textContent.trim());
@@ -9,8 +10,53 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('City selected:', selectedCity);
             updateCity(selectedCity);
         }
+
+        if (event.target.matches('.btn-clean-location')) {
+            console.log("Clean location button clicked");
+            event.preventDefault();
+            clearCity();
+        }
     });
+
+    // Event listener for clearing city
+    var cleanLocationBtn = document.querySelector('.btn-clean-location');
+    if (cleanLocationBtn) {
+        console.log("Clean location button found, attaching event listener.");
+        cleanLocationBtn.addEventListener('click', function (event) {
+            console.log("Clean location button clicked");
+            event.preventDefault();
+            clearCity();
+        });
+    } else {
+        console.log("Clean location button not found.");
+    }
 });
+
+function clearCity() {
+    console.log("Clearing selected city");
+    fetch('/update_city/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify({ city: 'None' })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response after clearing city:', data);
+        if (data.success) {
+            console.log('City cleared successfully, updating location text and reloading the page.');
+            updateLocationText('Location'); // Set text back to "Location"
+            window.location.reload();
+        } else {
+            console.error('Clearing failed:', data.message);
+        }
+    })
+    .catch(error => console.error('Error during fetch:', error));
+}
+
+
 
 function updateCity(city) {
     console.log("Sending request to update city to:", city);
@@ -29,7 +75,8 @@ function updateCity(city) {
     .then(data => {
         console.log('Server data:', data);
         if (data.success) {
-            console.log('City updated successfully, reloading the page.');
+            console.log('City updated successfully, updating location text.');
+            updateLocationText(city); // Update the location text
             window.location.reload(); // Reload the page
         } else {
             console.error('Update failed:', data.message);
@@ -37,6 +84,44 @@ function updateCity(city) {
     })
     .catch(error => console.error('Error during fetch:', error));
 }
+
+function updateLocationText(city) {
+    return new Promise((resolve) => {
+        var locationElement = document.querySelector('.location');
+        if (locationElement) {
+            locationElement.textContent = city === 'None' ? 'Location' : city;
+        }
+        resolve();
+    });
+}
+
+async function updateCity(city) {
+    console.log("Sending request to update city to:", city);
+    try {
+        const response = await fetch('/update_city/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            },
+            body: JSON.stringify({ city: city })
+        });
+        const data = await response.json();
+        console.log('Server data:', data);
+
+        if (data.success) {
+            console.log('City updated successfully, updating location text.');
+            await updateLocationText(city); // Wait for the location text to update
+            window.location.reload(); // Then reload the page
+        } else {
+            console.error('Update failed:', data.message);
+        }
+    } catch (error) {
+        console.error('Error during fetch:', error);
+    }
+}
+
+
 
 function updateHomepageContent(cityData) {
     console.log('Updating homepage content with city data:', cityData);
