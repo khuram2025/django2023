@@ -93,16 +93,30 @@
       {% for field in custom_fields %}
       <div class="form-group">
         <label>{{ field.name }}</label>
-        {% if field.field_type == 'number' or field.field_type == 'email' %}
+        {% if field.field_type == 'number' or field.field_type == 'email' or field.field_type == 'phone' or field.field_type == 'url' %}
         <input type="{{ field.field_type }}" name="custom_{{ field.id }}" class="form-control" />
+        {% elif field.field_type == 'textarea' %}
+        <textarea name="custom_{{ field.id }}" class="form-control"></textarea>
         {% elif field.field_type == 'select' %}
         <select name="custom_{{ field.id }}" class="form-control">
           {% for option in field.options_list %}
           <option value="{{ option }}">{{ option }}</option>
           {% endfor %}
         </select>
-        {% elif field.field_type == 'checkbox' %}
-        <!-- Render checkbox -->
+        {% elif field.field_type == 'checkbox' %} {% for option in field.options_list %}
+        <div class="checkbox">
+          <label> <input type="checkbox" name="custom_{{ field.id }}" value="{{ option }}" /> {{ option }} </label>
+        </div>
+        {% endfor %} {% elif field.field_type == 'radio' %} {% for option in field.options_list %}
+        <div class="radio">
+          <label> <input type="radio" name="custom_{{ field.id }}" value="{{ option }}" /> {{ option }} </label>
+        </div>
+        {% endfor %} {% elif field.field_type == 'date' %}
+        <input type="date" name="custom_{{ field.id }}" class="form-control" />
+        {% elif field.field_type == 'color' %}
+        <input type="color" name="custom_{{ field.id }}" class="form-control" />
+        {% elif field.field_type == 'date_interval' %}
+        <!-- Custom implementation for date interval -->
         {% endif %}
       </div>
       {% endfor %}
