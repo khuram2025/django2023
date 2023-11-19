@@ -96,13 +96,19 @@ def product_detail(request, pk):
     
 def product_list(request, category_slug=None):
     category = None
+    categories = Category.objects.filter(parent__isnull=True)  # Get all parent categories
+
     products = Product.objects.annotate(images_count=Count('images'))
-
     if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
+        category = get_object_or_404(Category, slug=category_slug, parent__isnull=True)
+        products = products.filter(category__in=category.get_descendants(include_self=True))
 
-    return render(request, 'product/product_listing.html', {'category': category, 'products': products})
+    return render(request, 'product/product_listing.html', {
+        'category': category, 
+        'categories': categories, 
+        'products': products
+    })
+
 
 def user_product_list(request, user_pk):
     # Get the user object, 404 if not found

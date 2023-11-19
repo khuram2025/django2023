@@ -1,160 +1,194 @@
 {% extends 'home/base.html' %} {% block content %}
+<style>
+  .realestate-details {
+  }
+  .realestate-details h3 {
+    margin-left: 40px;
+    margin-top: 20px;
+  }
+  .realestate-details .table-attributes {
+    margin-left: 20px;
+  }
+  .realestate-details .table-attributes table {
+    width: 100%;
+  }
+  .realestate-details .row-title {
+    width: 150px;
+  }
+  .realestate-details h4 {
+    margin-left: 20px;
+  }
+  .realestate-details .list-other-attributes li {
+    float: left;
+    width: 140px;
+  }
+  .realestate-details .list-other-attributes img {
+    height: 14px;
+    width: 14px;
+  }
+  .realestate-details .clear {
+    clear: both;
+  }
+</style>
 
 <body id="home" class="layout-default dvc-ios demo">
   {% include 'home/header.html' %}
 
-<div class="content loc-user sec-dashboard">
-
+  <div class="content loc-user sec-dashboard">
     <div id="breadcrumbs" class="container">
-      <div class="bread-text"><ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList"><meta itemprop="name" content="Breadcrumb">
-  <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child"><a href="https://epsilon.mb-themes.com/" itemprop="item"><span itemprop="name" class="home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path></svg> <span>Home</span></span></a><meta itemprop="position" content="1"></li>
-  
-  <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child"> &gt; <span itemprop="name">Dashboard</span><meta itemprop="position" content="2"></li>
-  </ul>
-  </div>
-      
-        </div>
-  
-  <div id="flashbox" class="container"><div class="wrap"><div class="wrap2"></div></div></div>
-    <div class="container primary">
-      <div id="user-menu">  <a href="https://epsilon.mb-themes.com/user/profile/demo" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
-  
-    <a href="https://epsilon.mb-themes.com/user/dashboard" class="active">Dashboard</a>
-    <a href="https://epsilon.mb-themes.com/user/items?itemType=active" class="has-counter">
-      Active listings    <span class="counter">1</span>
-    </a>
-    
-      
-    
-    <a href="https://epsilon.mb-themes.com/user/alerts" class="">
-      Subscriptions    <span class="counter">2</span>
-    </a>
-    
-    <a href="https://epsilon.mb-themes.com/user/profile" class="">My Profile</a>
-    
-    <div class="menu-hooks">
-      <li class="opt_favorite_items"><a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a></li><li class="opt_user_offers"><a href="https://epsilon.mb-themes.com/user/offers"><i class="fa fa-gavel"></i> Offers</a></li><li class="opt_instant_messenger"><a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a></li><li class="opt_user_rating"><a href="https://epsilon.mb-themes.com/user/rating"><i class="fa fa-star"></i> Ratings</a></li><li class="opt_bpr_profile"><a href="https://epsilon.mb-themes.com/user/business-profile"><i class="fa fa-briefcase"></i> Business profile</a></li>  </div>
-    
-    <a href="https://epsilon.mb-themes.com/user/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"
+              ><span itemprop="name" class="home"
+                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path></svg> <span>Home</span></span
+              ></a
+            ><meta itemprop="position" content="1" />
+          </li>
+
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">&gt; <span itemprop="name">Dashboard</span><meta itemprop="position" content="2" /></li>
+        </ul>
+      </div>
     </div>
-  
-          
+
+    <div id="flashbox" class="container">
+      <div class="wrap"><div class="wrap2"></div></div>
+    </div>
+    <div class="container primary">
+      <div id="user-menu">
+        <a href="https://epsilon.mb-themes.com/user/profile/demo" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
+
+        <a href="https://epsilon.mb-themes.com/user/dashboard" class="active">Dashboard</a>
+        <a href="https://epsilon.mb-themes.com/user/items?itemType=active" class="has-counter"> Active listings <span class="counter">1</span> </a>
+
+        <a href="https://epsilon.mb-themes.com/user/alerts" class=""> Subscriptions <span class="counter">2</span> </a>
+
+        <a href="https://epsilon.mb-themes.com/user/profile" class="">My Profile</a>
+
+        <div class="menu-hooks">
+          <li class="opt_favorite_items">
+            <a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a>
+          </li>
+          <li class="opt_user_offers">
+            <a href="https://epsilon.mb-themes.com/user/offers"><i class="fa fa-gavel"></i> Offers</a>
+          </li>
+          <li class="opt_instant_messenger">
+            <a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
+          </li>
+          <li class="opt_user_rating">
+            <a href="https://epsilon.mb-themes.com/user/rating"><i class="fa fa-star"></i> Ratings</a>
+          </li>
+          <li class="opt_bpr_profile">
+            <a href="https://epsilon.mb-themes.com/user/business-profile"><i class="fa fa-briefcase"></i> Business profile</a>
+          </li>
+        </div>
+
+        <a href="https://epsilon.mb-themes.com/user/logout" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+
       <div id="user-main">
         <div class="headers">
           <a href="https://epsilon.mb-themes.com/user/profile" class="img-container" title="Upload profile picture">
-            <img src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/5_8J2L7_20231116.png" alt="Test" width="36" height="36">
+            <img src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/5_8J2L7_20231116.png" alt="Test" width="36" height="36" />
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="28" height="28"><path d="M256 408c-66.2 0-120-53.8-120-120s53.8-120 120-120 120 53.8 120 120-53.8 120-120 120zm0-192c-39.7 0-72 32.3-72 72s32.3 72 72 72 72-32.3 72-72-32.3-72-72-72zm-24 72c0-13.2 10.8-24 24-24 8.8 0 16-7.2 16-16s-7.2-16-16-16c-30.9 0-56 25.1-56 56 0 8.8 7.2 16 16 16s16-7.2 16-16zm110.7-145H464v288H48V143h121.3l24-64h125.5l23.9 64zM324.3 31h-131c-20 0-37.9 12.4-44.9 31.1L136 95H48c-26.5 0-48 21.5-48 48v288c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V143c0-26.5-21.5-48-48-48h-88l-14.3-38c-5.8-15.7-20.7-26-37.4-26z"></path></svg>
           </a>
-  
-          <h1>
-            Hi Test          <img class="wave" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAV1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/yD3UjQH3wDcw0fbemg4jGwfjsjbtsCUln7uvgx8acIMFEBJKOhEtweMJKjHHmy5sUxcOPUiRcB9IUWvxAAAACnRSTlMAMRr/81Lhpcd5+GBt8QAAAwBJREFUWMPtmNd2pSAUhqOiWOCIvb7/cw7tKCItOncz+yJxmfCt3YB/+/Pz3/6SpTlIQA6L+CWnSL4Go1f+JIrBF17lKigB6WMQoMtbPLX9LFDFOxCzlqNA8Sq0YesnjHv+/Nvo0gJCmJ7JHnrq1EAfsl9lPJJJzs7qJ/OEW167p0U/bJhEdEH9FME8y+EV0OK2H7hPGM9hLsUKYuy69QvCeNrYUy+C82Ypyk5OV1IjtUwPZW0iuDmkcApnLUuVRH2ZBv6rD4itEBGRZZUOqaSWIzYRG8icO5g5NCK2vEu6j0YSiAFPxw62+sNbh4jl3V5pJInA+Ig+N9dLdGDdyOVLpZPa9vxp9ymWeR6rL6mpjscjT8LqDqGutnSm9KeuKy+p5llE9BWA5i0x0vyQzkuS9eyMWWINPYp/+FQVcpLkXxHrAmPhlzKMVJ6g5AZiL4/lHpITxA7U6hNGcoJY0dZAkhPEd1kXRnKCYsAbLYjkBAmXrKQviJPcIHnWm0mKUZITxDt7JUjZqhZSVXuTzTsbeUj0nRMEjz2EPi7S5wzdB9JJKgYpHF9oGqlpbBwLKFIujgvJEpen/G6S9tICEkft6CA1WuZNIKpbgTizR2QlnRvFClKUi0pCmkMa+Q66SpiDdOugxge66taDdEs18oGAdvmZSZUfdF7E8jquiRFUhng04YELjtlKCggt54jt1GNGkjHZ4LZhhX76ik0TCenlJ0zz3so/Cz22MX0/mEl6Qy63Kzs+9ViyTWxWMJL0jtzvugYKX2ah79tJJKpetNi0XTPeJ5xIEZuqPF9cWSImfQRFcNOsKf2ltNtuUjX8ehyolO4PpzIPiZhnt1RKaTz1m2DlhSqq7jbeiq+eJLOc8HirOUm7dZiUZ9JMiyZBLlJnV8c/KbjkOT/gu8UfEAcMRnJsEalbtd1KRt+8HZ2oQi3CsCsosiYBk22cQv79ItUDHveFIESWfXw6/6sTnJLBJx83CqBjsoejf1xcvMoff4tgARY8d3RqLl59sfmH7Q97YGQsT2rqKAAAAABJRU5ErkJggg==" alt="wave">
-          </h1>
+
+          <h1>Hi Test <img class="wave" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAV1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/yD3UjQH3wDcw0fbemg4jGwfjsjbtsCUln7uvgx8acIMFEBJKOhEtweMJKjHHmy5sUxcOPUiRcB9IUWvxAAAACnRSTlMAMRr/81Lhpcd5+GBt8QAAAwBJREFUWMPtmNd2pSAUhqOiWOCIvb7/cw7tKCItOncz+yJxmfCt3YB/+/Pz3/6SpTlIQA6L+CWnSL4Go1f+JIrBF17lKigB6WMQoMtbPLX9LFDFOxCzlqNA8Sq0YesnjHv+/Nvo0gJCmJ7JHnrq1EAfsl9lPJJJzs7qJ/OEW167p0U/bJhEdEH9FME8y+EV0OK2H7hPGM9hLsUKYuy69QvCeNrYUy+C82Ypyk5OV1IjtUwPZW0iuDmkcApnLUuVRH2ZBv6rD4itEBGRZZUOqaSWIzYRG8icO5g5NCK2vEu6j0YSiAFPxw62+sNbh4jl3V5pJInA+Ig+N9dLdGDdyOVLpZPa9vxp9ymWeR6rL6mpjscjT8LqDqGutnSm9KeuKy+p5llE9BWA5i0x0vyQzkuS9eyMWWINPYp/+FQVcpLkXxHrAmPhlzKMVJ6g5AZiL4/lHpITxA7U6hNGcoJY0dZAkhPEd1kXRnKCYsAbLYjkBAmXrKQviJPcIHnWm0mKUZITxDt7JUjZqhZSVXuTzTsbeUj0nRMEjz2EPi7S5wzdB9JJKgYpHF9oGqlpbBwLKFIujgvJEpen/G6S9tICEkft6CA1WuZNIKpbgTizR2QlnRvFClKUi0pCmkMa+Q66SpiDdOugxge66taDdEs18oGAdvmZSZUfdF7E8jquiRFUhng04YELjtlKCggt54jt1GNGkjHZ4LZhhX76ik0TCenlJ0zz3so/Cz22MX0/mEl6Qy63Kzs+9ViyTWxWMJL0jtzvugYKX2ah79tJJKpetNi0XTPeJ5xIEZuqPF9cWSImfQRFcNOsKf2ltNtuUjX8ehyolO4PpzIPiZhnt1RKaTz1m2DlhSqq7jbeiq+eJLOc8HirOUm7dZiUZ9JMiyZBLlJnV8c/KbjkOT/gu8UfEAcMRnJsEalbtd1KRt+8HZ2oQi3CsCsosiYBk22cQv79ItUDHveFIESWfXw6/6sTnJLBJx83CqBjsoejf1xcvMoff4tgARY8d3RqLl59sfmH7Q97YGQsT2rqKAAAAABJRU5ErkJggg==" alt="wave" /></h1>
           <h2>Manage your listings, subscriptions or profile</h2>
         </div>
-        
-              
+
         <div class="card-box">
-                    <a class="card public" href="https://epsilon.mb-themes.com/user/profile/demo">
-              <div class="icon">
-                <i class="far fa-address-card"></i>
-              </div>
-  
-              <div class="header">Public profile</div>
-              <div class="description">Your business profile visible to customers, where your information, address and listings are shown.</div>
-            </a>
-                  
+          <a class="card public" href="https://epsilon.mb-themes.com/user/profile/demo">
+            <div class="icon">
+              <i class="far fa-address-card"></i>
+            </div>
+
+            <div class="header">Public profile</div>
+            <div class="description">Your business profile visible to customers, where your information, address and listings are shown.</div>
+          </a>
+
           <a class="card active" href="https://epsilon.mb-themes.com/user/items?itemType=active">
             <div class="icon">
               <i class="fas fa-check-double"></i>
               <span class="count">1</span>
             </div>
-  
+
             <div class="header">Active listings</div>
             <div class="description">Listings that are visible in front and customer can view and share them.</div>
           </a>
-  
-  
+
           <a class="card not-validated" href="https://epsilon.mb-themes.com/user/items?itemType=pending_validate">
             <div class="icon">
               <i class="fas fa-history"></i>
               <span class="count">0</span>
             </div>
-  
+
             <div class="header">Validation pending listings</div>
             <div class="description">Listings that are hidden and waiting for yours or administrator's validation.</div>
           </a>
-  
-  
+
           <a class="card expired" href="https://epsilon.mb-themes.com/user/items?itemType=expired">
             <div class="icon">
               <i class="fas fa-hourglass-end"></i>
               <span class="count">0</span>
             </div>
-  
+
             <div class="header">Expired listings</div>
             <div class="description">Listings that are expired and are not visible in front. You can renew or recreate them.</div>
           </a>
-  
-  
+
           <a class="card alerts" href="https://epsilon.mb-themes.com/user/alerts">
             <div class="icon">
               <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M459.7 194.6C482 174.1 496 144.7 496 112 496 50.1 445.9 0 384 0c-45.3 0-84.3 26.8-101.9 65.5-17.3-2-34.9-2-52.2 0C212.3 26.8 173.3 0 128 0 66.1 0 16 50.1 16 112c0 32.7 14 62.1 36.3 82.6C39.3 223 32 254.7 32 288c0 53.2 18.6 102.1 49.5 140.5L39 471c-9.4 9.4-9.4 24.6 0 33.9 9.4 9.4 24.6 9.4 33.9 0l42.5-42.5c81.5 65.7 198.7 66.4 281 0L439 505c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6 0-33.9l-42.5-42.5c31-38.4 49.5-87.3 49.5-140.5.1-33.4-7.2-65.1-20.2-93.5zM384 48c35.3 0 64 28.7 64 64 0 15.1-5.3 29-14 39.9-26.2-34.2-62-60.6-103.3-75.2C342.1 59.4 361.7 48 384 48zM64 112c0-35.3 28.7-64 64-64 22.3 0 41.9 11.4 53.4 28.7-41.4 14.6-77.2 41-103.3 75.2C69.3 141 64 127.1 64 112zm192 352c-97.3 0-176-78.7-176-176 0-97 78.4-176 176-176 97.4 0 176 78.8 176 176 0 97.3-78.7 176-176 176zm46.2-95.7l-69-47.5c-3.3-2.2-5.2-5.9-5.2-9.9V180c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v107.7l50 34.4c5.5 3.8 6.8 11.2 3.1 16.7L319 365.2c-3.8 5.4-11.3 6.8-16.8 3.1z"></path></svg>
               <span class="count">2</span>
             </div>
-  
+
             <div class="header">Subscriptions</div>
             <div class="description">Notifications you have subscribed to based on specific search criteria.</div>
           </a>
-  
-  
+
           <a class="card profile" href="https://epsilon.mb-themes.com/user/profile">
-            
             <div class="icon">
               <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M358.9 433.3l-6.8 61c-1.1 10.2 7.5 18.8 17.6 17.6l60.9-6.8 137.9-137.9-71.7-71.7-137.9 137.8zM633 268.9L595.1 231c-9.3-9.3-24.5-9.3-33.8 0l-41.8 41.8 71.8 71.7 41.8-41.8c9.2-9.3 9.2-24.4-.1-33.8zM223.9 288c79.6.1 144.2-64.5 144.1-144.1C367.9 65.6 302.4.1 224.1 0 144.5-.1 79.9 64.5 80 144.1c.1 78.3 65.6 143.8 143.9 143.9zm-4.4-239.9c56.5-2.6 103 43.9 100.4 100.4-2.3 49.2-42.1 89.1-91.4 91.4-56.5 2.6-103-43.9-100.4-100.4 2.3-49.3 42.2-89.1 91.4-91.4zM134.4 352c14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 16.7 0 32.2 5 45.5 13.3l34.4-34.4c-22.4-16.7-49.8-26.9-79.9-26.9-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h258.3c-3.8-14.6-2.2-20.3.9-48H48v-25.6c0-47.6 38.8-86.4 86.4-86.4z"></path></svg>
-              <span class="count">
-                <i class="fas fa-check"></i>            </span>
+              <span class="count"> <i class="fas fa-check"></i> </span>
             </div>
-  
+
             <div class="header">My profile</div>
-            <div class="description">
-                            Your personal information, profile picture, location, business type and others                      </div>
+            <div class="description">Your personal information, profile picture, location, business type and others</div>
           </a>
-  
-          
-                    <a class="card messages" href="https://epsilon.mb-themes.com/im-threads">
-              <div class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24"><path d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288zm-96-216H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h224c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16zm-96 96H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z"></path></svg>
-                <span class="count">0</span>
-              </div>
-  
-              <div class="header">Messages</div>
-              <div class="description">Instant messages you have recieved &amp; sent to other users.</div>
-            </a>
-          
-                    <a class="card favorite" href="https://epsilon.mb-themes.com/fi-favorite-items">
-              <div class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="24" width="24"><path d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"></path></svg>
-                <span class="count">34</span>
-              </div>
-  
-              <div class="header">Favorite listings</div>
-              <div class="description">Listings you've marked as your favorite.</div>
-            </a>
-          
-                  
+
+          <a class="card messages" href="https://epsilon.mb-themes.com/im-threads">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24"><path d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288zm-96-216H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h224c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16zm-96 96H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z"></path></svg>
+              <span class="count">0</span>
+            </div>
+
+            <div class="header">Messages</div>
+            <div class="description">Instant messages you have recieved &amp; sent to other users.</div>
+          </a>
+
+          <a class="card favorite" href="https://epsilon.mb-themes.com/fi-favorite-items">
+            <div class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="24" width="24"><path d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"></path></svg>
+              <span class="count">34</span>
+            </div>
+
+            <div class="header">Favorite listings</div>
+            <div class="description">Listings you've marked as your favorite.</div>
+          </a>
+
           <a class="card contact" href="https://epsilon.mb-themes.com/contact">
             <div class="icon">
               <i class="fas fa-envelope"></i>
             </div>
-  
+
             <div class="header">Contact us</div>
             <div class="description">Do you have questions regarding our site or need help? Feel free to drop us a message.</div>
           </a>
-          
-                </div>
-        
-            </div>
+        </div>
+      </div>
     </div>
-  
-    </div>
-    {% endblock %}
+  </div>
+  {% endblock %}
+</body>
