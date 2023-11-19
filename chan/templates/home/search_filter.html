@@ -1,6 +1,6 @@
 <div id="search-menu" class="filter-menu" class="default-font font-size-14">
   <div class="wrap" class="default-font font-size-14">
-    <form action="https://epsilon.mb-themes.com/index.php" method="GET" class="search-side-form nocsrf" class="default-font font-size-14">
+    <form action="{% url 'product:product_search' %}" method="GET" class="search-side-form nocsrf" class="default-font font-size-14">
       <input type="hidden" class="ajaxRun" value="" class="default-font font-size-15" />
       <input type="hidden" name="page" value="search" class="default-font font-size-15" />
       <input type="hidden" name="sOrder" value="dt_pub_date" class="default-font font-size-15" />
@@ -13,48 +13,16 @@
       <input type="hidden" name="userId" value="" class="default-font font-size-15" />
       <input type="hidden" name="notFromUserId" value="" class="default-font font-size-15" />
 
-      <div class="row" class="default-font font-size-14">
-        <label for="sPattern" class="default-font font-size-14">Keyword</label>
-
-        <div class="input-box" class="default-font font-size-14">
-          <input type="text" name="sPattern" id="sPattern" placeholder="Keyword..." value="" autocomplete="off" class="default-font font-size-15" />
-          <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
-        </div>
-      </div>
-
-      <div class="row isMobile" class="default-font font-size-14">
-        <label for="sCategory" class="default-font font-size-14">Category</label>
-
-        <div class="input-box" class="default-font font-size-14">
-          <select name="sCategory" id="sCategory" class="default-font font-size-15">
-            <option value="" class="default-font font-size-15">Category...</option>
-            <option value="1" class="default-font font-size-15">For sale</option>
-            <option value="9" class="default-font font-size-15">&nbsp;&nbsp;Animals</option>
-            <option value="10" class="default-font font-size-15">&nbsp;&nbsp;Art - Collectibles</option>
-            <option value="2" class="default-font font-size-15">Vehicles</option>
-            <option value="31" class="default-font font-size-15">&nbsp;&nbsp;Cars</option>
-            <option value="32" class="default-font font-size-15">&nbsp;&nbsp;Car Parts</option>
-            <option value="4" class="default-font font-size-15">Real estate</option>
-            <option value="43" class="default-font font-size-15">&nbsp;&nbsp;Houses - Apartments for Sale</option>
-            <option value="50" class="default-font font-size-15">&nbsp;&nbsp;Office - Commercial Space</option>
-            <option value="51" class="default-font font-size-15">&nbsp;&nbsp;Shops for Rent - Sale</option>
-            <option value="5" class="default-font font-size-15">Services</option>
-            <option value="52" class="default-font font-size-15">&nbsp;&nbsp;Babysitter - Nanny</option>
-            <option value="61" class="default-font font-size-15">&nbsp;&nbsp;Writing - Editing - Translating</option>
-            <option value="62" class="default-font font-size-15">&nbsp;&nbsp;Other Services</option>
-            <option value="6" class="default-font font-size-15">Community</option>
-            <option value="63" class="default-font font-size-15">&nbsp;&nbsp;Carpool</option>
-            <option value="64" class="default-font font-size-15">&nbsp;&nbsp;Community Activities</option>
-
-            <option value="7" class="default-font font-size-15">Personals</option>
-            <option value="69" class="default-font font-size-15">&nbsp;&nbsp;Women looking for Men</option>
-            <option value="70" class="default-font font-size-15">&nbsp;&nbsp;Men looking for Women</option>
-
-            <option value="8" class="default-font font-size-15">Jobs</option>
-            <option value="75" class="default-font font-size-15">&nbsp;&nbsp;Accounting - Finance</option>
-            <option value="76" class="default-font font-size-15">&nbsp;&nbsp;Advertising - Public Relations</option>
-
-            <option value="95" class="default-font font-size-15">&nbsp;&nbsp;Other Jobs</option>
+      <div class="row isMobile">
+        <label for="sCategory">Category</label>
+        <div class="input-box">
+          <select name="sCategory" id="sCategory" onchange="filterByCategory()">
+            <option value="">Category...</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" data-slug="{{ category.slug }}">{{ category.title }}</option>
+            {% for subcategory in category.children.all %}
+            <option value="{{ subcategory.id }}" data-slug="{{ subcategory.slug }}">&nbsp;&nbsp;{{ subcategory.title }}</option>
+            {% endfor %} {% endfor %}
           </select>
         </div>
       </div>
@@ -81,20 +49,6 @@
         </div>
       </div>
 
-      <!-- TRANSACTION -->
-      <div class="row transaction" class="default-font font-size-14">
-        <label for="" class="default-font font-size-14">Transaction</label>
-        <div class="input-box" class="default-font font-size-14">
-          <select class="sTransaction" id="sTransaction" name="sTransaction" class="default-font font-size-15">
-            <option value="" class="default-font font-size-15">All</option>
-            <option value="1" class="default-font font-size-15">Sell</option>
-            <option value="2" class="default-font font-size-15">Buy</option>
-            <option value="3" class="default-font font-size-15">Rent</option>
-            <option value="4" class="default-font font-size-15">Exchange</option>
-          </select>
-        </div>
-      </div>
-
       <!-- PRICE -->
       <div class="row price" class="default-font font-size-14">
         <label for="sPriceMin" class="default-font font-size-14">Price range ($)</label>
@@ -108,7 +62,7 @@
         <div class="row check-only checkboxes" class="default-font font-size-14">
           <div class="input-box-check" class="default-font font-size-14">
             <input type="checkbox" name="bPriceCheckWithSeller" id="bPriceCheckWithSeller" value="1" class="default-font font-size-15" />
-            <label for="bPriceCheckWithSeller" class="only-check-label" class="default-font font-size-13">Price01</label>
+            <label for="bPriceCheckWithSeller" class="only-check-label" class="default-font font-size-13">Ask Seller</label>
           </div>
         </div>
 
@@ -124,7 +78,7 @@
       <div class="row period" class="default-font font-size-14">
         <label for="sPriceMin" class="default-font font-size-14">Period</label>
         <div class="input-box" class="default-font font-size-14">
-          <select class="sPeriod" id="sPeriod" name="sPeriod" class="default-font font-size-15">
+          <select class="sPeriod" id="sPeriod" name="sPeriod" class="default-font font-size-15" onchange="filterByPeriod()">
             <option value="" class="default-font font-size-15">All</option>
             <option value="1" class="default-font font-size-15">Yesterday</option>
             <option value="7" class="default-font font-size-15">Last week</option>
@@ -136,56 +90,6 @@
       </div>
 
       <!-- COMPANY -->
-      <div class="row company isMobile" class="default-font font-size-14">
-        <label for="sCompany" class="default-font font-size-14">Seller type</label>
-        <div class="input-box" class="default-font font-size-14">
-          <select class="sCompany" id="sCompany" name="sCompany" class="default-font font-size-15">
-            <option value="" selected="selected" class="default-font font-size-15">All sellers</option>
-            <option value="0" class="default-font font-size-15">Personal</option>
-            <option value="1" class="default-font font-size-15">Company</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row with-picture checkboxes" class="default-font font-size-14">
-        <div class="input-box-check" class="default-font font-size-14">
-          <input type="checkbox" name="bPic" id="bPic" value="1" class="default-font font-size-15" />
-          <label for="bPic" class="only-picture-label" class="default-font font-size-14">With picture only</label>
-        </div>
-      </div>
-
-      <div class="row premiums-only checkboxes" class="default-font font-size-14">
-        <div class="input-box-check" class="default-font font-size-14">
-          <input type="checkbox" name="bPremium" id="bPremium" value="1" class="default-font font-size-15" />
-          <label for="bPremium" class="only-premium-label" class="default-font font-size-14">Premium items only</label>
-        </div>
-      </div>
-
-      <div class="row phone-only checkboxes" class="default-font font-size-14">
-        <div class="input-box-check" class="default-font font-size-14">
-          <input type="checkbox" name="bPhone" id="bPhone" value="1" class="default-font font-size-15" />
-          <label for="bPhone" class="only-phone-label" class="default-font font-size-14">With phone number</label>
-        </div>
-      </div>
-
-      <div class="row sidebar-hooks" class="default-font font-size-14">
-        <fieldset class="default-font font-size-14">
-          <div class="row osm-row" class="default-font font-size-14">
-            <label for="osmRadius" class="default-font font-size-14">Radius</label
-            ><select id="osmRadius" name="osmRadius" class="default-font font-size-15">
-              <option value="" selected="selected" class="default-font font-size-15">Select radius</option>
-              <option value="1" class="default-font font-size-15">1 km</option>
-              <option value="5" class="default-font font-size-15">5 km</option>
-              <option value="10" class="default-font font-size-15">10 km</option>
-              <option value="50" class="default-font font-size-15">50 km</option>
-              <option value="100" class="default-font font-size-15">100 km</option>
-              <option value="500" class="default-font font-size-15">500 km</option>
-              <option value="2000" class="default-font font-size-15">2000 km</option>
-            </select>
-          </div>
-        </fieldset>
-      </div>
-
       <div class="row buttons srch" class="default-font font-size-14">
         <button type="submit" class="btn mbBg init-search" id="search-button" class="default-font font-size-16">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" class="default-font font-size-16"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class="default-font font-size-16"></path></svg>

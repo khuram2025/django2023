@@ -1,30 +1,206 @@
-{% extends 'base.html' %} {% block content %}
-<div class="product-detail">
-  <h1>{{ product.title }}</h1>
-  <p><strong>Price:</strong> {{ product.price }}</p>
-  <p><strong>Description:</strong> {{ product.description }}</p>
-  <p><strong>Condition:</strong> {{ product.get_condition_display }}</p>
-  <p><strong>Category:</strong> {{ product.category.title }}</p>
-  <p><strong>City:</strong> {{ product.city.name }}</p>
-  <p><strong>Address:</strong> {{ product.address }}</p>
-  <p><strong>Posted on:</strong> {{ product.created_at }}</p>
-  <p><strong>Last updated:</strong> {{ product.updated_at }}</p>
-  <p><strong>View count:</strong> {{ product.view_count }}</p>
+<div id="search-menu" class="filter-menu" class="default-font font-size-14">
+  <div class="wrap" class="default-font font-size-14">
+    <form action="https://epsilon.mb-themes.com/index.php" method="GET" class="search-side-form nocsrf" class="default-font font-size-14">
+      <input type="hidden" class="ajaxRun" value="" class="default-font font-size-15" />
+      <input type="hidden" name="page" value="search" class="default-font font-size-15" />
+      <input type="hidden" name="sOrder" value="dt_pub_date" class="default-font font-size-15" />
+      <input type="hidden" name="iOrderType" value="desc" class="default-font font-size-15" />
+      <input type="hidden" name="sCountry" id="sCountry" value="" class="default-font font-size-15" />
+      <input type="hidden" name="sRegion" id="sRegion" value="" class="default-font font-size-15" />
+      <input type="hidden" name="sCity" id="sCity" value="" class="default-font font-size-15" />
+      <input type="hidden" name="iPage" id="iPage" value="" class="default-font font-size-15" />
+      <input type="hidden" name="sShowAs" id="sShowAs" value="" class="default-font font-size-15" />
+      <input type="hidden" name="userId" value="" class="default-font font-size-15" />
+      <input type="hidden" name="notFromUserId" value="" class="default-font font-size-15" />
 
-  <div class="seller-information">
-    <h2>Seller Information</h2>
-    <p><strong>Contact Name:</strong> {{ product.seller_information.contact_name }}</p>
-    <p><strong>Phone Number:</strong> {% if product.seller_information.phone_visible %}{{ product.seller_information.phone_number }}{% else %}Hidden{% endif %}</p>
-    <p><strong>Email:</strong> {% if product.seller_information.email_visible %}{{ product.seller_information.email }}{% else %}Hidden{% endif %}</p>
+      <div class="row" class="default-font font-size-14">
+        <label for="sPattern" class="default-font font-size-14">Keyword</label>
+
+        <div class="input-box" class="default-font font-size-14">
+          <input type="text" name="sPattern" id="sPattern" placeholder="Keyword..." value="" autocomplete="off" class="default-font font-size-15" />
+          <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
+        </div>
+      </div>
+
+      <div class="row isMobile">
+        <label for="sCategory">Category</label>
+        <div class="input-box">
+          <select name="sCategory" id="sCategory" onchange="filterByCategory()">
+            <option value="">Category...</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}" data-slug="{{ category.slug }}">{{ category.title }}</option>
+            {% for subcategory in category.children.all %}
+            <option value="{{ subcategory.id }}" data-slug="{{ subcategory.slug }}">&nbsp;&nbsp;{{ subcategory.title }}</option>
+            {% endfor %} {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="row" class="default-font font-size-14">
+        <label for="sLocation" class="default-font font-size-14">Location</label>
+
+        <div class="input-box picker location only-search" class="default-font font-size-14">
+          <input name="sLocation" type="text" class="location-pick" id="sLocation" placeholder="Region, city..." value="" autocomplete="off" class="default-font font-size-15" />
+          <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
+          <div class="results" class="default-font font-size-14"></div>
+        </div>
+      </div>
+
+      <!-- CONDITION -->
+      <div class="row condition" class="default-font font-size-14">
+        <label for="" class="default-font font-size-14">Condition</label>
+        <div class="input-box" class="default-font font-size-14">
+          <select class="sCondition" id="sCondition" name="sCondition" class="default-font font-size-15">
+            <option value="" class="default-font font-size-15">All</option>
+            <option value="1" class="default-font font-size-15">New</option>
+            <option value="2" class="default-font font-size-15">Used</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TRANSACTION -->
+      <div class="row transaction" class="default-font font-size-14">
+        <label for="" class="default-font font-size-14">Transaction</label>
+        <div class="input-box" class="default-font font-size-14">
+          <select class="sTransaction" id="sTransaction" name="sTransaction" class="default-font font-size-15">
+            <option value="" class="default-font font-size-15">All</option>
+            <option value="1" class="default-font font-size-15">Sell</option>
+            <option value="2" class="default-font font-size-15">Buy</option>
+            <option value="3" class="default-font font-size-15">Rent</option>
+            <option value="4" class="default-font font-size-15">Exchange</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PRICE -->
+      <div class="row price" class="default-font font-size-14">
+        <label for="sPriceMin" class="default-font font-size-14">Price range ($)</label>
+
+        <div class="line input-box" class="default-font font-size-14">
+          <input type="number" class="priceMin" name="sPriceMin" id="sPriceMin" value="" size="6" maxlength="6" placeholder="Min" class="default-font font-size-15" />
+          <span class="delim" class="default-font font-size-14"></span>
+          <input type="number" class="priceMax" name="sPriceMax" id="sPriceMax" value="" size="6" maxlength="6" placeholder="Max" class="default-font font-size-15" />
+        </div>
+
+        <div class="row check-only checkboxes" class="default-font font-size-14">
+          <div class="input-box-check" class="default-font font-size-14">
+            <input type="checkbox" name="bPriceCheckWithSeller" id="bPriceCheckWithSeller" value="1" class="default-font font-size-15" />
+            <label for="bPriceCheckWithSeller" class="only-check-label" class="default-font font-size-13">Price01</label>
+          </div>
+        </div>
+
+        <div class="row free-only checkboxes" class="default-font font-size-14">
+          <div class="input-box-check" class="default-font font-size-14">
+            <input type="checkbox" name="bPriceFree" id="bPriceFree" value="1" class="default-font font-size-15" />
+            <label for="bPriceFree" class="only-free-label" class="default-font font-size-13">Free</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERIOD-->
+      <div class="row period" class="default-font font-size-14">
+        <label for="sPriceMin" class="default-font font-size-14">Period</label>
+        <div class="input-box" class="default-font font-size-14">
+          <select class="sPeriod" id="sPeriod" name="sPeriod" class="default-font font-size-15" onchange="filterByPeriod()">
+            <option value="" class="default-font font-size-15">All</option>
+            <option value="1" class="default-font font-size-15">Yesterday</option>
+            <option value="7" class="default-font font-size-15">Last week</option>
+            <option value="14" class="default-font font-size-15">Last 2 weeks</option>
+            <option value="31" class="default-font font-size-15">Last month</option>
+            <option value="365" class="default-font font-size-15">Last year</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- COMPANY -->
+      <div class="row company isMobile" class="default-font font-size-14">
+        <label for="sCompany" class="default-font font-size-14">Seller type</label>
+        <div class="input-box" class="default-font font-size-14">
+          <select class="sCompany" id="sCompany" name="sCompany" class="default-font font-size-15">
+            <option value="" selected="selected" class="default-font font-size-15">All sellers</option>
+            <option value="0" class="default-font font-size-15">Personal</option>
+            <option value="1" class="default-font font-size-15">Company</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row with-picture checkboxes" class="default-font font-size-14">
+        <div class="input-box-check" class="default-font font-size-14">
+          <input type="checkbox" name="bPic" id="bPic" value="1" class="default-font font-size-15" />
+          <label for="bPic" class="only-picture-label" class="default-font font-size-14">With picture only</label>
+        </div>
+      </div>
+
+      <div class="row premiums-only checkboxes" class="default-font font-size-14">
+        <div class="input-box-check" class="default-font font-size-14">
+          <input type="checkbox" name="bPremium" id="bPremium" value="1" class="default-font font-size-15" />
+          <label for="bPremium" class="only-premium-label" class="default-font font-size-14">Premium items only</label>
+        </div>
+      </div>
+
+      <div class="row phone-only checkboxes" class="default-font font-size-14">
+        <div class="input-box-check" class="default-font font-size-14">
+          <input type="checkbox" name="bPhone" id="bPhone" value="1" class="default-font font-size-15" />
+          <label for="bPhone" class="only-phone-label" class="default-font font-size-14">With phone number</label>
+        </div>
+      </div>
+
+      <div class="row sidebar-hooks" class="default-font font-size-14">
+        <fieldset class="default-font font-size-14">
+          <div class="row osm-row" class="default-font font-size-14">
+            <label for="osmRadius" class="default-font font-size-14">Radius</label
+            ><select id="osmRadius" name="osmRadius" class="default-font font-size-15">
+              <option value="" selected="selected" class="default-font font-size-15">Select radius</option>
+              <option value="1" class="default-font font-size-15">1 km</option>
+              <option value="5" class="default-font font-size-15">5 km</option>
+              <option value="10" class="default-font font-size-15">10 km</option>
+              <option value="50" class="default-font font-size-15">50 km</option>
+              <option value="100" class="default-font font-size-15">100 km</option>
+              <option value="500" class="default-font font-size-15">500 km</option>
+              <option value="2000" class="default-font font-size-15">2000 km</option>
+            </select>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="row buttons srch" class="default-font font-size-14">
+        <button type="submit" class="btn mbBg init-search" id="search-button" class="default-font font-size-16">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" class="default-font font-size-16"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class="default-font font-size-16"></path></svg>
+          <span class="default-font font-size-16">Search</span>
+        </button>
+      </div>
+    </form>
   </div>
 
-  <div class="product-images">
-    <h2>Images</h2>
-    {% for image in product.images.all %}
-    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" />
-    {% empty %}
-    <p>No images to display.</p>
-    {% endfor %}
+  <div id="search-category-box" class="default-font font-size-14">
+    <h3 class="default-font font-size-16">Select category</h3>
+    <div class="wrap nice-scroll-nothave-overflow">
+      <div class="catbox root nice-scroll">
+        {% for cat in categories %}
+        <a href="{% url 'product:product_list_by_category' cat.slug %}" class="child {% if cat.slug == category.slug %}active{% endif %}">
+          <div class="icon">
+            {% if cat.icon %}
+            <img src="{{ cat.icon.url }}" alt="{{ cat.title }}" />
+            {% endif %}
+          </div>
+          <div>
+            <span class="name">{{ cat.title }}</span>
+            <!-- Display product count if needed -->
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Display the products -->
+  <!-- Your code to display products goes here -->
+
+  <div id="banner-theme" class="banner-theme banner-search_sidebar not767 is-demo" class="default-font font-size-14">
+    <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
+      <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
+        <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=8fc96e08" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/banners/8fc96e08.jpg" alt="A2 Hosting Springing Into Summer Sale" title="A2 Hosting Springing Into Summer Sale" width="250" height="250" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=8fc96e08" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
+      </div>
+    </div>
   </div>
 </div>
-{% endblock %}

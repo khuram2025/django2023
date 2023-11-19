@@ -152,6 +152,29 @@ $(document).ready(function () {
   });
 });
 
+function filterByPeriod() {
+    var select = document.getElementById('sPeriod');
+    var selectedPeriod = select.value;
+    window.location.href = `${window.location.pathname}?sPeriod=${selectedPeriod}`;
+}
+
+function filterByCategory() {
+    console.log("Filter function called");
+
+    var select = document.getElementById('sCategory');
+    var selectedOption = select.options[select.selectedIndex];
+    var slug = selectedOption.getAttribute('data-slug');
+
+    console.log("Selected option:", selectedOption.value, "with slug:", slug);
+
+    if (slug) {
+        console.log("Redirecting to URL: /products/" + slug + "/");
+        window.location.href = `/products/${slug}/`; // Update with your URL pattern
+    } else {
+        console.log("No slug found for selected category");
+    }
+}
+
 
 function toggleDescription() {
   var visibleText = document.querySelector('.desc-text .visible');

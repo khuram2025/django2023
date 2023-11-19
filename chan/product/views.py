@@ -11,6 +11,9 @@ from django.db.models import Count
 from django.http import Http404
 from .models import CustomField
 from .documents import ProductDocument
+from django.db.models import Q
+from datetime import timedelta
+from django.utils import timezone
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -96,20 +99,52 @@ def product_detail(request, pk):
     
 def product_list(request, category_slug=None):
     category = None
-    categories = Category.objects.filter(parent__isnull=True)  # Get all parent categories
+    categories = Category.objects.filter(parent__isnull=True)
 
     products = Product.objects.annotate(images_count=Count('images'))
+
+    # Category filter
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug, parent__isnull=True)
         products = products.filter(category__in=category.get_descendants(include_self=True))
+
+    # Location filter
+    location = request.GET.get('sLocation')
+    if location:
+        products = products.filter(city__name__icontains=location)
+
+    # Condition filter
+    condition = request.GET.get('sCondition')
+    if condition:
+        products = products.filter(condition=condition)
+
+    # Price range filter
+    price_min = request.GET.get('sPriceMin')
+    price_max = request.GET.get('sPriceMax')
+    if price_min and price_max:
+        products = products.filter(price__gte=price_min, price__lte=price_max)
+
+    # Special price conditions
+    if request.GET.get('bPriceCheckWithSeller') == '1':
+        products = products.filter(check_with_seller=True)
+    if request.GET.get('bPriceFree') == '1':
+        products = products.filter(price=0)
+
+    # Period filter
+    period = request.GET.get('sPeriod')
+    if period:
+        try:
+            days = int(period)
+            date_from = timezone.now() - timedelta(days=days)
+            products = products.filter(created_at__gte=date_from)
+        except ValueError:
+            pass
 
     return render(request, 'product/product_listing.html', {
         'category': category, 
         'categories': categories, 
         'products': products
     })
-
-
 def user_product_list(request, user_pk):
     # Get the user object, 404 if not found
     user = get_object_or_404(CustomUser, pk=user_pk)
@@ -143,10 +178,49 @@ def search_cities(request):
 
 def product_search(request):
     query = request.GET.get('q', '')
-    if query:
-        search = ProductDocument.search().query("multi_match", query=query, fields=['title', 'description'])
-        products = search.to_queryset()
-    else:
-        products = Product.objects.none()
-    return render(request, 'home/search_results.html', {'products': products, 'query': query})
+    category_id = request.GET.get('sCategory')
+    location = request.GET.get('sLocation')
+    condition = request.GET.get('sCondition')
+    price_min = request.GET.get('sPriceMin')
+    price_max = request.GET.get('sPriceMax')
+    period = request.GET.get('sPeriod')
 
+    print(f"Received query params: query={query}, category_id={category_id}, location={location}, condition={condition}, price_min={price_min}, price_max={price_max}, period={period}")
+
+    base_query = Q()
+
+    # Handle text query
+    if query:
+        base_query &= (Q(title__icontains=query) | Q(description__icontains=query))
+
+    # Handle category
+    if category_id:
+        base_query &= Q(category_id=category_id)
+
+    # Handle location
+    if location:
+        base_query &= Q(city__name__icontains=location)
+
+    # Handle condition
+    if condition:
+        base_query &= Q(condition=condition)
+
+    # Handle price range
+    if price_min:
+        base_query &= Q(price__gte=price_min)
+    if price_max:
+        base_query &= Q(price__lte=price_max)
+
+    # Handle period
+    if period:
+        try:
+            days_ago = timezone.now() - timedelta(days=int(period))
+            base_query &= Q(created_at__gte=days_ago)
+        except ValueError:
+            pass
+
+    print(f"Final query: {base_query}")
+    products = Product.objects.filter(base_query)
+    print(f"Number of products found: {products.count()}")
+
+    return render(request, 'product/product_listing.html', {'products': products, 'query': query})
