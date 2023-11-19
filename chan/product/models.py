@@ -146,6 +146,8 @@ class CustomField(models.Model):
     # For select, checkbox, and radio fields, store options as comma-separated values
     options = models.TextField(verbose_name=_("Options"), blank=True, help_text=_("Comma-separated values"))
 
+    is_searchable = models.BooleanField(default=False, verbose_name=_("Available for Search"))
+
     categories = models.ManyToManyField(
         Category,
         related_name='custom_fields',

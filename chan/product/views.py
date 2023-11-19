@@ -104,9 +104,13 @@ def product_list(request, category_slug=None):
     products = Product.objects.annotate(images_count=Count('images'))
 
     # Category filter
+    custom_fields = []
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug, parent__isnull=True)
         products = products.filter(category__in=category.get_descendants(include_self=True))
+        custom_fields = CustomField.objects.filter(categories=category, is_searchable=True)
+        for field in custom_fields:
+            field.options_list = field.options.split(',') if field.options else []
 
     # Location filter
     location = request.GET.get('sLocation')
@@ -143,8 +147,11 @@ def product_list(request, category_slug=None):
     return render(request, 'product/product_listing.html', {
         'category': category, 
         'categories': categories, 
-        'products': products
+        'products': products,
+        'custom_fields': custom_fields,
     })
+
+
 def user_product_list(request, user_pk):
     # Get the user object, 404 if not found
     user = get_object_or_404(CustomUser, pk=user_pk)
@@ -185,6 +192,17 @@ def product_search(request):
     price_max = request.GET.get('sPriceMax')
     period = request.GET.get('sPeriod')
 
+    custom_fields = []
+    if category_id:
+        category = Category.objects.filter(id=category_id).first()
+        if category:
+            custom_fields_query = CustomField.objects.filter(categories=category, is_searchable=True)
+            for field in custom_fields_query:
+                field.options_list = field.options.split(',') if field.options else []
+                custom_fields.append(field)
+
+    
+
     print(f"Received query params: query={query}, category_id={category_id}, location={location}, condition={condition}, price_min={price_min}, price_max={price_max}, period={period}")
 
     base_query = Q()
@@ -223,4 +241,11 @@ def product_search(request):
     products = Product.objects.filter(base_query)
     print(f"Number of products found: {products.count()}")
 
-    return render(request, 'product/product_listing.html', {'products': products, 'query': query})
+    context = {
+        'products': products,
+        'query': query,
+        'custom_fields': custom_fields,  # Add custom fields to context
+        # ... other context variables ...
+    }
+
+    return render(request, 'product/product_listing.html', context)

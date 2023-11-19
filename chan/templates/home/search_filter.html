@@ -88,6 +88,26 @@
           </select>
         </div>
       </div>
+      <!-- Existing search form fields -->
+
+      {% for field in custom_fields %}
+      <div class="form-group">
+        <label>{{ field.name }}</label>
+        {% if field.field_type == 'number' or field.field_type == 'email' %}
+        <input type="{{ field.field_type }}" name="custom_{{ field.id }}" class="form-control" />
+        {% elif field.field_type == 'select' %}
+        <select name="custom_{{ field.id }}" class="form-control">
+          {% for option in field.options_list %}
+          <option value="{{ option }}">{{ option }}</option>
+          {% endfor %}
+        </select>
+        {% elif field.field_type == 'checkbox' %}
+        <!-- Render checkbox -->
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <!-- Existing form submit button -->
 
       <!-- COMPANY -->
       <div class="row buttons srch" class="default-font font-size-14">
