@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Assuming your settings file is in cstore/cstore/settings.py or a similar structure
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,12 +28,8 @@ SECRET_KEY = 'django-insecure-a^0*i@v8r6628qzn#%fd4key@lkgehjgxhsm%cwa!6qglnz93i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD:cstore/cstore/settings/base.py
-ALLOWED_HOSTS = ["*"]
-=======
-ALLOWED_HOSTS = ['*']
->>>>>>> dab1ba6 (for prod Server):cstore/cstore/settings_base.py
 
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
