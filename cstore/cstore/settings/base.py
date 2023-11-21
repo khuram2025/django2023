@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
     'rest_framework',
+    'storages',
 ]
 ELASTICSEARCH_DSL = {
     'default': {
