@@ -143,12 +143,15 @@ def product_list(request, category_slug=None):
             products = products.filter(created_at__gte=date_from)
         except ValueError:
             pass
+    
+    products_count = products.count()
 
     return render(request, 'product/product_listing.html', {
         'category': category, 
         'categories': categories, 
         'products': products,
         'custom_fields': custom_fields,
+        'products_count': products_count,
     })
 
 
@@ -240,6 +243,7 @@ def product_search(request):
     print(f"Final query: {base_query}")
     products = Product.objects.filter(base_query)
     print(f"Number of products found: {products.count()}")
+    
 
     context = {
         'products': products,

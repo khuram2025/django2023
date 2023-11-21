@@ -1,47 +1,42 @@
+{%load static %}
 <footer class="default-font font-size-15">
   <div class="container" class="default-font font-size-15">
     <section class="one" class="default-font font-size-15">
       <div class="col contact" class="default-font font-size-15">
         <h4 class="default-font font-size-18">About us</h4>
 
-        <p class="logo" class="default-font font-size-15"><img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/logo-default.png" alt="Epsilon Premium Osclass Classifieds Theme" class="default-font font-size-15" /></p>
-        <p class="company" class="default-font font-size-15"><strong class="default-font font-size-15">EpsilonTheme</strong></p>
+        <p class="logo default-font font-size-15">
+          <img src="{% static 'icons/channab_logo-min.png' %}" alt="Channab - Pakistan's Largest Marketplace" class="default-font font-size-15" />
+        </p>
+        <p class="company default-font font-size-15">
+          <strong class="default-font font-size-15">Channab</strong>
+        </p>
+
         <p class="default-font font-size-15">Phone: +923478181583</p>
         <p class="default-font font-size-15">Email: info@channab.com</p>
         <p class="default-font font-size-15">Lahore, Pakistan</p>
         <div class="quick-links" class="default-font font-size-15">
           <a class="btn-mini" href="https://epsilon.mb-themes.com/im-threads" class="default-font font-size-12">Messages</a>
 
-          <a class="btn-mini" href="https://epsilon.mb-themes.com/fi-favorite-items" class="default-font font-size-12">Favorite</a>
+          <a class="btn-mini" href="#" class="default-font font-size-12">Favorite</a>
 
-          <a class="btn-mini" href="https://epsilon.mb-themes.com/companies" class="default-font font-size-12">Companies</a>
+          <a class="btn-mini" href="#" class="default-font font-size-12">Companies</a>
 
-          <a class="btn-mini" href="https://epsilon.mb-themes.com/blog/" class="default-font font-size-12">Blog</a>
+          <a class="btn-mini" href="#" class="default-font font-size-12">Blog</a>
 
-          <a class="btn-mini" href="https://epsilon.mb-themes.com/faq/" class="default-font font-size-12">FAQ</a>
+          <a class="btn-mini" href="#" class="default-font font-size-12">FAQ</a>
         </div>
       </div>
 
       <div class="col socialx" class="default-font font-size-15">
         <h4 class="default-font font-size-18">Social media</h4>
-    
-        <a class="whatsapp" href="https://wa.me/your_whatsapp_number" class="default-font font-size-15">
-            <i class="fab fa-whatsapp" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Whatsapp
-        </a>
-        <a class="facebook" href="https://www.facebook.com/channab02" target="_blank" class="default-font font-size-15">
-            <i class="fab fa-facebook-f" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Facebook
-        </a>
-        <a class="pinterest" href="https://www.pinterest.com/your_pinterest_profile" target="_blank" class="default-font font-size-15">
-            <i class="fab fa-pinterest-p" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Pinterest
-        </a>
-        <a class="twitter" href="https://twitter.com/your_twitter_handle" target="_blank" class="default-font font-size-15">
-            <i class="fab fa-twitter" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Twitter
-        </a>
-        <a class="linkedin" href="https://www.linkedin.com/in/your_linkedin_profile" target="_blank" class="default-font font-size-15">
-            <i class="fab fa-linkedin" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> LinkedIn
-        </a>
-    </div>
-    
+
+        <a class="whatsapp" href="https://wa.me/your_whatsapp_number" class="default-font font-size-15"> <i class="fab fa-whatsapp" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Whatsapp </a>
+        <a class="facebook" href="https://www.facebook.com/channab02" target="_blank" class="default-font font-size-15"> <i class="fab fa-facebook-f" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Facebook </a>
+        <a class="pinterest" href="https://www.pinterest.com/your_pinterest_profile" target="_blank" class="default-font font-size-15"> <i class="fab fa-pinterest-p" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Pinterest </a>
+        <a class="twitter" href="https://twitter.com/your_twitter_handle" target="_blank" class="default-font font-size-15"> <i class="fab fa-twitter" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> Twitter </a>
+        <a class="linkedin" href="https://www.linkedin.com/in/your_linkedin_profile" target="_blank" class="default-font font-size-15"> <i class="fab fa-linkedin" speechify-initial-font-family='"Font Awesome 5 Brands"' speechify-initial-font-size="15px"></i> LinkedIn </a>
+      </div>
 
       <div class="col pages" class="default-font font-size-15">
         <h4 class="default-font font-size-18">Information</h4>
@@ -50,33 +45,16 @@
         <a href="{% url 'home:privacy-policy' %}" class="default-font font-size-15">Privacy Policy</a>
         <a href="{% url 'home:legal-notice' %}" class="default-font font-size-15">Legal Notice</a>
         <a href="#" class="default-font font-size-15">How promotion works</a>
-
- 
       </div>
 
-      <div class="col locale" class="default-font font-size-15">
-        <h4 class="default-font font-size-18">Change language</h4>
+      <div class="col categories" class="default-font font-size-15">
+        <h4 class="default-font font-size-18">Top Categories</h4>
 
-        <a class="lang" href="https://epsilon.mb-themes.com/language/ar_SY" class="default-font font-size-15">
-          <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/country_flags/large/sy.png" alt="Country flag" class="default-font font-size-15" />
-          <span class="default-font font-size-15">Arabic‎</span>
+        {% for category in categories|slice:":5" %}
+        <a class="category-link" href="{% url 'product:product_list_by_category' category.slug %}" class="default-font font-size-15">
+          <span class="default-font font-size-15">{{ category.title }}</span>
         </a>
-        <a class="lang" href="https://epsilon.mb-themes.com/language/zh_CN" class="default-font font-size-15">
-          <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/country_flags/large/cn.png" alt="Country flag" class="default-font font-size-15" />
-          <span class="default-font font-size-15">Chinese (China)‎</span>
-        </a>
-        <a class="lang active" href="https://epsilon.mb-themes.com/language/en_US" class="default-font font-size-15">
-          <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/country_flags/large/us.png" alt="Country flag" class="default-font font-size-15" />
-          <span class="default-font font-size-15">English (US)‎</span>
-        </a>
-        <a class="lang" href="https://epsilon.mb-themes.com/language/ro_RO" class="default-font font-size-15">
-          <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/country_flags/large/ro.png" alt="Country flag" class="default-font font-size-15" />
-          <span class="default-font font-size-15">Romanian‎</span>
-        </a>
-        <a class="lang" href="https://epsilon.mb-themes.com/language/ru_RU" class="default-font font-size-15">
-          <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/country_flags/large/ru.png" alt="Country flag" class="default-font font-size-15" />
-          <span class="default-font font-size-15">Russian‎</span>
-        </a>
+        {% endfor %}
       </div>
 
       <div class="footer-hook" class="default-font font-size-15">
