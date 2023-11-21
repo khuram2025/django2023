@@ -1,0 +1,22 @@
+
+
+git pull origin Web
+
+
+
+
+git stash
+git clean -f
+
+source ~/myenv/bin/activate
+
+python3 manage.py runserver 0.0.0.0:8000 --settings=cstore.settings.prod
+python3 manage.py makemigrations --settings=cstore.settings.prod
+python3 manage.py migrate --settings=cstore.settings.prod
+
+
+sudo systemctl restart gunicorn
+sudo systemctl restart nginx
+
+sudo systemctl status gunicorn
+sudo systemctl status nginx
