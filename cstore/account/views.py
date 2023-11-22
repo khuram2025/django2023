@@ -10,6 +10,10 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.core.files.base import ContentFile
 import base64
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser, UserProfile
+from .forms import UserProfileForm
+import requests
 
 
 def register(request):
@@ -68,16 +72,33 @@ def user_login(request):
 def dashboard(request):
     return render(request, 'account/dashboard.html')
 
+
+def get_location_from_ip(ip_address):
+    response = requests.get(f'http://ip-api.com/json/{ip_address}')
+    data = response.json()
+
+    if data['status'] == 'success':
+        return {
+            'latitude': data['lat'],
+            'longitude': data['lon'],
+            'city': data['city']
+        }
+    else:
+        return None
+
+# Example usage
+location_data = get_location_from_ip('YOUR_PUBLIC_IP_ADDRESS')
+print(location_data)
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
     instance.userprofile.save()
 
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import CustomUser, UserProfile
-from .forms import UserProfileForm
+
+
 
 @login_required
 def user_profile(request):

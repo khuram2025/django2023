@@ -125,7 +125,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="20" height="20" class="default-font font-size-14"><path d="M570.24 247.41L323.87 45a56.06 56.06 0 0 0-71.74 0L5.76 247.41a16 16 0 0 0-2 22.54L14 282.25a16 16 0 0 0 22.53 2L64 261.69V448a32.09 32.09 0 0 0 32 32h128a32.09 32.09 0 0 0 32-32V344h64v104a32.09 32.09 0 0 0 32 32h128a32.07 32.07 0 0 0 32-31.76V261.67l27.53 22.62a16 16 0 0 0 22.53-2L572.29 270a16 16 0 0 0-2.05-22.59zM463.85 432H368V328a32.09 32.09 0 0 0-32-32h-96a32.09 32.09 0 0 0-32 32v104h-96V222.27L288 77.65l176 144.56z" class="default-font font-size-14"></path></svg>
       <span class="default-font font-size-11">Home</span>
     </a>
-    
+
     <a href="{%url 'product:product_list' %}" class="l2" class="default-font font-size-14">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" class="default-font font-size-14"><path d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm16 352c0 8.8-7.2 16-16 16H288l-12.8 9.6L208 428v-60H64c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h384c8.8 0 16 7.2 16 16v288zm-96-216H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h224c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16zm-96 96H144c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z" class="default-font font-size-14"></path></svg>
 
@@ -138,7 +138,7 @@
 
     <a href="#" class="l4 favorite" class="default-font font-size-14">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" height="20" width="20" class="default-font font-size-14">
-        <path d="M512 0C805.019 0 1024 218.981 1024 512S805.019 1024 512 1024 0 805.019 0 512 218.981 0 512 0zm0 93.090C282.77 93.09 93.09 282.77 93.09 512S282.77 930.91 512 930.91 930.91 741.23 930.91 512 741.23 93.09 512 93.09zm187.273 139.636h139.636v139.636H699.273V232.726zm-232.727 0h139.636v139.636H466.546V232.726zm-232.727 0H373.455v139.636H233.819V232.726zM256 512h512v46.545H256V512zm0 93.091h512v46.545H256v-46.545zm0 93.091h512v46.545H256v-46.545z" fill="#90ee90"/>
+        <path d="M512 0C805.019 0 1024 218.981 1024 512S805.019 1024 512 1024 0 805.019 0 512 218.981 0 512 0zm0 93.090C282.77 93.09 93.09 282.77 93.09 512S282.77 930.91 512 930.91 930.91 741.23 930.91 512 741.23 93.09 512 93.09zm187.273 139.636h139.636v139.636H699.273V232.726zm-232.727 0h139.636v139.636H466.546V232.726zm-232.727 0H373.455v139.636H233.819V232.726zM256 512h512v46.545H256V512zm0 93.091h512v46.545H256v-46.545zm0 93.091h512v46.545H256v-46.545z" fill="#90ee90" />
       </svg>
       <span class="default-font font-size-11">Companies</span>
     </a>
@@ -305,18 +305,14 @@
         <div class="row popular" class="default-font font-size-16">
           <div class="lead" class="default-font font-size-13">Popular cities</div>
           {% for city in top_cities %}
-              <!-- Update href to link to a view that filters products by city -->
-              <a href="#" class="location-elem default-font font-size-16">
-                  {{ city.city__name }}, <em class="default-font font-size-11">{{ city.product_count }} items</em>
-              </a>
+          <!-- Update href to link to a view that filters products by city -->
+          <a href="#" class="location-elem default-font font-size-16"> {{ city.city__name }}, <em class="default-font font-size-11">{{ city.product_count }} items</em> </a>
           {% endfor %}
         </div>
-      
 
         <div class="row buttons" class="default-font font-size-16">
           <a class="btn btn-secondary btn-clean-location" href="#" class="default-font font-size-14">Clean default location</a>
-      </div>
-      
+        </div>
       </div>
     </div>
 
@@ -359,6 +355,59 @@
       <div class="section filter-menu" class="default-font font-size-16"></div>
     </div>
   </div>
+  <script>
+    function getLocation() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            console.log("Geolocation success: ", position.coords);
+            sendDataToBackend(position.coords.latitude, position.coords.longitude);
+          },
+          function (error) {
+            console.log("Error getting location: ", error);
+            // Optionally request IP-based location here
+          }
+        );
+      } else {
+        console.log("Geolocation is not available.");
+      }
+    }
 
+    function sendDataToBackend(latitude, longitude) {
+      console.log("Sending data to backend: ", latitude, longitude);
+      fetch("/save-location/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({ latitude: latitude, longitude: longitude }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Response from server: ", data);
+        })
+        .catch((error) => {
+          console.error("Error sending data to backend: ", error);
+        });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    window.onload = getLocation;
+  </script>
 </body>
 {% endblock %}

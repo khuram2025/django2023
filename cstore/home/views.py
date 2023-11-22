@@ -8,6 +8,10 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import json
 from product.models import Category, Product
+import requests
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+import json
 
 
 def product_detail(request, product_id):
@@ -20,6 +24,36 @@ def product_detail(request, product_id):
     }
     return render(request, 'product/product_detail.html', {'product': product})
 
+@require_POST
+def save_location(request):
+    try:
+        data = json.loads(request.body)
+        request.session['latitude'] = data['latitude']
+        request.session['longitude'] = data['longitude']
+        request.session.save()  # Explicitly save the session
+        return JsonResponse({'status': 'success', 'message': 'Location saved'})
+    except json.JSONDecodeError as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+    
+def get_city_from_coordinates(latitude, longitude):
+    # Use Nominatim API (OpenStreetMap) for geocoding
+    url = f"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # This will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        data = response.json()
+
+        # Extracting city name
+        address = data.get("address")
+        city = address.get("city") if address else None
+
+        return city
+
+    except requests.RequestException as e:
+        print(f"Error while fetching data from Nominatim: {e}")
+        return None
+    
 def index(request):
     today = timezone.now()
     date_7_days_ago = today - timedelta(days=7)
@@ -47,6 +81,18 @@ def index(request):
         products = products_query.order_by('-view_count')[:10]
 
     top_cities = Product.objects.values('city__name').annotate(product_count=Count('id')).order_by('-product_count')[:5]
+
+    latitude = request.session.get('latitude')
+    longitude = request.session.get('longitude')
+
+    print(f"Latitude from session: {latitude}")
+    print(f"Longitude from session: {longitude}")
+
+    if latitude and longitude:
+        user_city = get_city_from_coordinates(latitude, longitude)
+        print(f"User's City: {user_city}")
+    else:
+        print("Location not working")
 
     context = {
         'products_list': products_list,
@@ -82,3 +128,30 @@ def terms_conditions(request):
     return render(request, 'home/terms_conditions.html')
 def legal_notice(request):
     return render(request, 'home/legal_notice.html')
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+@csrf_exempt  # Use this only if you're not using Django's CSRF protection
+@require_POST
+def save_location(request):
+    data = json.loads(request.body)
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+
+    # If the user is authenticated, save to their profile
+    if request.user.is_authenticated:
+        user_profile = request.user.userprofile
+        user_profile.latitude = latitude
+        user_profile.longitude = longitude
+        user_profile.save()
+
+    # Otherwise, save in session
+    else:
+        request.session['latitude'] = latitude
+        request.session['longitude'] = longitude
+
+    return JsonResponse({'status': 'success', 'message': 'Location saved'})
