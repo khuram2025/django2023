@@ -641,6 +641,7 @@ body.body-ua {background:#fff;}
 #user-dashboard .card .header {font-size:18px;font-weight:bold;margin:5px 0;}
 #user-dashboard .card .description {font-size:15px;color:#444;}
 
+
 /* USER ITEMS */
 .items-box {margin:10px 0;}
 .items-box .item {margin:0 0 20px 0;padding:0 0 20px 0;border-bottom:1px solid #ccc;position:relative;display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start;}
@@ -698,7 +699,7 @@ body.body-ua {background:#fff;}
 .profile-box input {width:100%;max-width:320px;}
 .profile-box textarea {width:100%;max-width:100%;min-width:100%;margin-bottom:0;}
 .profile-box form.profile > .wrap {display:flex;flex-direction: row; justify-content: space-between; align-items: flex-start;}
-.profile-box .left-block {padding-right:25px;}
+.profile-box .left-block {padding-left: 10px;padding-right: 10px;width: 100%;}
 .profile-box .right-block {min-width:280px;max-width:280px;background:#f0f0f0;padding:16px;border-radius:4px;position: sticky;top: 72px;}
 .profile-box .tabberlive .tabbertab, .profile-box .tabberlive {margin-bottom:0;padding-bottom:0;} 
 .profile-box label {font-size:14px;margin:0 0 3px 0;display:block;}
@@ -1680,3 +1681,43 @@ a.toggle-pass i {line-height:30px;}
 
 /* RESET */
 fieldset{border:none;display:inline-block;padding:0;margin:0;width:100%;}html,input,select,textarea,button{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}div{margin:0;padding:0;}html{color:#222;box-sizing:border-box;font-size:14px;line-height:18px;cursor:default;-moz-tab-size:4;tab-size:4;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;word-break:break-word;}*,*:before,*:after{box-sizing:inherit}body{display:block;margin:0;font-weight:normal;width:100%;box-sizing:border-box;}h1,h2,h3,h4,h5,h6,p,ol,ul{display:inline-block;margin:0;padding:0;width:100%;}ol,ul{list-style:none}img{max-width:100%;width:auto;height:auto}
+
+.job-detail table { width: 100%; }
+.job-detail table label { font-weight: bold; }
+.job-detail > div { margin-top: 5px; }
+.job-detail > div > label { font-weight: bold; }
+
+/* fileuploader */
+.qq-uploader { position:relative; width: 100%;}
+
+.qq-upload-button {
+    display:block; /* or inline-block */
+    width: 200px; padding: 7px 0; text-align:center;    
+    background:#880000; border-bottom:1px solid #ddd;color:#fff;
+}
+.qq-upload-button-hover {background:#cc0000;}
+.qq-upload-button-focus {outline:1px dotted black;}
+
+.qq-upload-drop-area {
+    position:absolute; top:0; left:0; width:100%; height:100%; min-height: 70px; z-index:2;
+    background:#FF9797; text-align:center; 
+}
+.qq-upload-drop-area span {
+    display:block; position:absolute; top: 50%; width:100%; margin-top:-8px; font-size:16px;
+}
+.qq-upload-drop-area-active {background:#FF7171;}
+
+.qq-upload-list {margin:15px 35px; padding:0; list-style:disc;}
+.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px;}
+.qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
+    margin-right: 7px;
+}
+
+.qq-upload-file {}
+.qq-upload-spinner {display:inline-block; background: url("loading.gif"); width:15px; height:15px; vertical-align:text-bottom;}
+.qq-upload-size,.qq-upload-cancel {font-size:11px;}
+
+.qq-upload-failed-text {display:none;}
+.qq-upload-fail .qq-upload-failed-text {display:inline;}
+.qq-upload-success-text {display:none;}
+.qq-upload-success .qq-upload-success-text {display:inline;}

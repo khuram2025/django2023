@@ -4,7 +4,13 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.models import User
-from .models import CustomUser  # Import your CustomUser model
+from .models import CustomUser, UserProfile  # Import your CustomUser model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from django.core.files.base import ContentFile
+import base64
+
 
 def register(request):
     if request.method == 'POST':
@@ -24,10 +30,6 @@ def register(request):
     else:
         form = SignUpForm()
     return render(request, 'account/register.html', {'form': form})
-
-
-
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -65,3 +67,42 @@ def user_login(request):
 
 def dashboard(request):
     return render(request, 'account/dashboard.html')
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+    instance.userprofile.save()
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser, UserProfile
+from .forms import UserProfileForm
+
+@login_required
+def user_profile(request):
+    user = request.user
+    profile, created = UserProfile.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+
+        if form.is_valid():
+            if 'pp_blob' in request.POST:
+                image_data = request.POST['pp_blob']
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+
+                profile.profile_picture.save(f'profile_{user.pk}.{ext}', ContentFile(base64.b64decode(imgstr)), save=False)
+
+            form.save()
+            return redirect('account:user_profile')
+    else:
+        form = UserProfileForm(instance=profile)
+
+    context = {
+        'form': form,
+        'profile': profile
+    }
+
+    return render(request, 'account/user_profile.html', context)

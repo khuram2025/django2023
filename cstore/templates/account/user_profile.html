@@ -1,0 +1,322 @@
+{% extends 'home/base.html' %} {% block content %}
+<style>
+  .realestate-details {
+  }
+  .realestate-details h3 {
+    margin-left: 40px;
+    margin-top: 20px;
+  }
+  .realestate-details .table-attributes {
+    margin-left: 20px;
+  }
+  .realestate-details .table-attributes table {
+    width: 100%;
+  }
+  .realestate-details .row-title {
+    width: 150px;
+  }
+  .realestate-details h4 {
+    margin-left: 20px;
+  }
+  .realestate-details .list-other-attributes li {
+    float: left;
+    width: 140px;
+  }
+  .realestate-details .list-other-attributes img {
+    height: 14px;
+    width: 14px;
+  }
+  .realestate-details .clear {
+    clear: both;
+  }
+</style>
+
+<body id="user-dashboard" class="body-ua demo">
+  {% include 'home/header.html' %}
+
+  <div class="content loc-user sec-dashboard">
+    <div id="breadcrumbs" class="container">
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"
+              ><span itemprop="name" class="home"
+                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path></svg> <span>Home</span></span
+              ></a
+            ><meta itemprop="position" content="1" />
+          </li>
+
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">&gt; <span itemprop="name">Dashboard</span><meta itemprop="position" content="2" /></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="flashbox" class="container">
+      <div class="wrap"><div class="wrap2"></div></div>
+    </div>
+    <div class="container primary">
+      {% include 'account/user_menu.html' %}
+
+      <div id="user-main">
+        <h1>My Profile</h1>
+
+        <div class="profile-box prim">
+          <form action="{% url 'account:user_profile' %}" method="post" class="profile" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="octoken" value="o4cpoqiwjhzv" />
+            <div class="wrap">
+              <div class="left-block">
+                <input type="hidden" name="page" value="user" />
+                <input type="hidden" name="action" value="profile_post" />
+
+                <div class="control-group profile-img">
+                  <label class="control-label" for="profile_picture">Profile picture (avatar)</label>
+                  <div class="controls">
+                    <div class="user-img">
+                      <div class="img-preview">
+                        {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="{{ profile.user.full_name }}" />
+                        {% else %}
+                        <img src="default-image-url.jpg" alt="Default Image" />
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <div class="user-img-button">
+                      <a href="#" class="btn btn-primary start-image-upload">Upload new picture</a>
+                      <a href="#" class="btn btn-secondary btn-next remove-profile-picture">Remove</a>
+                      <input type="file" name="profile_picture" class="upload-image" style="display: none" accept=".jpg,.jpeg,.png,.gif" />
+                      <input type="hidden" name="pp_blob" />
+
+                      <div class="pp-uploader" style="display: none">
+                        <img src="" class="sample-image" id="sample-image" />
+                        <div class="row img-buttons">
+                          <button type="button" class="btn btn-primary crop">Save</button>
+                          <button type="button" class="btn btn-secondary btn-next img-rotate">Rotate</button>
+                          <button type="button" class="btn btn-next btn-secondary cancel">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <script>
+                  $(document).ready(function () {
+                    var image = document.getElementById("sample-image");
+                    var defaultImage = $(".img-preview img").prop("src");
+                    var cropper;
+
+                    function initCropper() {
+                      if (cropper) {
+                        cropper.destroy();
+                      }
+                      cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        preview: ".img-preview",
+                        crop: function (event) {
+                          console.log(event.detail.x);
+                          console.log(event.detail.y);
+                          console.log(event.detail.width);
+                          console.log(event.detail.height);
+                          console.log(event.detail.rotate);
+                          console.log(event.detail.scaleX);
+                          console.log(event.detail.scaleY);
+                        },
+                      });
+                    }
+
+                    $(".btn.start-image-upload").on("click", function (e) {
+                      e.preventDefault();
+                      $("input.upload-image").click();
+                    });
+
+                    $("body").on("change", "input.upload-image", function (event) {
+                      var fileExtension = ["jpeg", "jpg", "png", "gif"];
+                      if ($.inArray($(this).val().split(".").pop().toLowerCase(), fileExtension) == -1) {
+                        alert("Only formats are allowed: " + fileExtension.join(", "));
+                        return false;
+                      }
+
+                      var files = event.target.files;
+
+                      if (files && files.length > 0) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                          image.src = e.target.result;
+                          initCropper();
+                        };
+                        reader.readAsDataURL(files[0]);
+                      }
+
+                      $(".pp-uploader").show(0);
+                      $(".start-image-upload, .remove-profile-picture").hide(0);
+                    });
+
+                    $(".btn.img-rotate").click(function () {
+                      if (cropper) {
+                        cropper.rotate(90);
+                      }
+                    });
+
+                    $(".btn.cancel").click(function (e) {
+                      e.preventDefault();
+                      $("input.upload-image").val("");
+                      $(".start-image-upload, .remove-profile-picture").show(0);
+                      $(".pp-uploader").hide(0);
+                      if (cropper) {
+                        cropper.destroy();
+                      }
+                      $(".img-preview img").attr("src", defaultImage);
+                    });
+
+                    $(".btn.crop").click(function () {
+                      $(this).addClass("btn-loading-nofa");
+                      if (cropper) {
+                        canvas = cropper.getCroppedCanvas({
+                          width: 180,
+                          height: 180,
+                          imageSmoothingEnabled: true,
+                          imageSmoothingQuality: "high",
+                        });
+
+                        canvas.toBlob(
+                          function (blob) {
+                            var reader = new FileReader();
+                            reader.readAsDataURL(blob);
+                            reader.onloadend = function () {
+                              var base64data = reader.result;
+                              $('input[name="pp_blob"]').val(base64data).change();
+                            };
+                          },
+                          "image/jpeg",
+                          1
+                        );
+                      }
+                    });
+
+                    $("body").on("change", 'input[name="pp_blob"]', function (e) {
+                      e.preventDefault();
+                      $(this).closest("form").submit();
+                    });
+
+                    $(".btn.remove-profile-picture").on("click", function (e) {
+                      e.preventDefault();
+                      // Implement AJAX call as required
+                    });
+                  });
+                </script>
+
+                <!-- Name Field -->
+                <div class="row">
+                  <label for="name">Your name <span class="req">*</span></label>
+                  <div class="input-box">
+                    <input id="s_name" type="text" name="full_name" value="{{ profile.name|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="row">
+                  <label for="email">E-mail <a href="#" class="change-email">Edit</a></label>
+                  <div class="input-box">
+                    <input type="text" disabled="" value="{{ profile.email|default_if_none:'Not provided' }}" />
+                  </div>
+                </div>
+
+                <!-- Mobile Phone Field -->
+                <div class="row">
+                  <label for="phoneMobile">Mobile phone <span class="req">*</span></label>
+                  <div class="input-box">
+                    <input id="s_phone_mobile" type="text" name="mobile" value="{{ profile.mobile_number|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- Website Field -->
+                <div class="row">
+                  <label for="webSite">Website</label>
+                  <div class="input-box">
+                    <input id="s_website" type="text" name="website" value="{{ profile.website|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- About You Field -->
+                <div class="row">
+                  <label for="info">About you</label>
+                  <div class="tabberlive">
+                    <!-- ...existing multilingual tabs content... -->
+                    <div class="tabbertab" title="">
+                      <h2>English (US)</h2>
+                      <textarea id="s_infoen_US" name="about" rows="10">{{ profile.about|default_if_none:'' }}</textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="row user-buttons">
+              <button type="submit" class="btn btn-primary mbBg">Update</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="profile-box alt change-mail">
+          <h2>Change your email</h2>
+
+          <form action="https://epsilon.mb-themes.com/index.php" method="post" id="user_email_change" class="user-change">
+            <input type="hidden" name="octoken" value="o4cpoqiwjhzv" />
+
+            <div class="row">
+              <label for="email">Current e-mail</label>
+              <div class="input-box"><input type="text" disabled="" value="demo@demo.com" /></div>
+            </div>
+
+            <div class="row">
+              <label for="new_email">New e-mail <span class="req">*</span></label>
+              <div class="input-box"><input type="text" name="new_email" id="new_email" value="" /></div>
+            </div>
+
+            <div class="row user-buttons">
+              <a class="btn mbBg disabled" onclick="return false;" title="You cannot do this on demo site">Submit</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="profile-box alt change-pass">
+          <h2>Change your password</h2>
+
+          <form action="https://epsilon.mb-themes.com/index.php" method="post" id="user_password_change" class="user-change">
+            <input type="hidden" name="octoken" value="o4cpoqiwjhzv" />
+
+            <div class="row">
+              <label for="password">Current password <span class="req">*</span></label>
+              <div class="input-box"><input type="password" name="password" id="password" value="" /></div>
+            </div>
+
+            <div class="row">
+              <label for="new_password">New password <span class="req">*</span></label>
+              <div class="input-box">
+                <input type="password" name="new_password" id="new_password" value="" />
+                <a href="#" class="toggle-pass" title="Show/hide password"><i class="fa fa-eye-slash"></i></a>
+              </div>
+            </div>
+
+            <div class="row">
+              <label for="new_password2">Repeat new password <span class="req">*</span></label>
+              <div class="input-box">
+                <input type="password" name="new_password2" id="new_password2" value="" />
+                <a href="#" class="toggle-pass" title="Show/hide password"><i class="fa fa-eye-slash"></i></a>
+              </div>
+            </div>
+
+            <div class="row user-buttons">
+              <a class="btn mbBg disabled" onclick="return false;" title="You cannot do this on demo site">Submit</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</body>

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import CustomUser, UserProfile
 from django.core.exceptions import ValidationError
 
 class CustomUserCreationForm(UserCreationForm):
@@ -28,3 +28,8 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('full_name', 'email', 'mobile', 'password1', 'password2')
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['profile_picture', 'website', 'about']

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
@@ -36,3 +37,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.full_name or self.mobile
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    website = models.URLField(max_length=250, blank=True, null=True)
+    about = models.TextField(_('about you'), blank=True, null=True)
+
+    @property
+    def name(self):
+        return self.user.full_name
+
+    @property
+    def email(self):
+        return self.user.email
+
+    @property
+    def mobile_number(self):
+        return self.user.mobile
+
+    def __str__(self):
+        return self.user.full_name or self.user.mobile
+

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from account.models import CustomUser
+from account.models import CustomUser, UserProfile
 from .models import CustomFieldValue, Product
 from .forms import ProductForm
 from django.http import JsonResponse
@@ -158,6 +158,7 @@ def product_list(request, category_slug=None):
 def user_product_list(request, user_pk):
     # Get the user object, 404 if not found
     user = get_object_or_404(CustomUser, pk=user_pk)
+    user_profile = get_object_or_404(UserProfile, user=user)
 
     # Debug: Print the user's data
     print(f"User: {user.full_name or user.mobile} (ID: {user.pk})")
@@ -174,6 +175,7 @@ def user_product_list(request, user_pk):
     # Pass the user and products to the template
     context = {
         'user': user,
+        'user_profile': user_profile,
         'products': products,
     }
 

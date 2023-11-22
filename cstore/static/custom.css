@@ -352,3 +352,74 @@
   max-width: 100%; /* Ensures the image scales properly */
   max-height: 100%;
 }
+/* User profile  */
+
+.pp-uploader {
+  background: #ddd;
+  padding: 20px;
+}
+.row.img-buttons {
+  margin-top: 10px;
+  width: 100%;
+  clear: both;
+  display: inline-block;
+}
+.user-img {
+  margin: 0 0 10px 0;
+}
+.pp-uploader .img-left {
+  width: calc(100% - 140px);
+  display: inline-block;
+  position: relative;
+}
+.pp-uploader .img-left .cropper-container {
+  max-width: 100%;
+}
+.btn.cancel {
+  float: right;
+}
+.img-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+.pp-uploader .img-left {
+  width: 100%;
+}
+.img-preview {
+  overflow: hidden;
+  width: 180px !important;
+  height: 180px !important;
+  background: #ddd;
+}
+
+.realestate-details {
+}
+.realestate-details h3 {
+  margin-left: 40px;
+  margin-top: 20px;
+}
+.realestate-details .table-attributes {
+  margin-left: 20px;
+}
+.realestate-details .table-attributes table {
+  width: 100%;
+}
+.realestate-details .row-title {
+  width: 150px;
+}
+.realestate-details h4 {
+  margin-left: 20px;
+}
+.realestate-details .list-other-attributes li {
+  float: left;
+  width: 140px;
+}
+.realestate-details .list-other-attributes img {
+  height: 14px;
+  width: 14px;
+}
+.realestate-details .clear {
+  clear: both;
+}

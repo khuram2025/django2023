@@ -10,6 +10,6 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
 
     path('dashboard/', views.dashboard, name='dashboard'),
-
-    path('logout/', LogoutView.as_view(), {'next_page': reverse_lazy('account:login')}, name='logout'),
+    path('profile/', views.user_profile, name='user_profile'),
+    path('logout/', LogoutView.as_view(next_page=reverse_lazy('home:index')), name='logout'),
 ]
