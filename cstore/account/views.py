@@ -111,10 +111,16 @@ def user_profile(request):
         if form.is_valid():
             if 'pp_blob' in request.POST:
                 image_data = request.POST['pp_blob']
-                format, imgstr = image_data.split(';base64,')
-                ext = format.split('/')[-1]
+                
+                # Check if 'image_data' contains the expected separator
+                if ';base64,' in image_data:
+                    format, imgstr = image_data.split(';base64,')
+                    ext = format.split('/')[-1]
 
-                profile.profile_picture.save(f'profile_{user.pk}.{ext}', ContentFile(base64.b64decode(imgstr)), save=False)
+                    # Decode the base64 image and save it
+                    profile.profile_picture.save(f'profile_{user.pk}.{ext}', ContentFile(base64.b64decode(imgstr)), save=False)
+                else:
+                    print("Invalid image data format")
 
             form.save()
             return redirect('account:user_profile')
@@ -127,3 +133,4 @@ def user_profile(request):
     }
 
     return render(request, 'account/user_profile.html', context)
+

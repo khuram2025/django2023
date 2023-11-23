@@ -100,6 +100,105 @@
                     </div>
                   </div>
                 </div>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqekBkgxEZ66DKtG2AOIW5bIEpWFfxGlk&callback=initMap"></script>
+                <script>
+                  let map, marker;
+
+                  function initMap() {
+                    const initialPosition = { lat: 24.8607, lng: 67.0011 }; // Default location
+
+                    map = new google.maps.Map(document.getElementById("map"), {
+                      zoom: 8,
+                      center: initialPosition,
+                    });
+
+                    marker = new google.maps.Marker({
+                      position: initialPosition,
+                      map: map,
+                      draggable: true,
+                    });
+
+                    // Add listener for marker drag end event
+                    google.maps.event.addListener(marker, "dragend", function () {
+                      const pos = marker.getPosition();
+                      reverseGeocodeAndUpdateFields(pos);
+                    });
+
+                    // Bind click event to locate-me link
+                    $(".locate-me").click(function (e) {
+                      e.preventDefault();
+                      if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                          function (position) {
+                            const pos = {
+                              lat: position.coords.latitude,
+                              lng: position.coords.longitude,
+                            };
+                            map.setCenter(pos);
+                            marker.setPosition(pos);
+                            reverseGeocodeAndUpdateFields(pos);
+                          },
+                          function () {
+                            console.log("Geolocation failed or permission denied");
+                          }
+                        );
+                      } else {
+                        console.log("Browser doesn't support Geolocation");
+                      }
+                    });
+                  }
+
+                  function reverseGeocodeAndUpdateFields(position) {
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: position }, function (results, status) {
+                      if (status === "OK") {
+                        if (results[0]) {
+                          updateLocationFields(results[0]);
+                        } else {
+                          console.log("No results found");
+                        }
+                      } else {
+                        console.log("Geocoder failed due to: " + status);
+                      }
+                    });
+                  }
+
+                  function updateLocationFields(addressResult) {
+                    const addressComponents = addressResult.address_components;
+                    let city, country;
+
+                    addressComponents.forEach((component) => {
+                      if (component.types.includes("locality")) {
+                        city = component.long_name;
+                      }
+                      if (component.types.includes("country")) {
+                        country = component.long_name; // Use short_name for country code
+                      }
+                    });
+
+                    // Update the city and country select elements
+                    if (city) {
+                      // Assuming the cityId select has cities listed by their names
+                      $("#cityId").val(city).trigger("change");
+                    }
+
+                    if (country) {
+                      // Assuming the countryId select has countries listed by their country codes
+                      $("#countryId").val(country).trigger("change");
+                    }
+
+                    // Update address input
+                    $("#address").val(addressResult.formatted_address);
+                  }
+
+                  // Rest of your existing code...
+
+                  google.maps.event.addListener(map, "click", function (event) {
+                    marker.setPosition(event.latLng);
+                    reverseGeocodeAndUpdateFields(event.latLng);
+                  });
+                  initMap();
+                </script>
 
                 <script>
                   $(document).ready(function () {
@@ -249,6 +348,50 @@
                       <h2>English (US)</h2>
                       <textarea id="s_infoen_US" name="about" rows="10">{{ profile.about|default_if_none:'' }}</textarea>
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div id="user-loc" class="right-block navigator-fill-selects">
+                <h2>Location information</h2>
+
+                <div class="row navigator">
+                  <a href="#" class="locate-me">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 168c-48.6 0-88 39.4-88 88s39.4 88 88 88 88-39.4 88-88-39.4-88-88-88zm0 128c-22.06 0-40-17.94-40-40s17.94-40 40-40 40 17.94 40 40-17.94 40-40 40zm240-64h-49.66C435.49 145.19 366.81 76.51 280 65.66V16c0-8.84-7.16-16-16-16h-16c-8.84 0-16 7.16-16 16v49.66C145.19 76.51 76.51 145.19 65.66 232H16c-8.84 0-16 7.16-16 16v16c0 8.84 7.16 16 16 16h49.66C76.51 366.81 145.19 435.49 232 446.34V496c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-49.66C366.81 435.49 435.49 366.8 446.34 280H496c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zM256 400c-79.4 0-144-64.6-144-144s64.6-144 144-144 144 64.6 144 144-64.6 144-144 144z"></path></svg>
+                    <strong>Use current location</strong>
+                    <span class="status">
+                      <span class="init">Click to find closest city to your location</span>
+                      <span class="not-supported" style="display: none">Geolocation is not supported by your browser</span>
+                      <span class="failed" style="display: none">Unable to retrieve your location, it may be blocked</span>
+                      <span class="failed-unfound" style="display: none">Unable to retrieve your location, no close city found</span>
+                      <span class="loading" style="display: none">Locating...</span>
+                      <span class="success" style="display: none"></span>
+                      <span class="refresh" style="display: none">Refresh page to take effect</span>
+                    </span>
+                  </a>
+                </div>
+                <div id="map" style="height: 300px"></div>
+
+                <!-- Country Field -->
+                <div class="row">
+                  <label for="country">Country</label>
+                  <div class="input-box">
+                    <input type="text" name="country" id="countryId" placeholder="Country" value="{{ profile.country|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- City Field -->
+                <div class="row">
+                  <label for="city">City</label>
+                  <div class="input-box">
+                    <input type="text" name="city" id="cityId" placeholder="City" value="{{ profile.city|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- Address Field -->
+                <div class="row">
+                  <label for="address">Address</label>
+                  <div class="input-box">
+                    <input type="text" name="address" id="address" placeholder="Address" value="{{ profile.address|default_if_none:'' }}" />
                   </div>
                 </div>
               </div>
