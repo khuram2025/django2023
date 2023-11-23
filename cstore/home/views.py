@@ -31,29 +31,47 @@ def save_location(request):
         request.session['latitude'] = data['latitude']
         request.session['longitude'] = data['longitude']
         request.session.save()  # Explicitly save the session
+        print(f"Session saved - Latitude: {request.session.get('latitude')}, Longitude: {request.session.get('longitude')}")
+        print(f"Session after saving: {request.session.items()}")
         return JsonResponse({'status': 'success', 'message': 'Location saved'})
     except json.JSONDecodeError as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
-    
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 def get_city_from_coordinates(latitude, longitude):
-    # Use Nominatim API (OpenStreetMap) for geocoding
     url = f"https://nominatim.openstreetmap.org/reverse?lat={latitude}&lon={longitude}&format=json"
 
     try:
         response = requests.get(url)
-        response.raise_for_status()  # This will raise an HTTPError if the HTTP request returned an unsuccessful status code
+        response.raise_for_status()
         data = response.json()
 
-        # Extracting city name
         address = data.get("address")
-        city = address.get("city") if address else None
+        if not address:
+            print(f"No address data found in response.")
+            return None
 
+        # Try to get the city from various fields
+        city = address.get("city") or address.get("municipality") or address.get("suburb") or address.get("state")
+
+        if city is None:
+            print(f"City not found in response. Address data: {address}")
+        
         return city
 
     except requests.RequestException as e:
         print(f"Error while fetching data from Nominatim: {e}")
         return None
-    
+
+
 def index(request):
     today = timezone.now()
     date_7_days_ago = today - timedelta(days=7)
@@ -82,18 +100,24 @@ def index(request):
 
     top_cities = Product.objects.values('city__name').annotate(product_count=Count('id')).order_by('-product_count')[:5]
 
+    request.session['latitude'] = '24.7488368'
+    request.session['longitude'] = '46.6616983'
+    request.session.save()
+
     latitude = request.session.get('latitude')
     longitude = request.session.get('longitude')
+    client_ip = get_client_ip(request)
 
     print(f"Latitude from session: {latitude}")
     print(f"Longitude from session: {longitude}")
+
+    print(f"Client IP Address: {client_ip}")
 
     if latitude and longitude:
         user_city = get_city_from_coordinates(latitude, longitude)
         print(f"User's City: {user_city}")
     else:
         print("Location not working")
-
     context = {
         'products_list': products_list,
         'categories': root_categories,

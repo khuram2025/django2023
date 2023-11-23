@@ -359,18 +359,31 @@
     function getLocation() {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
-          function (position) {
-            console.log("Geolocation success: ", position.coords);
-            sendDataToBackend(position.coords.latitude, position.coords.longitude);
-          },
-          function (error) {
-            console.log("Error getting location: ", error);
-            // Optionally request IP-based location here
+          (position) => sendDataToBackend(position.coords.latitude, position.coords.longitude),
+          (error) => {
+            console.log("Geolocation error:", error);
+            getLocationFromIP(); // Fallback to IP location
           }
         );
       } else {
         console.log("Geolocation is not available.");
+        getLocationFromIP(); // Fallback to IP location
       }
+    }
+
+    function getLocationFromIP() {
+      fetch("https://ipinfo.io/json?token=a09cd3c882d35c")
+        .then((response) => response.json())
+        .then((data) => {
+          const [latitude, longitude] = data.loc.split(",");
+          const country = data.country;
+          const city = data.city;
+
+          console.log("Country: ", country, "City: ", city); // Log country and city to console
+
+          sendDataToBackend(latitude, longitude);
+        })
+        .catch((error) => console.error("Error fetching IP location:", error));
     }
 
     function sendDataToBackend(latitude, longitude) {
