@@ -153,6 +153,8 @@ def terms_conditions(request):
 def legal_notice(request):
     return render(request, 'home/legal_notice.html')
 
+def test(request):
+    return render(request, 'companies/companies.html')
 
 
 from django.http import JsonResponse

@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'mptt',
     'product',
     'search',
+    'companies',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
     'rest_framework',
     'storages',
+    'phonenumber_field',
 ]
 ELASTICSEARCH_DSL = {
     'default': {

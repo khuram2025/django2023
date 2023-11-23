@@ -66,3 +66,4 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.full_name or self.user.mobile
 
+
