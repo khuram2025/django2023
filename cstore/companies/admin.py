@@ -1,3 +1,22 @@
 from django.contrib import admin
+from .models import CompanyProfile, Branch, Location, PhoneNumber, Schedule
 
-# Register your models here.
+class CompanyProfileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'owner', 'verified')
+    search_fields = ('name', 'owner__full_name', 'owner__mobile')
+    list_filter = ('verified',)
+
+admin.site.register(CompanyProfile, CompanyProfileAdmin)
+
+class ScheduleInline(admin.TabularInline):
+    model = Schedule
+    extra = 1
+
+class BranchAdmin(admin.ModelAdmin):
+    inlines = [ScheduleInline]
+
+admin.site.register(Branch, BranchAdmin)
+
+
+admin.site.register(Location)
+admin.site.register(PhoneNumber)

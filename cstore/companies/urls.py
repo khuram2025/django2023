@@ -1,7 +1,11 @@
 from django.urls import path
-from .views import create_company
+from . import views
+from account.views import user_profile
+
 app_name = 'companies'
 urlpatterns = [
     # ... other url patterns ...
-    path('create-company/', create_company, name='create_company'),
+    path('create-company/', views.create_company, name='create_company'),
+    path('company/', views.company_detail, name='company_detail'),
+    
 ]

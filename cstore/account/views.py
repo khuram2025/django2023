@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse
 from django.contrib import messages
+
+from companies.models import CompanyProfile
 from .forms import SignUpForm
 from django.contrib.auth.models import User
 from .models import CustomUser, UserProfile  # Import your CustomUser model
@@ -99,11 +101,14 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 
 
 
-
 @login_required
 def user_profile(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
+
+    # Fetching the company associated with the user
+    # Assuming 'user' has a foreign key to 'CompanyProfile' named 'company'
+    companies = user.owned_companies.all()
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
@@ -111,13 +116,9 @@ def user_profile(request):
         if form.is_valid():
             if 'pp_blob' in request.POST:
                 image_data = request.POST['pp_blob']
-                
-                # Check if 'image_data' contains the expected separator
                 if ';base64,' in image_data:
                     format, imgstr = image_data.split(';base64,')
                     ext = format.split('/')[-1]
-
-                    # Decode the base64 image and save it
                     profile.profile_picture.save(f'profile_{user.pk}.{ext}', ContentFile(base64.b64decode(imgstr)), save=False)
                 else:
                     print("Invalid image data format")
@@ -129,8 +130,10 @@ def user_profile(request):
 
     context = {
         'form': form,
-        'profile': profile
+        'profile': profile,
+        'companies': companies,
     }
 
     return render(request, 'account/user_profile.html', context)
+
 

@@ -11,5 +11,6 @@ urlpatterns = [
 
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/', views.user_profile, name='user_profile'),
+    
     path('logout/', LogoutView.as_view(next_page=reverse_lazy('home:index')), name='logout'),
 ]
