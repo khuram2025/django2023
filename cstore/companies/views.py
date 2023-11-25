@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse
 from django.contrib import messages
+from .forms import CompanyProfileForm
 
 from companies.models import CompanyProfile
 
@@ -39,23 +40,38 @@ def company_detail(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
 
-    # Fetching the company associated with the user
     companies = user.owned_companies.all()
 
     if companies.exists():
         main_company = companies.first()
-        main_branch = companies.first().branches.first()  # Get the main branch of the first company
+        main_branch = companies.first().branches.first()
         if main_branch:
-            # Print schedules for debugging
             for schedule in main_branch.schedules.all():
                 print(f"Day: {schedule.get_day_display()}, Time: {schedule.start_time} - {schedule.end_time}")
     else:
         main_branch = None
 
+    if request.method == 'POST':
+        print("Received POST request")
+
+        form = CompanyProfileForm(request.POST, request.FILES, instance=main_company)
+        print("Form data:", request.POST)
+
+        if form.is_valid():
+            print("Form is valid")
+            form.save()
+            print("Company profile updated")
+            return redirect('account:company_detail')  # Adjust the redirect as needed
+        else:
+            print("Form errors:", form.errors)
+
+    else:
+        form = CompanyProfileForm(instance=main_company)
+
     day_choices = Schedule.DAY_CHOICES
 
     context = {
-        
+        'form': form,
         'profile': profile,
         'companies': companies,
         'branch': main_branch,

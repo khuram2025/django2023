@@ -87,10 +87,98 @@
               <a class="bpr-show-profile" href="https://epsilon.mb-themes.com/company/mario">Show profile</a>
 
               <form class="nocsrf" method="POST" name="bpr_profile" id="bpr_profile"
-                action="https://epsilon.mb-themes.com/user/business-profile" enctype="multipart/form-data">
-                <input type="hidden" name="what" value="profile">
-                <input type="hidden" name="user_id" value="5">
-                <input type="hidden" name="seller_id" value="3">
+                action="{%url 'companies:company_detail'%}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <script>
+                  $(document).ready(function () {
+                    var image = document.getElementById('sample-image'); // Placeholder image element for cropper
+                    var cropper;
+                
+                    // Initialize cropper on the image
+                    function initCropper() {
+                      if (cropper) {
+                        cropper.destroy();
+                      }
+                      cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 2,
+                        preview: '.img-preview', // Your preview container
+                        crop: function (event) {
+                          // Cropping logic here if needed
+                        }
+                      });
+                    }
+                
+                    $('#bpr-file-icon').on('change', function (event) {
+                      var files = event.target.files;
+                      var allowedExtensions = ['jpeg', 'jpg', 'png', 'gif'];
+                
+                      if (files && files.length) {
+                        var fileExtension = files[0].name.split('.').pop().toLowerCase();
+                        if (!allowedExtensions.includes(fileExtension)) {
+                          alert('Only formats are allowed: ' + allowedExtensions.join(', '));
+                          return false;
+                        }
+                
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                          image.src = e.target.result;
+                          initCropper(); // Initialize cropper with new image
+                        };
+                        reader.readAsDataURL(files[0]);
+                      }
+                    });
+                
+                    $('.btn.img-rotate').click(function () {
+                      if (cropper) {
+                        cropper.rotate(90);
+                      }
+                    });
+                
+                    $('.btn.cancel').click(function (e) {
+                      e.preventDefault();
+                      $('#bpr-file-icon').val('');
+                      if (cropper) {
+                        cropper.destroy();
+                      }
+                      image.src = ''; // Reset the image source or set to a default image
+                    });
+                
+                    $('.btn.crop').click(function () {
+                      if (cropper) {
+                        canvas = cropper.getCroppedCanvas({
+                          width: 100, // Set the width of the cropped image
+                          height: 100, // Set the height of the cropped image
+                          imageSmoothingEnabled: true,
+                          imageSmoothingQuality: 'high',
+                        });
+                
+                        canvas.toBlob(function (blob) {
+                          var reader = new FileReader();
+                          reader.readAsDataURL(blob);
+                          reader.onloadend = function () {
+                            var base64data = reader.result;
+                            $('input[name="pp_blob"]').val(base64data).change(); // Update the hidden input field
+                          };
+                        }, 'image/jpeg', 1);
+                      }
+                    });
+                
+                    $('input[name="pp_blob"]').on('change', function () {
+                      // Submit the form or perform further actions
+                      // $(this).closest('form').submit();
+                    });
+                
+                    // Implement the logic for the remove profile picture button if required
+                    $('.btn.remove-profile-picture').on('click', function (e) {
+                      e.preventDefault();
+                      // AJAX call or other logic here
+                    });
+                  });
+                </script>
+                
+
                 <div class="bpr-row bpr-row-icon">
                   <div class="bpr-utitle">Company logo (100x100 px)</div>
 
@@ -131,21 +219,22 @@
 
                   </div>
                 </div>
-
-
-
-
-
-
                 <!-- Name Field -->
+
                 <div class="row">
                   <label for="name">Company Name <span class="req">*</span></label>
                   <div class="input-box">
-                    <input id="s_name" type="text" name="full_name"
-                      value="{{ companies.first.name|default_if_none:'' }}" />
+                    <input id="name" type="text" name="name" value="{{ main_company.name|default_if_none:'' }}" />
                   </div>
                 </div>
 
+                <!-- About Field -->
+                <div class="row">
+                  <label for="about">About Company <span class="req">*</span></label>
+                  <div class="input-box">
+                    <textarea id="about" name="about">{{ main_company.about|default_if_none:'' }}</textarea>
+                  </div>
+                </div>
 
                 <div class="bpr-row bpr-row-cat">
                   <div class="bpr-utitle">Primary categories</div>
@@ -201,29 +290,32 @@
 
                 <div class="bpr-row bpr-row-sc">
                   <div class="bpr-utitle">Social network links</div>
-              
+
                   <div class="bpr-inputs">
-                      <div class="bpr-line">
-                          <span>Facebook</span>
-                          <input type="text" class="bpr-input bpr-soc" name="bpr-soc_fb" value="{{ main_company.facebook_link }}" placeholder="http://">
-                      </div>
-                      <div class="bpr-line">
-                          <span>Twitter</span>
-                          <input type="text" class="bpr-input bpr-soc" name="bpr-soc_tw" value="{{ main_company.twitter_link }}" placeholder="http://">
-                      </div>
-                      <div class="bpr-line">
-                          <span>Youtube</span>
-                          <input type="text" class="bpr-input bpr-soc" name="bpr-soc_yt" value="{{ main_company.youtube_link }}" placeholder="http://">
-                      </div>
+                    <div class="bpr-line">
+                      <span>Facebook</span>
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_fb"
+                        value="{{ main_company.facebook_link }}" placeholder="http://">
+                    </div>
+                    <div class="bpr-line">
+                      <span>Twitter</span>
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_tw"
+                        value="{{ main_company.twitter_link }}" placeholder="http://">
+                    </div>
+                    <div class="bpr-line">
+                      <span>Youtube</span>
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_yt"
+                        value="{{ main_company.youtube_link }}" placeholder="http://">
+                    </div>
                   </div>
-              </div>
-              
+                </div>
+
 
 
                 <div class="bpr-row bpr-row-buttons">
-                  <button class="bpr-btn bpr-disabled" disabled="" type="submit" onclick="return false;"
-                    title="This is demo site, you cannot update profile">Submit</button>
+                  <button class="bpr-btn" type="submit" title="Update Profile">Submit</button>
                 </div>
+
               </form>
             </div>
           </div>
