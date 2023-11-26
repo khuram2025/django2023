@@ -97,61 +97,52 @@
 
                 <div class="bpr-reg">Seller since 2022</div>
 
-                <div class="bpr-features">
-                  <div class="bpr-feat">
-                    <span class="bpr-ic"><img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/check.png" alt="Free coffee" /></span>
-                    <span class="bpr-feat-name">Free coffee</span>
-                  </div>
-
-                  <div class="bpr-feat">
-                    <span class="bpr-ic"><img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/check.png" alt="Parking" /></span>
-                    <span class="bpr-feat-name">Parking</span>
-                  </div>
-
-                  <div class="bpr-feat">
-                    <span class="bpr-ic"><img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/check.png" alt="Bonus" /></span>
-                    <span class="bpr-feat-name">Bonus</span>
-                  </div>
-
-                  <div class="bpr-feat">
-                    <span class="bpr-ic"><img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/check.png" alt="Gift" /></span>
-                    <span class="bpr-feat-name">Gift</span>
-                  </div>
+                <div class="bpr-features" id="company-about">
+                  <p>{{ company.about|linebreaksbr }}</p>
                 </div>
               </div>
             </div>
 
             <div class="bpr-right">
+              {% if branches_with_details %} {% with branch=branches_with_details.0 %}
+
+              <!-- Branch Location -->
+              {% if branch.locations %}
               <div class="bpr-location">
                 <i class="fa fa-map-marker"></i>
                 <div class="bpr-right-box">
-                  <span>Company Location</span>
+                  {% for location in branch.locations %}
+                  <span>{{ location.address }}, {{ location.city }}, {{ location.country }}</span><br />
+                  {% endfor %}
                 </div>
               </div>
+              {% endif %}
 
+              <!-- Branch Phone Numbers -->
+              {% if branch.phone_numbers %}
               <div class="bpr-payments">
                 <i class="fa fa-phone"></i>
-
-                <div class="bpr-right-box">Phone Number</div>
+                <div class="bpr-right-box">
+                  {% for phone_number in branch.phone_numbers %}
+                  <div>{{ phone_number.number }}</div>
+                  {% endfor %}
+                </div>
               </div>
+              {% endif %}
 
+              <!-- Branch Schedule -->
+              {% if branch.schedules %}
               <div class="bpr-hours">
                 <i class="fa fa-clock"></i>
-
                 <div class="bpr-right-box">
-                  <div><span>Mo:</span> <strong>10-20</strong></div>
-                  <div><span>Tu:</span> <strong>10-20</strong></div>
-                  <div><span>We:</span> <strong>10-20</strong></div>
+                  {% for schedule in branch.schedules %}
+                  <div><span>{{ schedule.get_day_display }}:</span> <strong>{{ schedule.start_time }} - {{ schedule.end_time }}</strong></div>
+                  {% endfor %}
                 </div>
               </div>
+              {% endif %} {% endwith %} {% endif %}
 
-              <div class="bpr-links">
-                <i class="fa fa-link"></i>
-
-                <div class="bpr-right-box">
-                  <a href="https://epsilon.mb-themes.com/companies" class="bpr-comp-all">Show all companies <i class="fa fa-angle-double-right"></i></a>
-                </div>
-              </div>
+              <!-- Other existing content ... -->
             </div>
           </div>
 

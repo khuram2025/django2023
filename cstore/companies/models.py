@@ -1,7 +1,7 @@
 from django.db import models
 from account.models import CustomUser
 from phonenumber_field.modelfields import PhoneNumberField
-from product.models import Category  # Import your existing Category model
+from product.models import Category, City  # Import your existing Category model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -63,12 +63,12 @@ class Schedule(models.Model):
     
 class Location(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    city = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     address = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.city}, {self.country} ({self.branch.name})"
+        return f"{self.city.name if self.city else 'No City'}, {self.branch.name}"
+
 
 class PhoneNumber(models.Model):
     branch = models.ForeignKey(Branch, related_name='phone_numbers_rel', on_delete=models.CASCADE)
