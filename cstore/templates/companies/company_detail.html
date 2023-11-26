@@ -1,6 +1,7 @@
 {% extends 'home/base.html' %} {% block content %}
 <style>
-  .realestate-details {}
+  .realestate-details {
+  }
 
   .realestate-details h3 {
     margin-left: 40px;
@@ -47,16 +48,19 @@
         <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
           <meta itemprop="name" content="Breadcrumb" />
           <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
-            <a href="https://epsilon.mb-themes.com/" itemprop="item"><span itemprop="name" class="home"><svg
-                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
-                  <path
-                    d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z">
-                  </path>
-                </svg> <span>Home</span></span></a>
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"
+              ><span itemprop="name" class="home"
+                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
+                  <path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path>
+                </svg>
+                <span>Home</span></span
+              ></a
+            >
             <meta itemprop="position" content="1" />
           </li>
 
-          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">&gt;
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">
+            &gt;
             <span itemprop="name">Dashboard</span>
             <meta itemprop="position" content="2" />
           </li>
@@ -74,8 +78,6 @@
 
       <div id="user-main">
         <div class="user-custom-box">
-
-
           <div id="bpr-prof" class="bpr-body bpr-prof">
             <div class="bpr-msg-wrap">
               <div class="bpr-msg">Your business profile is pending validation by admin</div>
@@ -86,116 +88,60 @@
 
               <a class="bpr-show-profile" href="https://epsilon.mb-themes.com/company/mario">Show profile</a>
 
-              <form class="nocsrf" method="POST" name="bpr_profile" id="bpr_profile"
-                action="{%url 'companies:company_detail'%}" enctype="multipart/form-data">
+              <form class="nocsrf" method="POST" name="bpr_profile" id="bpr_profile" action="{%url 'companies:company_detail'%}" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <script>
                   $(document).ready(function () {
-                    var image = document.getElementById('sample-image'); // Placeholder image element for cropper
-                    var cropper;
-                
-                    // Initialize cropper on the image
-                    function initCropper() {
-                      if (cropper) {
-                        cropper.destroy();
-                      }
-                      cropper = new Cropper(image, {
-                        aspectRatio: 1,
-                        viewMode: 2,
-                        preview: '.img-preview', // Your preview container
-                        crop: function (event) {
-                          // Cropping logic here if needed
-                        }
-                      });
-                    }
-                
-                    $('#bpr-file-icon').on('change', function (event) {
+                    function handleFileChange(event, previewSelector) {
                       var files = event.target.files;
-                      var allowedExtensions = ['jpeg', 'jpg', 'png', 'gif'];
-                
+                      var allowedExtensions = ["jpeg", "jpg", "png", "gif"];
+
                       if (files && files.length) {
-                        var fileExtension = files[0].name.split('.').pop().toLowerCase();
+                        var fileExtension = files[0].name.split(".").pop().toLowerCase();
                         if (!allowedExtensions.includes(fileExtension)) {
-                          alert('Only formats are allowed: ' + allowedExtensions.join(', '));
+                          alert("Only formats are allowed: " + allowedExtensions.join(", "));
                           return false;
                         }
-                
+
                         var reader = new FileReader();
                         reader.onload = function (e) {
-                          image.src = e.target.result;
-                          initCropper(); // Initialize cropper with new image
+                          $(previewSelector).attr("src", e.target.result);
                         };
                         reader.readAsDataURL(files[0]);
                       }
+                    }
+
+                    $("#bpr-file-icon").on("change", function (event) {
+                      handleFileChange(event, ".bpr-row-icon .bpr-preview img");
                     });
-                
-                    $('.btn.img-rotate').click(function () {
-                      if (cropper) {
-                        cropper.rotate(90);
-                      }
-                    });
-                
-                    $('.btn.cancel').click(function (e) {
-                      e.preventDefault();
-                      $('#bpr-file-icon').val('');
-                      if (cropper) {
-                        cropper.destroy();
-                      }
-                      image.src = ''; // Reset the image source or set to a default image
-                    });
-                
-                    $('.btn.crop').click(function () {
-                      if (cropper) {
-                        canvas = cropper.getCroppedCanvas({
-                          width: 100, // Set the width of the cropped image
-                          height: 100, // Set the height of the cropped image
-                          imageSmoothingEnabled: true,
-                          imageSmoothingQuality: 'high',
-                        });
-                
-                        canvas.toBlob(function (blob) {
-                          var reader = new FileReader();
-                          reader.readAsDataURL(blob);
-                          reader.onloadend = function () {
-                            var base64data = reader.result;
-                            $('input[name="pp_blob"]').val(base64data).change(); // Update the hidden input field
-                          };
-                        }, 'image/jpeg', 1);
-                      }
-                    });
-                
-                    $('input[name="pp_blob"]').on('change', function () {
-                      // Submit the form or perform further actions
-                      // $(this).closest('form').submit();
-                    });
-                
-                    // Implement the logic for the remove profile picture button if required
-                    $('.btn.remove-profile-picture').on('click', function (e) {
-                      e.preventDefault();
-                      // AJAX call or other logic here
+
+                    $("#bpr-file-cover").on("change", function (event) {
+                      handleFileChange(event, ".bpr-row-cover .bpr-preview img");
                     });
                   });
                 </script>
-                
 
                 <div class="bpr-row bpr-row-icon">
                   <div class="bpr-utitle">Company logo (100x100 px)</div>
 
                   <div class="bpr-inputs">
                     <div class="bpr-preview">
-                      <img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/icon_default.png">
+                      {% if main_company.logo %}
+                      <img src="{{ main_company.logo.url }}" alt="Company Logo" />
+                      {% else %}
+                      <img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/icon_default.png" alt="Default Logo" />
+                      {% endif %}
                     </div>
 
                     <div class="bpr-attachment">
                       <div class="bpr-att-box">
                         <label class="bpr-status">
                           <span class="bpr-wrap"><i class="fa fa-paperclip"></i> <span>Upload your logo</span></span>
-                          <input type="file" name="bpr-file-icon" id="bpr-file-icon" class="bpr-file-icon">
+                          <input type="file" name="logo" id="bpr-file-icon" class="bpr-file-icon" />
                         </label>
                       </div>
                     </div>
-
                   </div>
                 </div>
 
@@ -204,19 +150,21 @@
 
                   <div class="bpr-inputs">
                     <div class="bpr-preview">
-                      <img
-                        src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/cover_default.jpg">
+                      {% if main_company.cover_pic %}
+                      <img src="{{ main_company.cover_pic.url }}" alt="Company Cover" />
+                      {% else %}
+                      <img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/cover_default.jpg" alt="Default Cover" />
+                      {% endif %}
                     </div>
 
                     <div class="bpr-attachment">
                       <div class="bpr-att-box">
                         <label class="bpr-status">
                           <span class="bpr-wrap"><i class="fa fa-paperclip"></i> <span>Upload your cover</span></span>
-                          <input type="file" name="bpr-file-cover" id="bpr-file-cover" class="bpr-file-cover">
+                          <input type="file" name="cover_pic" id="bpr-file-cover" class="bpr-file-cover" />
                         </label>
                       </div>
                     </div>
-
                   </div>
                 </div>
                 <!-- Name Field -->
@@ -240,37 +188,31 @@
                   <div class="bpr-utitle">Primary categories</div>
 
                   <div class="bpr-row-select-multiple">
-                    <input type="hidden" name="bpr-category" id="bpr-category" value="12">
+                    <input type="hidden" name="bpr-category" id="bpr-category" value="12" />
 
                     <div class="bpr-select-cat">
-
                       <div class="bpr-box-check bpr-check-parent" data-parent="0">
-                        <input type="checkbox" id="bpr-cat-1" value="1">
+                        <input type="checkbox" id="bpr-cat-1" value="1" />
                         <label for="bpr-cat-1">For sale</label>
                       </div>
 
-
-
                       <div class="bpr-box-check bpr-check-child" data-parent="1">
-                        <input type="checkbox" id="bpr-cat-9" value="9">
+                        <input type="checkbox" id="bpr-cat-9" value="9" />
                         <label for="bpr-cat-9">Animals</label>
                       </div>
 
                       <div class="bpr-box-check bpr-check-parent" data-parent="0">
-                        <input type="checkbox" id="bpr-cat-4" value="4">
+                        <input type="checkbox" id="bpr-cat-4" value="4" />
                         <label for="bpr-cat-4">Real estate</label>
                       </div>
 
-
-
                       <div class="bpr-box-check bpr-check-child" data-parent="8">
-                        <input type="checkbox" id="bpr-cat-95" value="95">
+                        <input type="checkbox" id="bpr-cat-95" value="95" />
                         <label for="bpr-cat-95">Other Jobs</label>
                       </div>
                     </div>
                   </div>
                 </div>
-
 
                 <div class="bpr-row bpr-row-oh">
                   <div class="bpr-utitle">Opening hours</div>
@@ -278,15 +220,11 @@
                     {% for day, day_name in day_choices %}
                     <div class="bpr-line">
                       <span>{{ day_name }}</span>
-                      <input type="text" class="bpr-input bpr-oh" name="bpr-oh_{{ forloop.counter }}"
-                        value="{% for schedule in branch.schedules.all %}{% if schedule.day == day %}{{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}"
-                        placeholder="From - To">
+                      <input type="text" class="bpr-input bpr-oh" name="bpr-oh_{{ forloop.counter }}" value="{% for schedule in branch.schedules.all %}{% if schedule.day == day %}{{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}" placeholder="From - To">
                     </div>
                     {% endfor %}
                   </div>
                 </div>
-
-
 
                 <div class="bpr-row bpr-row-sc">
                   <div class="bpr-utitle">Social network links</div>
@@ -294,28 +232,22 @@
                   <div class="bpr-inputs">
                     <div class="bpr-line">
                       <span>Facebook</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_fb"
-                        value="{{ main_company.facebook_link }}" placeholder="http://">
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_fb" value="{{ main_company.facebook_link }}" placeholder="http://" />
                     </div>
                     <div class="bpr-line">
                       <span>Twitter</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_tw"
-                        value="{{ main_company.twitter_link }}" placeholder="http://">
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_tw" value="{{ main_company.twitter_link }}" placeholder="http://" />
                     </div>
                     <div class="bpr-line">
                       <span>Youtube</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_yt"
-                        value="{{ main_company.youtube_link }}" placeholder="http://">
+                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_yt" value="{{ main_company.youtube_link }}" placeholder="http://" />
                     </div>
                   </div>
                 </div>
 
-
-
                 <div class="bpr-row bpr-row-buttons">
                   <button class="bpr-btn" type="submit" title="Update Profile">Submit</button>
                 </div>
-
               </form>
             </div>
           </div>
