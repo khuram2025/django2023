@@ -1,92 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Cropping</title>
-    <!-- Cropper.js CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.css" rel="stylesheet" />
-    <style>
-      .img-preview {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-        margin-bottom: 20px;
-      }
-      .hidden {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="bpr-row bpr-row-icon">
-      <div class="bpr-utitle">Company logo (100x100 px)</div>
-      <div class="bpr-inputs">
-        <div class="img-preview"></div>
-        <input type="file" name="bpr-file-icon" id="bpr-file-icon" class="bpr-file-icon" />
-      </div>
-    </div>
+<!-- your_template_name.html -->
 
-    <div class="bpr-row bpr-row-cover">
-      <div class="bpr-utitle">Company cover (1600x600 px)</div>
-      <div class="bpr-inputs">
-        <div class="img-preview"></div>
-        <input type="file" name="bpr-file-cover" id="bpr-file-cover" class="bpr-file-cover" />
-      </div>
-    </div>
+{% block content %}
+<h1>{{ company.name }}</h1>
+<div>
+  <img src="{{ company.logo.url }}" alt="Company Logo" />
+  <img src="{{ company.cover_pic.url }}" alt="Company Cover" />
+  <p>{{ company.about }}</p>
+  <!-- Other company details like social links -->
+</div>
 
-    <!-- Hidden Images for Cropper -->
-    <img id="logo-image" class="hidden" />
-    <img id="cover-image" class="hidden" />
+<h2>Branches</h2>
+{% for branch in branches %}
+<div>
+  <h3>{{ branch.name }}</h3>
+  <h4>Schedules</h4>
+  {% for schedule in branch.schedules %}
+  <p>{{ schedule.day }}: {{ schedule.start_time }} - {{ schedule.end_time }}</p>
+  {% endfor %}
 
-    <!-- Cropper.js and jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js"></script>
+  <h4>Phone Numbers</h4>
+  {% for phone_number in branch.phone_numbers %}
+  <p>{{ phone_number.number }}</p>
+  {% endfor %}
 
-    <script>
-      $(document).ready(function () {
-        var cropperLogo, cropperCover;
-
-        function initCropper(imageElement, aspectRatio, previewSelector) {
-          return new Cropper(imageElement, {
-            aspectRatio: aspectRatio,
-            viewMode: 2,
-            preview: previewSelector,
-            crop: function (event) {
-              // Cropping logic here if needed
-            },
-          });
-        }
-
-        function handleFileChange(event, imageElement, cropperInstance, aspectRatio, previewSelector) {
-          var files = event.target.files;
-          var allowedExtensions = ["jpeg", "jpg", "png", "gif"];
-
-          if (files && files.length) {
-            var fileExtension = files[0].name.split(".").pop().toLowerCase();
-            if (!allowedExtensions.includes(fileExtension)) {
-              alert("Only formats are allowed: " + allowedExtensions.join(", "));
-              return false;
-            }
-
-            var reader = new FileReader();
-            reader.onload = function (e) {
-              if (cropperInstance) cropperInstance.destroy();
-              imageElement.src = e.target.result;
-              cropperInstance = initCropper(imageElement, aspectRatio, previewSelector);
-            };
-            reader.readAsDataURL(files[0]);
-          }
-        }
-
-        $("#bpr-file-icon").on("change", function (event) {
-          handleFileChange(event, document.getElementById("logo-image"), cropperLogo, 1, ".bpr-row-icon .img-preview");
-        });
-
-        $("#bpr-file-cover").on("change", function (event) {
-          handleFileChange(event, document.getElementById("cover-image"), cropperCover, 1600 / 600, ".bpr-row-cover .img-preview");
-        });
-      });
-    </script>
-  </body>
-</html>
+  <h4>Locations</h4>
+  {% for location in branch.locations %}
+  <p>{{ location.address }}, {{ location.city }}, {{ location.country }}</p>
+  {% endfor %}
+</div>
+{% endfor %} {% endblock %}

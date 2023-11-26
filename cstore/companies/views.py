@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import CompanyProfileForm
 
-from companies.models import CompanyProfile
+from companies.models import CompanyProfile, Location
 
 from django.contrib.auth.models import User
 from account.models import CustomUser, UserProfile  # Import your CustomUser model
@@ -30,7 +30,7 @@ def create_company(request):
             company.owner = request.user 
             company.save()
             # Redirect to a new URL, for example, the company detail page
-            return redirect('company_detail', pk=company.pk)
+            return redirect('company-public', pk=company.pk)
     else:
         form = CompanyProfileForm()
     return render(request, 'companies/create_company.html', {'form': form})
@@ -61,7 +61,7 @@ def company_detail(request):
             print("Form is valid")
             form.save()
             print("Company profile updated")
-            return redirect('account:company_detail')  # Adjust the redirect as needed
+            return redirect('companies:company-public')  # Adjust the redirect as needed
         else:
             print("Form errors:", form.errors)
 
@@ -80,3 +80,39 @@ def company_detail(request):
     }
 
     return render(request, 'companies/company_detail.html', context)
+
+def company_profile_detail(request, pk):
+    # Get the company profile or 404 if not found
+    company = get_object_or_404(CompanyProfile, pk=pk)
+
+    # Fetch branches and their related data
+    branches_with_details = []
+    for branch in company.branches.all():
+        schedules = branch.schedules.all()
+        phone_numbers = branch.phone_numbers_rel.all()
+        locations = Location.objects.filter(branch=branch)
+
+        branches_with_details.append({
+            'branch': branch,
+            'schedules': schedules,
+            'phone_numbers': phone_numbers,
+            'locations': locations
+        })
+
+    # Prepare context
+    context = {
+        'company': company,
+        'branches_with_details': branches_with_details,
+    }
+
+    return render(request, 'companies/company_public.html', context)
+
+
+def list_companies(request):
+    companies = CompanyProfile.objects.all()  # Retrieve all company profiles
+
+    context = {
+        'companies': companies,
+    }
+
+    return render(request, 'companies/companies_list.html', context)
