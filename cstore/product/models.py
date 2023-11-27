@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from account.models import CustomUser
+from locations.models import City
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
 from django.utils import timezone
@@ -42,16 +43,6 @@ class Category(MPTTModel):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-
-class City(models.Model):
-    name = models.CharField(max_length=100, verbose_name=_("City"))
-    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
-    seo_title = models.CharField(max_length=255, verbose_name=_("SEO Title"), blank=True, null=True)
-    seo_description = models.TextField(verbose_name=_("SEO Description"), blank=True, null=True)
-    seo_keywords = models.CharField(max_length=255, verbose_name=_("SEO Keywords"), blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.name}, {self.name}"
 
 class SellerInformation(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, verbose_name=_("User Account"))

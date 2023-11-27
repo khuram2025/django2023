@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import City, Product, ProductImage, CustomFieldValue, SellerInformation
+from .models import Product, ProductImage, CustomFieldValue, SellerInformation
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -13,10 +13,6 @@ class CategoryAdmin(MPTTModelAdmin):  # Use MPTTModelAdmin for hierarchical mode
     list_display = ['title', 'status', 'created_at', 'updated_at']
     prepopulated_fields = {'slug': ('title',)}
 
-# City Admin
-class CityAdmin(admin.ModelAdmin):
-    list_display = ['name', 'seo_title']
-    search_fields = ['name']
 
 # SellerInformation Admin
 class SellerInformationAdmin(admin.ModelAdmin):
@@ -25,7 +21,7 @@ class SellerInformationAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(City, CityAdmin)
+
 admin.site.register(SellerInformation, SellerInformationAdmin)
 
 class CustomFieldForm(forms.ModelForm):
