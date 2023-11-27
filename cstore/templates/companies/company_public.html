@@ -106,14 +106,19 @@
             <div class="bpr-right">
               {% if branches_with_details %} {% with branch=branches_with_details.0 %}
 
-              <!-- Branch Location -->
-              {% if branch.locations %}
+              <!-- Company Address -->
+              {% if company.address %}
+              <div class="bpr-location">
+                <i class="fa fa-map-marker"></i>
+                <div class="bpr-right-box"><span>{{ company.address.line1 }}{% if company.address.line2 %}, {{ company.address.line2 }}{% endif %}, {{ company.address.city.name }}, {{ company.address.city.country.name }}</span><br /></div>
+              </div>
+              {% elif branches_with_details %}
               <div class="bpr-location">
                 <i class="fa fa-map-marker"></i>
                 <div class="bpr-right-box">
-                  {% for location in branch.locations %}
-                  <span>{{ location.address }}, {{ location.city }}, {{ location.country }}</span><br />
-                  {% endfor %}
+                  {% with branch_detail=branches_with_details|first %} {% if branch_detail.address %}
+                  <span>{{ branch_detail.address.line1 }}{% if branch_detail.address.line2 %}, {{ branch_detail.address.line2 }}{% endif %}, {{ branch_detail.address.city.name }}, {{ branch_detail.address.city.country.name }}</span><br />
+                  {% endif %} {% endwith %}
                 </div>
               </div>
               {% endif %}

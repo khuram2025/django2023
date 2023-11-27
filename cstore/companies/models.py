@@ -1,5 +1,6 @@
 from django.db import models
 from account.models import CustomUser
+from locations.models import Address
 from phonenumber_field.modelfields import PhoneNumberField
 from product.models import Category, City  # Import your existing Category model
 from django.db.models.signals import post_save
@@ -9,17 +10,16 @@ from django.dispatch import receiver
 class CompanyProfile(models.Model):
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='owned_companies')
-
-
     verified = models.BooleanField(default=False)
     about = models.TextField()
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
     cover_pic = models.ImageField(upload_to='company_covers/', blank=True, null=True)
-
     twitter_link = models.URLField(blank=True, null=True)
     facebook_link = models.URLField(blank=True, null=True)
     youtube_link = models.URLField(blank=True, null=True)
     instagram_link = models.URLField(blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
+
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None  # Check if the instance is new
@@ -36,9 +36,9 @@ class Branch(models.Model):
     name = models.CharField(max_length=200)
     working_categories = models.ManyToManyField(Category)
     phone_numbers = models.ManyToManyField('PhoneNumber', related_name='branch_phone_numbers')
-   
-    
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='branches')
 
+   
     def __str__(self):
         return f"{self.name} ({self.company.name})"
 
@@ -60,15 +60,6 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f"{self.get_day_display()} ({self.start_time} - {self.end_time})"
-    
-class Location(models.Model):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
-    address = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f"{self.city.name if self.city else 'No City'}, {self.branch.name}"
-
 
 class PhoneNumber(models.Model):
     branch = models.ForeignKey(Branch, related_name='phone_numbers_rel', on_delete=models.CASCADE)

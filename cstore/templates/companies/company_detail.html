@@ -1,7 +1,6 @@
 {% extends 'home/base.html' %} {% block content %}
 <style>
-  .realestate-details {
-  }
+  .realestate-details {}
 
   .realestate-details h3 {
     margin-left: 40px;
@@ -48,14 +47,10 @@
         <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
           <meta itemprop="name" content="Breadcrumb" />
           <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
-            <a href="https://epsilon.mb-themes.com/" itemprop="item"
-              ><span itemprop="name" class="home"
-                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"><span itemprop="name" class="home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
                   <path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path>
                 </svg>
-                <span>Home</span></span
-              ></a
-            >
+                <span>Home</span></span></a>
             <meta itemprop="position" content="1" />
           </li>
 
@@ -167,12 +162,13 @@
                     </div>
                   </div>
                 </div>
-                <!-- Name Field -->
+                <!-- Existing fields -->
 
+                <!-- Name Field -->
                 <div class="row">
                   <label for="name">Company Name <span class="req">*</span></label>
                   <div class="input-box">
-                    <input id="name" type="text" name="name" value="{{ main_company.name|default_if_none:'' }}" />
+                    <input id="name" type="text" name="name" value="{{ form.name.value|default_if_none:'' }}" />
                   </div>
                 </div>
 
@@ -180,9 +176,32 @@
                 <div class="row">
                   <label for="about">About Company <span class="req">*</span></label>
                   <div class="input-box">
-                    <textarea id="about" name="about">{{ main_company.about|default_if_none:'' }}</textarea>
+                    <textarea id="about" name="about">{{ form.about.value|default_if_none:'' }}</textarea>
                   </div>
                 </div>
+
+                <!-- Address Line1 Field -->
+                <div class="row">
+                  <label for="line1">Address Line 1</label>
+                  <div class="input-box">
+                    <input id="line1" type="text" name="line1" value="{{ form.line1.value|default_if_none:'' }}" />
+                  </div>
+                </div>
+
+                <!-- City Field -->
+                <div class="row">
+                  <label for="city">City</label>
+                  <div class="input-box">
+                    <select id="city" name="city">
+                      <option value="">Select City</option>
+                      {% for city in form.city.field.queryset %}
+                      <option value="{{ city.pk }}" {% if form.city.value == city.pk %}selected{% endif %}>{{ city.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Remaining fields and form submission button -->
 
                 <div class="bpr-row bpr-row-cat">
                   <div class="bpr-utitle">Primary categories</div>

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
+
+from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
 from .models import CompanyProfile, Schedule
 from django.shortcuts import get_object_or_404, render, redirect
@@ -8,7 +10,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import CompanyProfileForm
 
-from companies.models import CompanyProfile, Location
+from companies.models import CompanyProfile
 
 from django.contrib.auth.models import User
 from account.models import CustomUser, UserProfile  # Import your CustomUser model
@@ -42,6 +44,9 @@ def company_detail(request):
 
     companies = user.owned_companies.all()
 
+    main_company = companies.first() if companies.exists() else None
+    main_branch = main_company.branches.first() if main_company and main_company.branches.exists() else None
+
     if companies.exists():
         main_company = companies.first()
         main_branch = companies.first().branches.first()
@@ -58,9 +63,17 @@ def company_detail(request):
         print("Form data:", request.POST)
 
         if form.is_valid():
-            print("Form is valid")
-            form.save()
-            print("Company profile updated")
+            company = form.save(commit=False)
+            address_data = {'line1': form.cleaned_data.get('line1')}
+            city = form.cleaned_data.get('city')
+
+            if city:
+                address_data['city'] = city
+
+            address, addr_created = Address.objects.get_or_create(**address_data)
+            company.address = address
+            company.save()
+
             return redirect('companies:company-public')  # Adjust the redirect as needed
         else:
             print("Form errors:", form.errors)
@@ -90,13 +103,13 @@ def company_profile_detail(request, pk):
     for branch in company.branches.all():
         schedules = branch.schedules.all()
         phone_numbers = branch.phone_numbers_rel.all()
-        locations = Location.objects.filter(branch=branch)
+        address = branch.address
 
         branches_with_details.append({
             'branch': branch,
             'schedules': schedules,
             'phone_numbers': phone_numbers,
-            'locations': locations
+            'address': address
         })
 
     # Prepare context

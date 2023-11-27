@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'storages',
     'phonenumber_field',
+    'locations',
 ]
 ELASTICSEARCH_DSL = {
     'default': {
