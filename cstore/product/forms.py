@@ -144,7 +144,7 @@ class ProductForm(forms.ModelForm):
 
 class CompanyProductForm(forms.ModelForm):
     phone_number = forms.CharField(max_length=50, required=False)
-    company_name = forms.ModelChoiceField(queryset=CompanyProfile.objects.all(), empty_label="Select Company", required=False)
+    company = forms.ModelChoiceField(queryset=CompanyProfile.objects.all(), empty_label="Select Company", required=False)
 
 
     class Meta:

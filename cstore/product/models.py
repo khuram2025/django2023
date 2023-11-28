@@ -79,6 +79,8 @@ class Product(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"),blank=True, null=True )
+    company = models.ForeignKey('companies.CompanyProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
+
     
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))

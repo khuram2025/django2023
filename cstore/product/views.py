@@ -71,8 +71,20 @@ def create_company_product(request):
             product = form.save(commit=False)
             product.view_count = 0
             print("View Count Set:", product.view_count)
-            company_profile = CompanyProfile.objects.get(owner=request.user)
-            product.company_information = company_profile
+
+            # Check if company information is being received
+            print("Form company data:", form.cleaned_data.get('company'))
+
+            # Check if company is found for the current user
+            if request.user and request.user.is_authenticated:
+                company_profile = CompanyProfile.objects.get(owner=request.user)
+                print("Company Profile Found:", company_profile)
+            
+            if 'company' in form.cleaned_data and form.cleaned_data['company']:
+                product.company = form.cleaned_data['company']
+                print("Company Assigned to Product:", product.company)
+            else:
+                print("No Company Assigned")
             product.save()
 
             print("Product saved:", product)  # Print the saved product
@@ -116,6 +128,8 @@ def product_detail(request, pk):
     try:
         # Retrieve the Product instance
         product = get_object_or_404(Product, pk=pk)
+        if product.company:
+            print(f"Company Name: {product.company.name}")
         custom_field_values = CustomFieldValue.objects.filter(product=product)
 
         custom_fields_dict = {cfv.custom_field.name: cfv.value for cfv in custom_field_values}

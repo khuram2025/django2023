@@ -226,18 +226,21 @@
               </div>
 
               <div class="data">
-                {% if product.seller_information.user %}
-                <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
-                  {{ product.seller_information.contact_name }}
-                </a>
-                {% else %}
-                <span class="name">{{ product.seller_information.contact_name }}</span>
-                {% endif %}
+    {% if product.company %}
+        <span class="name">{{ product.company.name }}</span>
+        <div class="phone">{{ product.company.phone_number }}</div>
+        <!-- Add more fields as needed -->
+    {% elif product.seller_information.user %}
+        <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
+            {{ product.seller_information.contact_name }}
+        </a>
+        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+    {% else %}
+        <span class="name">{{ product.seller_information.contact_name }}</span>
+        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+    {% endif %}
+</div>
 
-
-                <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
-
-              </div>
             </div>
 
             <div class="line-rating">

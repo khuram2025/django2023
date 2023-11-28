@@ -46,21 +46,21 @@ INSTALLED_APPS = [
     'product',
     'search',
     'companies',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     'rest_framework',
     'storages',
     'phonenumber_field',
     'locations',
 ]
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'https://127.0.0.1:9200',
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'https://127.0.0.1:9200',
         
-        'verify_certs': False,
-        'ssl_show_warn': False
-    },
-}
+#         'verify_certs': False,
+#         'ssl_show_warn': False
+#     },
+# }
 
 
 
