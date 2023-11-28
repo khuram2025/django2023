@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %} {% block content %}
+{% extends 'home/base.html' %} {% load humanize %} {% block content %}
 
 <body id="home" class="layout-default dvc-ios demo">
   {% include 'home/header.html' %}
@@ -179,15 +179,16 @@
             <div id="gallery-view" class="white search-items-wrap">
               <div id="listing-card-list" class="block listing-card-list listing-grid">
                 <div class="wrap products grid">
+                  {% for product in company_products %}
                   <div class="simple-prod o1">
                     <div class="simple-wrap" title="">
                       <div class="img-wrap">
-                        <a class="img" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2">
-                          <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/0/1_thumbnail.jpg" alt="iPhone gonna be cool" style="display: block; transition: all 0.2s ease 0s" />
+                        <a class="img" href="{% url 'product:product_detail' pk=product.pk %}">
+                          <img class="lazy loaded" src="product.images.all.0.image.url " alt="iPhone gonna be cool" style="display: block; transition: all 0.2s ease 0s" />
                         </a>
 
-                        <a class="bar" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2">
-                          <div class="price isGrid isDetail"><span>568.00 $</span></div>
+                        <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}">
+                          <div class="price isGrid isDetail"><span>{{ product.price }} Rs.</span></div>
 
                           <div class="image-counter"><i class="fas fa-camera"></i> 3</div>
                         </a>
@@ -202,25 +203,24 @@
                       <div class="data">
                         <div class="info">Borkowice, Poland</div>
 
-                        <a class="title" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2">iPhone gonna be cool</a>
+                        <a class="title" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2">{{ product.title }}</a>
 
-                        <div class="description isDetail">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ex felis, aliquet ac pellentesque ut, vehicula quis enim. Vivamus at vehicula enim. Nulla eu aliquam ex. Fusce pretium libero erat, ac dignissim odio porta in. Pellentesque vehicula consequat elit, ut imperdiet sapien ullamcorper eu. Vestibulum consectetur velit lectus, nec tempus lorem scele...</div>
+                        <div class="description isDetail">{{ product.description }}</div>
 
-                        <div class="price standalone isList"><span>568.00 $</span></div>
+                        <div class="price standalone isList"><span>{{ product.price }} Rs.</span></div>
 
                         <div class="extra">
-                          <span>1 year ago</span>
-                          <span>Sporting Goods - Bicycles</span>
+                          <span>{{ product.updated_at|timesince }} ago</span>
+
+                          <span>{{ product.category }} - {{ product.subcategory }}</span>
 
                           <span>New</span>
 
-                          <span>Sell</span>
-
-                          <span>463 people viewed</span>
+                          <span>{{ product.view_count }} people viewed</span>
                         </div>
 
                         <div class="action isDetail">
-                          <div class="price"><span>568.00 $</span></div>
+                          <div class="price"><span>{{ product.price }} Rs.</span></div>
                         </div>
 
                         <div class="contact isDetail">
@@ -231,7 +231,7 @@
                       </div>
 
                       <div class="right isList">
-                        <div class="price"><span>568.00 $</span></div>
+                        <div class="price"><span>{{ product.price }} Rs.</span></div>
 
                         <div class="favorite">
                           <a href="javascript://" class="fi_save_favorite fi_save fi_fav_2" rel="2" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
@@ -241,6 +241,7 @@
                       <div class="labels isGrid"></div>
                     </div>
                   </div>
+                  {%endfor%}
                 </div>
               </div>
             </div>

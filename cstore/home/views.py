@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import json
+from companies.models import CompanyProfile
 from product.models import Category, Product
 import requests
 from django.http import JsonResponse
@@ -97,6 +98,7 @@ def index(request):
         products = products_query.filter(created_at__gte=date_30_days_ago).order_by('-view_count')[:10]
     if len(products) < 10:
         products = products_query.order_by('-view_count')[:10]
+    companies = CompanyProfile.objects.all()[:10]
 
     top_cities = Product.objects.values('city__name').annotate(product_count=Count('id')).order_by('-product_count')[:5]
 
@@ -124,6 +126,7 @@ def index(request):
         'products': products,
         'selected_city': selected_city,
         'top_cities': top_cities,
+        'companies': companies,
     }
     return render(request, 'home/index.html', context)
 

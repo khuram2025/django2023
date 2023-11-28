@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
+from product.models import Product
 
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -111,11 +112,14 @@ def company_profile_detail(request, pk):
             'phone_numbers': phone_numbers,
             'address': address
         })
+        
+    company_products = Product.objects.filter(company=company)
 
     # Prepare context
     context = {
         'company': company,
         'branches_with_details': branches_with_details,
+        'company_products': company_products,
     }
 
     return render(request, 'companies/company_public.html', context)
