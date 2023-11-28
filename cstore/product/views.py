@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.models import CustomUser, UserProfile
+from companies.models import CompanyProfile
 from .models import CustomFieldValue, Product
-from .forms import ProductForm
+from .forms import CompanyProductForm, ProductForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
@@ -57,6 +58,52 @@ def create_product(request):
         form = ProductForm(user=request.user)
 
     return render(request, 'product/add_product.html', {'form': form})
+
+
+def create_company_product(request):
+    if request.method == 'POST':
+        form = CompanyProductForm(request.POST, request.FILES, user=request.user)
+        
+        print("Form Received: POST =", request.POST)  # Print the POST data received
+        print("Form Received: FILES =", request.FILES)  # Print the FILES data received
+
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.view_count = 0
+            print("View Count Set:", product.view_count)
+            company_profile = CompanyProfile.objects.get(owner=request.user)
+            product.company_information = company_profile
+            product.save()
+
+            print("Product saved:", product)  # Print the saved product
+
+            # Handle custom fields
+            for key, value in request.POST.items():
+                if key.startswith('custom_field_'):
+                    field_id = int(key.split('_')[-1])
+                    custom_field = CustomField.objects.get(id=field_id)
+                    CustomFieldValue.objects.update_or_create(
+                        product=product,
+                        custom_field=custom_field,
+                        defaults={'value': value}
+                    )
+
+            # Handle the images
+            images = request.FILES.getlist('images')
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
+            
+            print("Product images uploaded")  # Confirmation of image upload
+
+            messages.success(request, 'Product added successfully!')
+            return redirect('product:product_detail', pk=product.pk)
+        else:
+            print("Form errors:", form.errors)  # Print form errors
+            messages.error(request, "There was an error with the form. Please check the details.")
+    else:
+        form = CompanyProductForm(user=request.user)
+
+    return render(request, 'product/add_company_product.html', {'form': form})
 
 from django.http import JsonResponse
 

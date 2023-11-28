@@ -68,6 +68,7 @@ class SellerInformation(models.Model):
         return 0
 
 
+
 class Product(models.Model):
     CONDITION_CHOICES = [
         ('new', _('New')),
@@ -77,7 +78,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
-    seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"))
+    seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"),blank=True, null=True )
     
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
@@ -107,7 +108,6 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
     
-
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='product_images/', verbose_name=_("Image"))

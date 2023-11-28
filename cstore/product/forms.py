@@ -1,4 +1,6 @@
 from django import forms
+
+from companies.models import CompanyProfile
 from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField
 from django import forms
 from .models import Product, SellerInformation, Category, City
@@ -135,6 +137,95 @@ class ProductForm(forms.ModelForm):
 
         return product
 
+
+
+
+
+
+class CompanyProductForm(forms.ModelForm):
+    phone_number = forms.CharField(max_length=50, required=False)
+    company_name = forms.ModelChoiceField(queryset=CompanyProfile.objects.all(), empty_label="Select Company", required=False)
+
+
+    class Meta:
+        model = Product
+        exclude = ['seller_information','view_count']  # Exclude the seller_information field
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(CompanyProductForm, self).__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(parent__isnull=True, status=True)
+        self.fields['city'].queryset = City.objects.all()
+
+        if self.user and self.user.is_authenticated:
+            company_profile = CompanyProfile.objects.get(owner=self.user)
+            self.fields['address'].initial = company_profile.address
+            self.fields['phone_number'].initial = company_profile.phone_number
+
+        # Custom fields setup as in the original ProductForm
+    def get_field_for_type(self, field_type):
+        field_class = forms.CharField
+        field_kwargs = {'required': False}
+
+        if field_type == 'number':
+            field_class = forms.DecimalField
+        elif field_type == 'email':
+            field_class = forms.EmailField
+        elif field_type == 'phone':
+            field_class = forms.CharField
+        elif field_type == 'url':
+            field_class = forms.URLField
+        elif field_type == 'color':
+            field_class = forms.CharField
+        elif field_type == 'textarea':
+            field_class = forms.CharField
+            field_kwargs['widget'] = forms.Textarea
+        elif field_type == 'select':
+            field_class = forms.ChoiceField
+            field_kwargs['choices'] = []
+        elif field_type == 'checkbox':
+            field_class = forms.MultipleChoiceField
+            field_kwargs['widget'] = forms.CheckboxSelectMultiple
+            field_kwargs['choices'] = []
+        elif field_type == 'radio':
+            field_class = forms.ChoiceField
+            field_kwargs['widget'] = forms.RadioSelect
+            field_kwargs['choices'] = []
+        elif field_type == 'date':
+            field_class = forms.DateField
+        elif field_type == 'date_interval':
+            field_class = forms.CharField
+
+        return field_class(**field_kwargs)
+
+
+    def save(self, commit=True):
+        product = super(CompanyProductForm, self).save(commit=False)
+        
+        if self.user and self.user.is_authenticated:
+            company_profile = CompanyProfile.objects.get(owner=self.user)
+            product.company_information = company_profile
+
+        product.youtube_video_url = self.cleaned_data.get('youtube_video_url')
+        product.facebook_video_url = self.cleaned_data.get('facebook_video_url')
+        product.web_link = self.cleaned_data.get('web_link')
+
+
+        if commit:
+            product.save()
+            # After saving the product, now save custom fields
+            for field_name, value in self.cleaned_data.items():
+                if field_name.startswith('custom_field_'):
+                    field_id = int(field_name.split('_')[-1])
+                    custom_field = CustomField.objects.get(id=field_id)
+                    CustomFieldValue.objects.update_or_create(
+                        product=product,
+                        custom_field=custom_field,
+                        defaults={'value': value}
+                    )
+
+            self.save_m2m()
+        return product
 
 class ProductImageForm(forms.ModelForm):
     class Meta:

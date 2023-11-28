@@ -1,31 +1,33 @@
-{% extends 'home/base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'home/base.html' %} {% load static %} {% block content %}
 
 <body id="body-item-post" class="item-publish">
   {% include 'home/header.html' %}
 
   <div class="container">
     <div class="box">
-      <h1>Post your company ad</h1>
-      <form name="company_item" action="{% url 'product:add_company_product' %}" method="post" enctype="multipart/form-data">
+      <h1>Post Your Company Ad</h1>
+      <form name="company_item" action="{% url 'product:add_product_company' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Additional fields specific to companies can be added here -->
-
-        <!-- Main Category Field -->
+        <!-- Category Field -->
         <div class="form-section">
           <label for="id_category">{{ form.category.label }}</label>
           {{ form.category }}
         </div>
-
         <!-- Subcategory Field -->
-        <div class="form-section" id="subcategory-section" style="display: none;">
+        <div class="form-section" id="subcategory-section" style="display: none">
           <label for="id_subcategory">Subcategory</label>
           <select id="id_subcategory" name="subcategory" class="form-control">
             <option value="">Select subcategory</option>
             <!-- Options will be populated based on the main category selection -->
           </select>
+        </div>
+        <!-- Company Name Field -->
+        <div class="form-section">
+          <label for="id_company_name">{{ form.company_name.label }}</label>
+          {{ form.company_name }} {% if form.company_name.errors %} {% for error in form.company_name.errors %}
+          <div class="alert alert-danger">{{ error }}</div>
+          {% endfor %} {% endif %}
         </div>
 
         <!-- City Field -->
@@ -39,31 +41,12 @@
           <label for="id_address">{{ form.address.label }}</label>
           {{ form.address }}
         </div>
-        
-<!-- Company Information Fields -->
-<div class="form-section">
-    <h2>Company Information</h2>
-  <div class="form-section">
-  
-  <div class="form-group">
-    <label for="id_company_name">Select Company</label>
-    {{ form.company_name }}
-    {% for error in form.company_name.errors %}
-      <div class="alert alert-danger">{{ error }}</div>
-    {% endfor %}
-  </div>
-</div>
 
-  <div class="form-group">
-    <label for="id_company_contact_number">Company Contact Number</label>
-    {{ form.company_contact_number }}
-    {% for error in form.company_contact_number.errors %}
-      <div class="alert alert-danger">{{ error }}</div>
-    {% endfor %}
-  </div>
-</div>
-<!-- Rest of your form fields... -->
-
+        <!-- Phone Number Field (from CompanyProfile) -->
+        <div class="form-section">
+          <label for="id_phone_number">{{ form.phone_number.label }}</label>
+          {{ form.phone_number }}
+        </div>
 
         <!-- Price Field -->
         <div class="form-section">
@@ -107,32 +90,15 @@
           {{ form.web_link }}
         </div>
 
-        <div  id="custom-fields-container" class="form-section">
-          <h2>Additional Information</h2>
-          {% for field in form.custom_fields %}
-              <div class="id="custom-fields-container" form-group">
-                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                  {{ field }}
-                  {% if field.help_text %}
-                      <small class="form-text text-muted">{{ field.help_text }}</small>
-                  {% endif %}
-                  {% for error in field.errors %}
-                      <div class="alert alert-danger">{{ error }}</div>
-                  {% endfor %}
-              </div>
-          {% endfor %}
-      </div>
-
         <!-- Formset for images -->
         <div class="form-section">
-          <div class="image-upload-instructions">
-            You can upload up to 15 pictures
-          </div>
+          <div class="image-upload-instructions">You can upload up to 15 pictures</div>
           <div class="image-upload-box">
             <label for="id_images">
-              <i class="fa fa-camera" aria-hidden="true"></i> <!-- Use your preferred icon library -->
+              <i class="fa fa-camera" aria-hidden="true"></i>
+              <!-- Use your preferred icon library -->
               <span>Click or Drop for Upload Image</span>
-              <input type="file" name="images" multiple id="id_images" class="form-control">
+              <input type="file" name="images" multiple id="id_images" class="form-control" />
             </label>
           </div>
           <!-- Image preview container -->
@@ -141,24 +107,29 @@
           </div>
         </div>
 
+        <!-- Custom Fields Container -->
+        <div id="custom-fields-container" class="form-section">
+          <!-- Custom fields will be populated here -->
+        </div>
+
         <!-- Messages -->
         {% if messages %}
-        <ul class="messages">
+        <div class="messages">
           {% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+          <div class="{{ message.tags }}">{{ message }}</div>
           {% endfor %}
-        </ul>
+        </div>
         {% endif %}
 
         <!-- Submit Button -->
-        <button type="submit" class="btn">Submit</button>
-
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   </div>
 
   {% include 'home/footer.html' %}
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       // Function to read and preview image
@@ -171,29 +142,28 @@
             var reader = new FileReader();
             reader.onload = function (e) {
               // Create an image element for preview
-              var img = $('<img>', {
+              var img = $("<img>", {
                 src: e.target.result,
-                class: 'image-preview',
-                alt: 'Image preview',
-                style: 'max-width: 100px; max-height: 100px; margin: 10px;' // Adjust the size as necessary
+                class: "image-preview",
+                alt: "Image preview",
+                style: "max-width: 100px; max-height: 100px; margin: 10px;", // Adjust the size as necessary
               });
               container.append(img); // Append new images without clearing existing ones
-            }
+            };
             reader.readAsDataURL(file);
           });
         }
       }
 
       // Initialize previews for already selected files
-      readURL($('#id_images')[0]);
+      readURL($("#id_images")[0]);
 
       // Listen for changes in the image input
-      $('#id_images').on('change', function () {
+      $("#id_images").on("change", function () {
         readURL(this);
       });
     });
   </script>
-
 
   <script type="text/javascript">
     $(document).ready(function () {
@@ -220,86 +190,86 @@
       $('#id_category').change(updateSubcategoryOptions);
       // No need to run on document ready if you want it to only show when a category is selected
     });
-    
   </script>
   <script>
-  // The rest of your code...
+      // The rest of your code...
 
-$('#id_category').change(function () {
-  var categoryId = $(this).val();
-  loadCustomFields(categoryId);
-  // No need to call updateSubcategoryOptions() here if it's already called inside loadCustomFields()
-});
+    $('#id_category').change(function () {
+      var categoryId = $(this).val();
+      loadCustomFields(categoryId);
+      // No need to call updateSubcategoryOptions() here if it's already called inside loadCustomFields()
+    });
 
-function loadCustomFields(categoryId) {
-  if (!categoryId) {
-      $('#custom-fields-container').empty();
-      return;
-  }
-  $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
-      $('#custom-fields-container').empty();
-      $.each(data.custom_fields, function (index, field) {
-          var input;
-          switch(field.field_type) {
-              case 'text':
-              case 'number':
-              case 'email':
-              case 'url':
-              case 'date':
-                  input = $('<input>', {
-                      type: field.field_type,
-                      class: 'form-control',
-                      name: 'custom_field_' + field.id,
-                      id: 'id_custom_field_' + field.id
-                  });
-                  break;
-              case 'textarea':
-                  input = $('<textarea>', {
-                      class: 'form-control',
-                      name: 'custom_field_' + field.id,
-                      id: 'id_custom_field_' + field.id
-                  });
-                  break;
-              case 'select':
-                  input = $('<select>', {
-                      class: 'form-control',
-                      name: 'custom_field_' + field.id,
-                      id: 'id_custom_field_' + field.id
-                  });
-                  field.options.split(',').forEach(function(option) {
-                      input.append($('<option>', { value: option, text: option }));
-                  });
-                  break;
-              case 'radio':
-              case 'checkbox':
-                  input = $('<div>');
-                  field.options.split(',').forEach(function(option) {
-                      var singleOption = $('<input>', {
+    function loadCustomFields(categoryId) {
+      if (!categoryId) {
+          $('#custom-fields-container').empty();
+          return;
+      }
+      $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
+          $('#custom-fields-container').empty();
+          $.each(data.custom_fields, function (index, field) {
+              var input;
+              switch(field.field_type) {
+                  case 'text':
+                  case 'number':
+                  case 'email':
+                  case 'url':
+                  case 'date':
+                      input = $('<input>', {
                           type: field.field_type,
+                          class: 'form-control',
                           name: 'custom_field_' + field.id,
-                          id: 'id_custom_field_' + field.id + '_' + option,
-                          value: option
+                          id: 'id_custom_field_' + field.id
                       });
-                      var label = $('<label>', {
-                          text: option,
-                          'for': 'id_custom_field_' + field.id + '_' + option
+                      break;
+                  case 'textarea':
+                      input = $('<textarea>', {
+                          class: 'form-control',
+                          name: 'custom_field_' + field.id,
+                          id: 'id_custom_field_' + field.id
                       });
-                      input.append(singleOption).append(label);
-                  });
-                  break;
-              // Add cases for other types if necessary
-          }
+                      break;
+                  case 'select':
+                      input = $('<select>', {
+                          class: 'form-control',
+                          name: 'custom_field_' + field.id,
+                          id: 'id_custom_field_' + field.id
+                      });
+                      field.options.split(',').forEach(function(option) {
+                          input.append($('<option>', { value: option, text: option }));
+                      });
+                      break;
+                  case 'radio':
+                  case 'checkbox':
+                      input = $('<div>');
+                      field.options.split(',').forEach(function(option) {
+                          var singleOption = $('<input>', {
+                              type: field.field_type,
+                              name: 'custom_field_' + field.id,
+                              id: 'id_custom_field_' + field.id + '_' + option,
+                              value: option
+                          });
+                          var label = $('<label>', {
+                              text: option,
+                              'for': 'id_custom_field_' + field.id + '_' + option
+                          });
+                          input.append(singleOption).append(label);
+                      });
+                      break;
+                  // Add cases for other types if necessary
+              }
 
-          var label = $('<label>', {
-              'for': 'id_custom_field_' + field.id,
-              text: field.name
+              var label = $('<label>', {
+                  'for': 'id_custom_field_' + field.id,
+                  text: field.name
+              });
+
+              var div = $('<div>', {class: 'form-group'}).append(label).append(input);
+              $('#custom-fields-container').append(div);
           });
-
-          var div = $('<div>', {class: 'form-group'}).append(label).append(input);
-          $('#custom-fields-container').append(div);
       });
-  });
-}
+    }
   </script>
 </body>
+
 {% endblock %}

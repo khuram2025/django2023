@@ -6,6 +6,7 @@ app_name = 'product'
 urlpatterns = [
     # ... other url patterns
     path('add_product/', views.create_product, name='add_product'),
+    path('add_product_company/', views.create_company_product, name='add_product_company'),
     path('search-cities/', views.search_cities, name='search_cities'),
     path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),  # URL for loading subcategories via AJAX
 

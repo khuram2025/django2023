@@ -18,6 +18,7 @@ class CompanyProfile(models.Model):
     facebook_link = models.URLField(blank=True, null=True)
     youtube_link = models.URLField(blank=True, null=True)
     instagram_link = models.URLField(blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
 
 
