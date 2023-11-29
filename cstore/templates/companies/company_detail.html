@@ -247,7 +247,9 @@
                     <!-- Facebook Link -->
                     <div class="bpr-line">
                       <span>Facebook</span>
+                      {% if main_company %}
                       <input type="text" class="bpr-input bpr-soc" name="facebook_link" value="{{ form.facebook_link.value|default:main_company.facebook_link }}" placeholder="http://" />
+                    {% endif %}
                     </div>
                     <!-- Twitter Link -->
                     <div class="bpr-line">
