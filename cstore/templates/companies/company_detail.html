@@ -254,17 +254,23 @@
                     <!-- Twitter Link -->
                     <div class="bpr-line">
                       <span>Twitter</span>
+                      {% if main_company %}
                       <input type="text" class="bpr-input bpr-soc" name="twitter_link" value="{{ form.twitter_link.value|default:main_company.twitter_link }}" placeholder="http://" />
+                    {% endif %}
                     </div>
                     <!-- Youtube Link -->
                     <div class="bpr-line">
                       <span>Youtube</span>
+                      {% if main_company %}
                       <input type="text" class="bpr-input bpr-soc" name="youtube_link" value="{{ form.youtube_link.value|default:main_company.youtube_link }}" placeholder="http://" />
+                   {% endif %}
                     </div>
                     <!-- Instagram Link -->
                     <div class="bpr-line">
                       <span>Instagram</span>
+                      {% if main_company %}
                       <input type="text" class="bpr-input bpr-soc" name="instagram_link" value="{{ form.instagram_link.value|default:main_company.instagram_link }}" placeholder="http://" />
+                    {% endif %}
                     </div>
                   </div>
                 </div>

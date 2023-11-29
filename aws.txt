@@ -11,6 +11,8 @@ git clean -f
 source ~/myenv/bin/activate
 cd Django2023/cstore
 
+git pull origin 1st
+
 python3 manage.py makemigrations --settings=cstore.settings.prod
 python3 manage.py migrate --settings=cstore.settings.prod
 
