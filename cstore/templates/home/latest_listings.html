@@ -5,7 +5,7 @@
 
       <div id="latest-items" class="products grid" class="default-font font-size-14">
         {% for product in products_list %}
-        
+
         <div class="simple-prod o7 medium" class="default-font font-size-14">
           <div class="simple-wrap" title="" class="default-font font-size-14">
             <div class="img-wrap" class="default-font font-size-14">
@@ -13,7 +13,7 @@
                 <img class="lazy" src="{{ product.images.all.0.image.url }}" data-src="{{ product.images.all.0.image.url }}" alt="BMW Q7 2019" class="default-font font-size-14" />
               </a>
 
-              <a class="bar" href="https://epsilon.mb-themes.com/vehicles/cars/bmw-q7-2019_i277" class="default-font font-size-17">
+              <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}" class="default-font font-size-17">
                 <div class="price isGrid isDetail" class="default-font font-size-17"><span class="default-font font-size-17">{{product.price}} Rs.</span></div>
 
                 <div class="image-counter" class="default-font font-size-13"><i class="fas fa-camera" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="11px"></i> {{ product.images_count }}</div>
@@ -66,8 +66,8 @@
             <div class="labels isGrid" class="default-font font-size-14"></div>
           </div>
         </div>
-        {% endfor %}
-        {% comment %} <div class="simple-prod o8 medium st-sold" class="default-font font-size-14">
+        {% endfor %} {% comment %}
+        <div class="simple-prod o8 medium st-sold" class="default-font font-size-14">
           <div class="simple-wrap" title="Sold" class="default-font font-size-14">
             <div class="img-wrap" class="default-font font-size-14">
               <a class="img" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289" class="default-font font-size-14">
@@ -136,8 +136,8 @@
               <span class="label sold" class="default-font font-size-12">Sold</span>
             </div>
           </div>
-        </div> {% endcomment %}
-       
+        </div>
+        {% endcomment %}
       </div>
     </div>
   </div>
