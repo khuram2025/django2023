@@ -243,22 +243,30 @@
 
                 <div class="bpr-row bpr-row-sc">
                   <div class="bpr-utitle">Social network links</div>
-
                   <div class="bpr-inputs">
+                    <!-- Facebook Link -->
                     <div class="bpr-line">
                       <span>Facebook</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_fb" value="{{ main_company.facebook_link }}" placeholder="http://" />
+                      <input type="text" class="bpr-input bpr-soc" name="facebook_link" value="{{ form.facebook_link.value|default:main_company.facebook_link }}" placeholder="http://" />
                     </div>
+                    <!-- Twitter Link -->
                     <div class="bpr-line">
                       <span>Twitter</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_tw" value="{{ main_company.twitter_link }}" placeholder="http://" />
+                      <input type="text" class="bpr-input bpr-soc" name="twitter_link" value="{{ form.twitter_link.value|default:main_company.twitter_link }}" placeholder="http://" />
                     </div>
+                    <!-- Youtube Link -->
                     <div class="bpr-line">
                       <span>Youtube</span>
-                      <input type="text" class="bpr-input bpr-soc" name="bpr-soc_yt" value="{{ main_company.youtube_link }}" placeholder="http://" />
+                      <input type="text" class="bpr-input bpr-soc" name="youtube_link" value="{{ form.youtube_link.value|default:main_company.youtube_link }}" placeholder="http://" />
+                    </div>
+                    <!-- Instagram Link -->
+                    <div class="bpr-line">
+                      <span>Instagram</span>
+                      <input type="text" class="bpr-input bpr-soc" name="instagram_link" value="{{ form.instagram_link.value|default:main_company.instagram_link }}" placeholder="http://" />
                     </div>
                   </div>
                 </div>
+
 
                 <div class="bpr-row bpr-row-buttons">
                   <button class="bpr-btn" type="submit" title="Update Profile">Submit</button>

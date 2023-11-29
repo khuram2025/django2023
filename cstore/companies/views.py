@@ -59,6 +59,12 @@ def company_detail(request):
         if form.is_valid():
             company = form.save(commit=False)
 
+            company.facebook_link = form.cleaned_data.get('facebook_link', '')
+            company.twitter_link = form.cleaned_data.get('twitter_link', '')
+            company.youtube_link = form.cleaned_data.get('youtube_link', '')
+            company.instagram_link = form.cleaned_data.get('instagram_link', '')
+
+
             # Handle address data
             address_data = {'line1': form.cleaned_data.get('line1')}
             city = form.cleaned_data.get('city')
