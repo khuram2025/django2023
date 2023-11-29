@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Product
+from product.models import Category, Product
 
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -44,41 +44,37 @@ def company_detail(request):
     profile, created = UserProfile.objects.get_or_create(user=user)
 
     companies = user.owned_companies.all()
+    categories = Category.objects.all()
 
     main_company = companies.first() if companies.exists() else None
+    selected_category_ids = []
+    if main_company:
+        selected_category_ids = main_company.working_categories.values_list('id', flat=True)
+
+
     main_branch = main_company.branches.first() if main_company and main_company.branches.exists() else None
 
-    if companies.exists():
-        main_company = companies.first()
-        main_branch = companies.first().branches.first()
-        if main_branch:
-            for schedule in main_branch.schedules.all():
-                print(f"Day: {schedule.get_day_display()}, Time: {schedule.start_time} - {schedule.end_time}")
-    else:
-        main_branch = None
-
     if request.method == 'POST':
-        print("Received POST request")
-
         form = CompanyProfileForm(request.POST, request.FILES, instance=main_company)
-        print("Form data:", request.POST)
-
         if form.is_valid():
             company = form.save(commit=False)
+
+            # Handle address data
             address_data = {'line1': form.cleaned_data.get('line1')}
             city = form.cleaned_data.get('city')
-
             if city:
                 address_data['city'] = city
-
             address, addr_created = Address.objects.get_or_create(**address_data)
             company.address = address
             company.save()
 
+            # Handle working categories
+            working_categories = form.cleaned_data.get('working_categories')
+            company.working_categories.set(working_categories)
+
             return redirect('companies:company-public')  # Adjust the redirect as needed
         else:
             print("Form errors:", form.errors)
-
     else:
         form = CompanyProfileForm(instance=main_company)
 
@@ -91,6 +87,8 @@ def company_detail(request):
         'branch': main_branch,
         'day_choices': day_choices,
         'main_company': main_company,
+        'selected_category_ids': selected_category_ids,
+        'categories': categories,
     }
 
     return render(request, 'companies/company_detail.html', context)

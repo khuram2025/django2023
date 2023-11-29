@@ -5,12 +5,22 @@ from phonenumber_field.modelfields import PhoneNumberField
 from product.models import Category, City  # Import your existing Category model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import gettext_lazy as _
+
+
 
 
 class CompanyProfile(models.Model):
     name = models.CharField(max_length=200)
     owner = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='owned_companies')
     verified = models.BooleanField(default=False)
+    working_categories = models.ManyToManyField(
+        Category,
+        blank=True, 
+        null=True,
+        related_name='companies', 
+        verbose_name=_("Working Categories")
+    )
     about = models.TextField()
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
     cover_pic = models.ImageField(upload_to='company_covers/', blank=True, null=True)

@@ -205,33 +205,29 @@
 
                 <div class="bpr-row bpr-row-cat">
                   <div class="bpr-utitle">Primary categories</div>
-
                   <div class="bpr-row-select-multiple">
-                    <input type="hidden" name="bpr-category" id="bpr-category" value="12" />
-
+                    <input type="hidden" name="bpr-category" id="bpr-category" />
                     <div class="bpr-select-cat">
+                      {% for category in categories %}
+                      {% if category.is_root_category %}
                       <div class="bpr-box-check bpr-check-parent" data-parent="0">
-                        <input type="checkbox" id="bpr-cat-1" value="1" />
-                        <label for="bpr-cat-1">For sale</label>
+                        <input type="checkbox" name="working_categories" id="bpr-cat-{{ category.id }}" value="{{ category.id }}" {% if category.id in selected_category_ids %}checked{% endif %} />
+                        <label for="bpr-cat-{{ category.id }}">{{ category.title }}</label>
                       </div>
-
-                      <div class="bpr-box-check bpr-check-child" data-parent="1">
-                        <input type="checkbox" id="bpr-cat-9" value="9" />
-                        <label for="bpr-cat-9">Animals</label>
+                      {% for child in category.get_children %}
+                      <div class="bpr-box-check bpr-check-child" data-parent="{{ category.id }}">
+                        <input type="checkbox" name="working_categories" id="bpr-cat-{{ child.id }}" value="{{ child.id }}" {% if child.id in selected_category_ids %}checked{% endif %} />
+                        <label for="bpr-cat-{{ child.id }}">{{ child.title }}</label>
                       </div>
-
-                      <div class="bpr-box-check bpr-check-parent" data-parent="0">
-                        <input type="checkbox" id="bpr-cat-4" value="4" />
-                        <label for="bpr-cat-4">Real estate</label>
-                      </div>
-
-                      <div class="bpr-box-check bpr-check-child" data-parent="8">
-                        <input type="checkbox" id="bpr-cat-95" value="95" />
-                        <label for="bpr-cat-95">Other Jobs</label>
-                      </div>
+                      {% endfor %}
+                      {% endif %}
+                      {% endfor %}
                     </div>
+
                   </div>
                 </div>
+
+
 
                 <div class="bpr-row bpr-row-oh">
                   <div class="bpr-utitle">Opening hours</div>
