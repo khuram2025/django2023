@@ -76,7 +76,7 @@ class Product(models.Model):
     ]
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
+    city = models.ForeignKey('locations.City', on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"),blank=True, null=True )
     company = models.ForeignKey('companies.CompanyProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
