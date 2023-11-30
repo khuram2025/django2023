@@ -39,16 +39,17 @@
               </div>
 
               <!-- Company Name -->
-              <div class="bpr-row">
-                <label for="name">Company Name</label>
-                <input type="text" name="name" value="{{ company_form.name.value }}">
-              </div>
+              <div class="bpr-row"><div class="form-group" style="margin-bottom: 20px;"> <!-- Added a bottom margin for spacing -->
+    <input type="text" name="name" placeholder="Company Name" class="form-control" value="{{ company_form.name.value }}">
+</div></div>
 
-              <!-- About -->
-              <div class="bpr-row">
-                <label for="about">About</label>
-                <textarea name="about">{{ company_form.about.value }}</textarea>
-              </div>
+
+<!-- About -->
+<div class="bpr-row"><div class="form-group">
+    <textarea name="about" placeholder="About" class="form-control" rows="4">{{ company_form.about.value }}</textarea>
+</div>
+</div>
+
 
               <!-- Social Network Links -->
               <div class="bpr-row bpr-row-sc">

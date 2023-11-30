@@ -38,8 +38,10 @@ def create_company(request):
         form = CompanyProfileForm()
     return render(request, 'companies/create_company.html', {'form': form})
 
+
+
 @login_required
-def company_detail(request):
+def company_edit(request):
     user = request.user
     profile, created = UserProfile.objects.get_or_create(user=user)
 

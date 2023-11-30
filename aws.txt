@@ -39,3 +39,6 @@ sudo systemctl status nginx
 
 
 psql -U channab -h localhost -d channabdb
+
+
+DROP DATABASE channabdb;
