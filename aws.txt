@@ -15,6 +15,7 @@ git pull origin 1st
 
 python3 manage.py makemigrations --settings=cstore.settings.prod
 python3 manage.py migrate --settings=cstore.settings.prod
+python3 manage.py shell --settings=cstore.settings.prod
 
 
 sudo systemctl restart gunicorn

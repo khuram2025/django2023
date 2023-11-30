@@ -12,9 +12,7 @@ class Category(MPTTModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     description = models.TextField(verbose_name=_("Description"))
-    seo_title = models.CharField(max_length=70, blank=True, verbose_name=_("SEO Title"))
-    seo_description = models.CharField(max_length=160, blank=True, verbose_name=_("SEO Description"))
-    seo_keywords = models.CharField(max_length=255, blank=True, verbose_name=_("SEO Keywords"))
+  
     status = models.BooleanField(default=True, verbose_name=_("Status (Active/Disabled)"))
     icon = models.ImageField(upload_to='icons/', verbose_name=_("Icon"), blank=True, null=True)
     image = models.ImageField(upload_to='category_images/', verbose_name=_("Category Image"), blank=True, null=True)
