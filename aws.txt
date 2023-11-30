@@ -25,6 +25,8 @@ python3 manage.py runserver 0.0.0.0:8000 --settings=cstore.settings.prod
 python3 manage.py makemigrations --settings=cstore.settings.prod
 python3 manage.py migrate --settings=cstore.settings.prod
 python3 manage.py collectstatic --settings=cstore.settings.prod
+python manage.py showmigrations --settings=cstore.settings.prod
+
 
 
 sudo systemctl restart gunicorn
@@ -32,3 +34,8 @@ sudo systemctl restart nginx
 
 sudo systemctl status gunicorn
 sudo systemctl status nginx
+
+
+
+
+psql -U channab -h localhost -d channabdb

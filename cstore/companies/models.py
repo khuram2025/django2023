@@ -43,7 +43,7 @@ class CompanyProfile(models.Model):
         return self.name
 
 class Branch(models.Model):
-    company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE, related_name='branches')
+    company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE, related_name='branches', null=True)
     name = models.CharField(max_length=200)
     working_categories = models.ManyToManyField(Category)
     phone_numbers = models.ManyToManyField('PhoneNumber', related_name='branch_phone_numbers')
