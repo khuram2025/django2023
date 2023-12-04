@@ -21,13 +21,21 @@ from django.core.files.base import ContentFile
 import base64
 from django.contrib.auth.decorators import login_required
 from account.forms import UserProfileForm
-
+import os
 
 
 @login_required
 def create_company(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST, request.FILES)
+        # Shorten the filenames if they are too long
+        for field in ['logo', 'cover_pic']:
+            if field in request.FILES:
+                file = request.FILES[field]
+                if len(file.name) > 100:
+                    # Keep the extension, shorten the filename
+                    name, ext = os.path.splitext(file.name)
+                    file.name = name[:100 - len(ext)] + ext
         print("POST Data:", request.POST)
         print("FILES Data:", request.FILES)
         if form.is_valid():
@@ -39,7 +47,7 @@ def create_company(request):
             print("Form Errors:", form.errors)  # Print form errors
     else:
         form = CompanyProfileForm()
-
+    print("City field choices:", form.fields['city'].queryset)
     return render(request, 'companies/create_company.html', {'form': form})
 
 

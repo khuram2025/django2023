@@ -1,5 +1,7 @@
 {% extends 'home/base.html' %} {% load static %} {% block content %}
 <link href="{% static 'create_company.css' %}" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
 <body id="user-dashboard" class="item-publish">
   {% include 'home/header.html' %}
 
@@ -26,7 +28,7 @@
 
                 <div class="user-image-container">
                   <img id="user-image" src="path_to_user_image.jpg" alt="User Image" />
-                  <button id="user-image-upload-button"><i class="fas fa-camera"></i></button>
+                  <button type="button" id="user-image-upload-button"><i class="fas fa-camera"></i></button>
                 </div>
 
                 <button type="button" id="upload-cover-button">Upload</button>
@@ -90,6 +92,8 @@
       </div>
     </div>
   </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       // Sync Custom File Input with Django Form Field for Cover Picture
