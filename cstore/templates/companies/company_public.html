@@ -45,7 +45,11 @@
         <div class="bpr-inside">
           <div class="bpr-cover">
             <div class="bpr-wrap">
+              {% if company.cover_pic %}
               <div class="bpr-wrap-img" style="background-image: url('{{ company.cover_pic.url }}')"></div>
+              {% else %}
+              <div class="bpr-wrap-img" style=""></div>
+              {% endif %}
 
               <form class="nocsrf" method="POST" name="bpr_contact" id="sellerContact" action="https://epsilon.mb-themes.com/company/michal">
                 <input type="hidden" name="identifier" value="michal" />
@@ -79,7 +83,11 @@
           <div class="bpr-profile">
             <div class="bpr-left">
               <div class="bpr-icon">
-                <img src="{{ company.logo.url }}" alt="Michal" />
+                {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="channab" />
+                {% else %}
+                <img src="" alt="channab" />
+                {% endif %}
 
                 <div class="bpr-type-wrap">
                   <div class="bpr-user-type bpr-type-2">Pro</div>

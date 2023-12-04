@@ -18,14 +18,22 @@
           <a class="bpr-comp" href="{% url 'companies:company-public' company.pk %}">
             <div class="bpr-cover">
               <div class="bpr-wrap">
+                {% if company.cover_pic %}
                 <div class="bpr-wrap-img" style="background-image: url('{{ company.cover_pic.url }}')"></div>
+                {% else %}
+                <div class="bpr-wrap-img" style=""></div>
+                {% endif %}
                 <div class="bpr-elip"></div>
               </div>
             </div>
 
             <div class="bpr-icon-wrap">
               <div class="bpr-icon">
+                {% if company.logo %}
                 <div style="background-image: url('{{ company.logo.url }}')"></div>
+                {% else %}
+                <div style=""></div>
+                {% endif %}
               </div>
             </div>
 

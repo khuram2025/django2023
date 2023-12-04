@@ -42,7 +42,7 @@ def create_company(request):
             company = form.save(commit=False)
             company.owner = request.user 
             company.save()
-            return redirect('company-public', pk=company.pk)
+            return redirect('companies:company-public', pk=company.pk)
         else:
             print("Form Errors:", form.errors)  # Print form errors
     else:
