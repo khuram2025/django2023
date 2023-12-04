@@ -1,0 +1,133 @@
+.form-container {
+  max-width: 700px; /* Set the maximum width of the form */
+  margin: 0 auto; /* Center the form */
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px;
+}
+.bpr-prof .form-section.form-full .textarea-fullwidth {
+  width: 100%; /* Full width */
+  height: 200px; /* Fixed height */
+  max-width: none; /* Remove max-width restriction */
+  padding: 1px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  float: none; /* Assuming you don't need the textarea to float */
+  margin: 0;
+}
+.bpr-prof input[type="text"],
+.bpr-prof input[type="url"] {
+  width: 100%;
+  padding: 8px;
+  float: left;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  height: 36px !important;
+  margin: 0;
+}
+
+.form-half {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 10px;
+}
+
+.form-full {
+  flex: 0 0 100%; /* Full width */
+  max-width: 100%; /* Full width */
+}
+
+@media (max-width: 768px) {
+  .form-half {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.profile-picture-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 20px; /* Space below the container for other form fields */
+  text-align: center; /* Center align for mobile view */
+  margin-bottom: 80px;
+}
+
+#profile-picture-preview {
+  height: 150px;
+  width: 100%;
+}
+
+.user-image-container {
+  position: absolute;
+  bottom: -84px; /* Half of the user image size */
+  left: 50%; /* Center in mobile view */
+  transform: translateX(-50%); /* Center in mobile view */
+  width: 168px;
+  height: 168px;
+}
+
+@media (min-width: 768px) {
+  .profile-picture-container {
+    text-align: left;
+  }
+
+  .user-image-container {
+    left: 20px; /* Space from the left side in desktop */
+    transform: translateX(0);
+  }
+}
+
+#user-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+}
+
+#user-image-upload-button {
+  position: absolute;
+  right: calc(15px - 10px);
+  bottom: calc(20px - 5px);
+  width: 30px; /* Width of the camera button */
+  height: 30px; /* Height of the camera button */
+  background-color: #fff;
+  border: 1px solid #ccc; /* Adjust border as needed */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#upload-cover-button,
+#remove-profile-button {
+  position: absolute;
+  right: 10px; /* 10px from the right of the container */
+  background-color: #3b49df;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold; /* Make text bolder */
+}
+
+#upload-cover-button {
+  width: 80;
+  bottom: 55px; /* Adjust as needed */
+}
+
+#remove-profile-button {
+  width: 80;
+  bottom: 25px; /* 10px from the bottom of the container */
+}
+
+/* Container for other form fields */
+.form-fields-container {
+  margin-top: 20px; /* Start after the profile-picture-container */
+}

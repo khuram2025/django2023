@@ -28,15 +28,20 @@ from account.forms import UserProfileForm
 def create_company(request):
     if request.method == 'POST':
         form = CompanyProfileForm(request.POST, request.FILES)
+        print("POST Data:", request.POST)
+        print("FILES Data:", request.FILES)
         if form.is_valid():
             company = form.save(commit=False)
             company.owner = request.user 
             company.save()
-            # Redirect to a new URL, for example, the company detail page
             return redirect('company-public', pk=company.pk)
+        else:
+            print("Form Errors:", form.errors)  # Print form errors
     else:
         form = CompanyProfileForm()
+
     return render(request, 'companies/create_company.html', {'form': form})
+
 
 
 

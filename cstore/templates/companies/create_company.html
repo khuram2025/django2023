@@ -1,9 +1,6 @@
-{% extends 'home/base.html' %}
-{% load static %}
-{% block content %}
-<!-- CSS and other existing HTML content -->
-
-<body id="user-dashboard" class="body-ua demo">
+{% extends 'home/base.html' %} {% load static %} {% block content %}
+<link href="{% static 'create_company.css' %}" rel="stylesheet" type="text/css" />
+<body id="user-dashboard" class="item-publish">
   {% include 'home/header.html' %}
 
   <!-- Main Content -->
@@ -15,64 +12,120 @@
 
       <div id="user-main">
         <div class="user-custom-box">
-
           <div id="bpr-prof" class="bpr-body bpr-prof">
             <h2>Create Company Profile</h2>
 
-            <form method="POST" action="{% url 'companies:create_company' %}" enctype="multipart/form-data">
+            <form name="company" action="{% url 'companies:create_company' %}" method="post" enctype="multipart/form-data" class="form-container">
               {% csrf_token %}
+              <div style="display: none">{{ form.logo }} {{ form.cover_pic }}</div>
 
-              <!-- Company Logo -->
-              <div class="bpr-row bpr-row-icon">
-                <div class="bpr-utitle">Company logo (100x100 px)</div>
-                <div class="bpr-inputs">
-                  <input type="file" name="logo" id="bpr-file-icon" class="bpr-file-icon">
+              <!-- Custom Interface for Image Upload -->
+              <div class="profile-picture-container">
+                <img id="profile-picture-preview" src="path_to_default_image.jpg" alt="Profile Picture" />
+                <input type="file" id="profile-picture-input" accept="image/*" style="display: none" />
+
+                <div class="user-image-container">
+                  <img id="user-image" src="path_to_user_image.jpg" alt="User Image" />
+                  <button id="user-image-upload-button"><i class="fas fa-camera"></i></button>
+                </div>
+
+                <button type="button" id="upload-cover-button">Upload</button>
+                <button type="button" id="remove-profile-button">Remove</button>
+              </div>
+
+              <div class="form-row">
+                <!-- Company Name -->
+                <div class="form-section form-half">
+                  <label for="id_name">{{ form.name.label }}</label>
+                  {{ form.name }}
+                </div>
+                <!-- City -->
+                <div class="form-section form-half">
+                  <label for="id_city">{{ form.city.label }}</label>
+                  {{ form.city }}
                 </div>
               </div>
 
-              <!-- Company Cover -->
-              <div class="bpr-row bpr-row-cover">
-                <div class="bpr-utitle">Company cover (1600x600 px)</div>
-                <div class="bpr-inputs">
-                  <input type="file" name="cover_pic" id="bpr-file-cover" class="bpr-file-cover">
-                </div>
+              <!-- About -->
+              <div class="form-section form-full">
+                <label for="id_about">{{ form.about.label }}</label>
+                <textarea name="about" id="id_about" class="textarea-fullwidth" required>{{ form.about.value }}</textarea>
               </div>
 
-              <!-- Company Name -->
-              <div class="bpr-row"><div class="form-group" style="margin-bottom: 20px;"> <!-- Added a bottom margin for spacing -->
-    <input type="text" name="name" placeholder="Company Name" class="form-control" value="{{ company_form.name.value }}">
-</div></div>
+              <!-- Social Media Links -->
+              <div class="form-section form-full">
+                <label for="id_twitter_link">{{ form.twitter_link.label }}</label>
+                {{ form.twitter_link }}
+              </div>
+              <div class="form-section form-full">
+                <label for="id_facebook_link">{{ form.facebook_link.label }}</label>
+                {{ form.facebook_link }}
+              </div>
+              <div class="form-section form-full">
+                <label for="id_youtube_link">{{ form.youtube_link.label }}</label>
+                {{ form.youtube_link }}
+              </div>
+              <div class="form-section form-full">
+                <label for="id_instagram_link">{{ form.instagram_link.label }}</label>
+                {{ form.instagram_link }}
+              </div>
 
+              <!-- Address Line 1 -->
+              <div class="form-section form-full">
+                <label for="id_line1">{{ form.line1.label }}</label>
+                {{ form.line1 }}
+              </div>
 
-<!-- About -->
-<div class="bpr-row"><div class="form-group">
-    <textarea name="about" placeholder="About" class="form-control" rows="4">{{ company_form.about.value }}</textarea>
-</div>
-</div>
-
-
-              <!-- Social Network Links -->
-              <div class="bpr-row bpr-row-sc">
-                <div class="bpr-utitle">Social network links</div>
-                <div class="bpr-inputs">
-                  <input type="text" name="facebook_link" placeholder="Facebook URL" value="{{ company_form.facebook_link.value }}">
-                  <input type="text" name="twitter_link" placeholder="Twitter URL" value="{{ company_form.twitter_link.value }}">
-                  <input type="text" name="youtube_link" placeholder="Youtube URL" value="{{ company_form.youtube_link.value }}">
-                  <input type="text" name="instagram_link" placeholder="Instagram URL" value="{{ company_form.instagram_link.value }}">
-                </div>
+              <!-- Working Categories -->
+              <div class="form-section form-full">
+                <label>{{ form.working_categories.label }}</label>
+                {{ form.working_categories }}
               </div>
 
               <!-- Submit Button -->
-              <div class="bpr-row bpr-row-buttons">
-                <button type="submit" class="bpr-btn">Submit</button>
-              </div>
+              <button type="submit" class="btn">Create Profile</button>
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Sync Custom File Input with Django Form Field for Cover Picture
+      document.getElementById("upload-cover-button").addEventListener("click", function () {
+        document.querySelector("#id_cover_pic").click(); // Assuming 'id_cover_pic' is the ID for the Django form field
+      });
 
-{% endblock %}
+      document.querySelector("#id_cover_pic").addEventListener("change", function (event) {
+        document.getElementById("profile-picture-input").files = event.target.files;
+        updateImagePreview(event, "profile-picture-preview");
+      });
+
+      // Sync Custom File Input with Django Form Field for Logo
+      document.getElementById("user-image-upload-button").addEventListener("click", function () {
+        document.querySelector("#id_logo").click(); // Assuming 'id_logo' is the ID for the Django form field
+      });
+
+      document.querySelector("#id_logo").addEventListener("change", function (event) {
+        document.getElementById("id_logo").files = event.target.files;
+        updateImagePreview(event, "user-image");
+      });
+
+      function updateImagePreview(event, imageElementId) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById(imageElementId).src = e.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+
+      function resetImagePreview(imageElementId, defaultImagePath, inputElementId) {
+        document.getElementById(imageElementId).src = defaultImagePath;
+        document.getElementById(inputElementId).value = "";
+      }
+    });
+  </script>
+
+  {% endblock %}
 </body>

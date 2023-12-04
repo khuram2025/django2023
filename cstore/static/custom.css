@@ -484,3 +484,19 @@ form label {
   margin-top: 196px;
   border: 4px solid #f3f3f3;
 }
+
+.aligned-form-section .form-section {
+  margin-left: 0;
+  padding-left: 0;
+  /* Other alignment-related styles */
+}
+
+.bpr-prof textareacompany {
+  width: 100%;
+  height: 200px;
+  padding: 8px;
+  float: left;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin: 0;
+}
