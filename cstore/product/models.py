@@ -1,6 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from account.models import CustomUser
+from PIL import Image
+from io import BytesIO
+from django.core.files import File
+from django.utils.translation import gettext_lazy as _
+
 from locations.models import City
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
@@ -112,6 +117,27 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='product_images/', verbose_name=_("Image"))
     alt_text = models.CharField(max_length=255, verbose_name=_("Alt text"), blank=True, null=True) # Important for SEO and accessibility
+
+    def save(self, *args, **kwargs):
+        # Open the uploaded image
+        pil_image = Image.open(self.image)
+        
+        if pil_image.mode in ("RGBA", "P"):  # P mode includes palette images
+            pil_image = pil_image.convert("RGB")
+
+        # Resize the image
+        output_size = (800, 800)  # You can change this to your desired dimensions
+        pil_image.thumbnail(output_size, Image.ANTIALIAS)
+
+        # Save the image to a BytesIO object
+        output_io_stream = BytesIO()
+        pil_image.save(output_io_stream, format='JPEG', quality=85)  # Adjust quality for your needs
+        output_io_stream.seek(0)
+
+        # Change the ImageField value to the newly modified image data
+        self.image = File(output_io_stream, name=self.image.name)
+
+        super(ProductImage, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.alt_text if self.alt_text else f"Image for {self.product.title}"
