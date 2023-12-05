@@ -41,16 +41,15 @@
 
               <div class="bpr-search-right">
                 <form id="city-filter-form" method="get" action="{% url 'companies:list-companies' %}">
-                  <select class="bpr-city" name="bpCity" id="city-dropdown">
-                    <option value="">All cities</option>
-                    {% for city in cities %}
-                    <option value="{{ city.id }}" {% if request.GET.bpCity == city.id|stringformat:"s" %}selected{% endif %}>
-                      {{ city.name }}
-                    </option>
-                    {% endfor %}
-                  </select>
-                  <!-- No need for a filter button, form will submit on city selection -->
-                </form>
+      <select class="bpr-city" name="bpCity" id="city-dropdown">
+        <option value="">All cities</option>
+        {% for city in cities %}
+        <option value="{{ city.id }}" {% if request.GET.bpCity == city.id|stringformat:"s" %}selected{% endif %}>
+          {{ city.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </form>
 
                 <select class="bpr-category" name="bpCategory">
                   <option value="">All categories</option>
@@ -138,25 +137,26 @@
   </div>
 
   {% include 'home/side_menu.html' %}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var cityDropdown = document.getElementById('city-dropdown');
-      var cityForm = document.getElementById('city-filter-form');
-
-      console.log("City Dropdown:", cityDropdown); // Log the dropdown element
-      console.log("City Form:", cityForm); // Log the form element
-
-      if (cityDropdown && cityForm) {
-        cityDropdown.addEventListener('change', function () {
-          console.log("Dropdown changed. Selected value:", cityDropdown.value); // Log the selected value
-          cityForm.submit();
-          console.log("Form submitted."); // Log form submission
-        });
-      } else {
-        console.log("Dropdown or Form not found."); // Log if elements are not found
-      }
-    });
-  </script>
-
 </body>
+{% endblock %}
+{% block custom_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cityDropdown = document.getElementById('city-dropdown');
+    var cityForm = document.getElementById('city-filter-form');
+
+    console.log("City Dropdown:", cityDropdown);
+    console.log("City Form:", cityForm);
+
+    if (cityDropdown && cityForm) {
+      cityDropdown.addEventListener('change', function () {
+        console.log("Dropdown changed. Selected value:", cityDropdown.value);
+        cityForm.submit();
+        console.log("Form submitted.");
+      });
+    } else {
+      console.log("Dropdown or Form not found.");
+    }
+  });
+</script>
 {% endblock %}

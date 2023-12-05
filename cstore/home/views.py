@@ -151,6 +151,8 @@ def update_city(request):
 
 def privacy_policy(request):
     return render(request, 'home/privacy_policy.html')
+def company_create_message(request):
+    return render(request, 'home/company_create_message.html')
 def terms_conditions(request):
     return render(request, 'home/terms_conditions.html')
 def legal_notice(request):

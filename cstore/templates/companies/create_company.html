@@ -23,11 +23,11 @@
 
               <!-- Custom Interface for Image Upload -->
               <div class="profile-picture-container">
-                <img id="profile-picture-preview" src="path_to_default_image.jpg" alt="Profile Picture" />
+                <img id="profile-picture-preview" src="{% static 'icons/default_cover.png' %}" alt="Profile Picture" />
                 <input type="file" id="profile-picture-input" accept="image/*" style="display: none" />
 
                 <div class="user-image-container">
-                  <img id="user-image" src="path_to_user_image.jpg" alt="User Image" />
+                  <img id="user-image" src="{% static 'icons/default_logo.png' %}" alt="User Image" />
                   <button type="button" id="user-image-upload-button"><i class="fas fa-camera"></i></button>
                 </div>
 

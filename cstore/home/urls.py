@@ -10,6 +10,7 @@ urlpatterns = [
     path('update_city/', views.update_city, name='update_city'),
     path('privacy-policy/', views.privacy_policy, name='privacy-policy'),
     path('terms-conditions/', views.terms_conditions, name='terms-conditions'),
+    path('company_create_message/', views.company_create_message, name='company_create_message'),
     path('legal-notice/', views.legal_notice, name='legal-notice'),
     path('test/', views.test, name='test'),
    

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
+from django.contrib.auth.decorators import login_required
 from .models import CustomFieldValue, Product
 from .forms import CompanyProductForm, ProductForm
 from django.http import JsonResponse
@@ -59,8 +60,15 @@ def create_product(request):
 
     return render(request, 'product/add_product.html', {'form': form})
 
-
+@login_required
 def create_company_product(request):
+    try:
+        company_profile = CompanyProfile.objects.get(owner=request.user)
+    except CompanyProfile.DoesNotExist:
+        # Redirect to create company page if no company is found
+        messages.error(request, "You need to create a company before adding a product.")
+        return redirect('home:company_create_message')
+    
     if request.method == 'POST':
         form = CompanyProductForm(request.POST, request.FILES, user=request.user)
         
