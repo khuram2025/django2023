@@ -8,23 +8,33 @@
 
   <a href="{%url 'account:user_profile' %}" class="">My Profile</a>
 
-  <div class="menu-hooks">
-    <li class="opt_favorite_items">
-      <a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a>
-    </li>
-    <li class="opt_user_offers">
-      <a href="https://epsilon.mb-themes.com/user/offers"><i class="fa fa-gavel"></i> Offers</a>
-    </li>
-    <li class="opt_instant_messenger">
-      <a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
-    </li>
-    <li class="opt_user_rating">
-      <a href="https://epsilon.mb-themes.com/user/rating"><i class="fa fa-star"></i> Ratings</a>
-    </li>
-    <li class="opt_bpr_profile">
-      <a href="{%url 'companies:company_detail' %}"><i class="fa fa-briefcase"></i> Business profile</a>
-    </li>
-  </div>
+  {% if companies.count > 1 %}
+  <a href="{% url 'companies:list-companies' %}" class="">My Companies</a>
+  {% elif single_company %}
+  <a href="{% url 'companies:company-public' single_company.pk %}" class="">My Company</a>
+  {% else %}
+  <a href="{% url 'companies:create_company' %}">Create Your Company</a>
+  {% endif %}
 
-  <a href="{%url 'account:logout' %}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  <div class="menu-hooks">
+    <div class="menu-hooks">
+      <li class="opt_favorite_items">
+        <a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a>
+      </li>
+      <li class="opt_user_offers">
+        <a href="https://epsilon.mb-themes.com/user/offers"><i class="fa fa-gavel"></i> Offers</a>
+      </li>
+      <li class="opt_instant_messenger">
+        <a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
+      </li>
+      <li class="opt_user_rating">
+        <a href="https://epsilon.mb-themes.com/user/rating"><i class="fa fa-star"></i> Ratings</a>
+      </li>
+      <li class="opt_bpr_profile">
+        <a href="{%url 'companies:company_detail' %}"><i class="fa fa-briefcase"></i> Business profile</a>
+      </li>
+    </div>
+
+    <a href="{%url 'account:logout' %}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
 </div>

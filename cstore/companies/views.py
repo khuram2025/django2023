@@ -145,10 +145,18 @@ def company_profile_detail(request, pk):
 
 
 def list_companies(request):
-    companies = CompanyProfile.objects.all()  # Retrieve all company profiles
+    city_id = request.GET.get('bpCity')  # Get the city ID from the request
+
+    if city_id:
+        companies = CompanyProfile.objects.filter(address__city_id=city_id)
+    else:
+        companies = CompanyProfile.objects.all()
+
+    cities = City.objects.all()  # Get all cities for the dropdown
 
     context = {
         'companies': companies,
+        'cities': cities,
     }
 
     return render(request, 'companies/companies_list.html', context)

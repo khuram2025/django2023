@@ -71,8 +71,22 @@ def user_login(request):
     return render(request, 'account/login.html')
 
 
+
+
+@login_required
 def dashboard(request):
-    return render(request, 'account/dashboard.html')
+    # Fetch all companies owned by the user
+    companies = request.user.owned_companies.all()
+
+    # Prepare context based on the number of companies
+    context = {
+        'companies': companies,
+        'single_company': companies.first() if companies.count() == 1 else None,
+        # ... other context variables ...
+    }
+
+    return render(request, 'account/dashboard.html', context)
+
 
 
 def get_location_from_ip(ip_address):
