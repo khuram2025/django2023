@@ -4,7 +4,7 @@ from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
 from .models import CustomFieldValue, Product
-from .forms import CompanyProductForm, ProductForm
+from .forms import CompanyProductForm, ProductForm, StoreProductForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
@@ -16,6 +16,7 @@ from .documents import ProductDocument
 from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
+from django.http import HttpResponse
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -324,3 +325,48 @@ def product_search(request):
     }
 
     return render(request, 'product/product_listing.html', context)
+
+
+
+def create_or_import_product(request, company_id):
+    # Ensure the user is authorized to add products to this company/store
+    company = CompanyProfile.objects.get(id=company_id)
+    if request.user != company.owner:
+        return HttpResponse("Unauthorized", status=401)
+
+    if request.method == 'POST':
+        form = StoreProductForm(request.POST)
+        if form.is_valid():
+            store_product = form.save(commit=False)
+            store_product.store = company
+
+            if 'import_product' in request.POST:
+                # Import and customize a product
+                product_id = request.POST.get('product_id')
+                product = Product.objects.get(id=product_id)
+                store_product.product = product
+                store_product.is_store_exclusive = False
+            else:
+                # Create a new product exclusive to the store
+                store_product.is_store_exclusive = True
+                if store_product.custom_title:  # Create a new product if a custom title is provided
+                    selected_category = form.cleaned_data['category']
+                    new_product = Product(
+                        title=store_product.custom_title,
+                        description=store_product.custom_description,
+                        price=store_product.custom_price,
+                        category=selected_category,
+                        # Set other necessary fields
+                        is_published=False  # New product is not published site-wide by default
+                    )
+                    new_product.save()
+                    store_product.product = new_product
+
+            store_product.save()
+            return redirect('some-view')  # Redirect to a relevant page after saving
+    else:
+        form = StoreProductForm()
+        products = Product.objects.filter(is_published=True)  # Get site-wide published products
+        return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company})
+
+    return render(request, 'companies/create_or_import_product.html', {'form': form})

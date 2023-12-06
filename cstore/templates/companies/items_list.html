@@ -83,7 +83,7 @@
 
         <div id="search-quick-bar">
           <div id="search-alert" class="pos-top">
-            <a class="publish btn" href="{% url 'companies:add_inventory' %}" class="default-font font-size-16"> Add Prodcut </a>
+            <a class="publish btn" href="{% url 'product:create_or_import_product' company_id=company.id %}" class="default-font font-size-16">Add Product</a>
 
             <div class="alert-box logged" style="display: none">
               <form action="#" method="post" name="sub_alert" id="alert-form" class="nocsrf"><input id="page" type="hidden" name="page" value="search" /> <input id="alert" type="hidden" name="alert" value="" /> <input id="alert_userId" type="hidden" name="alert_userId" value="5" /></form>

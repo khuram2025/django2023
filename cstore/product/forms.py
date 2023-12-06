@@ -3,7 +3,7 @@ from django import forms
 from companies.models import CompanyProfile
 from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField
 from django import forms
-from .models import Product, SellerInformation, Category, City
+from .models import Product, SellerInformation, Category, City ,StoreProduct
 
 
 
@@ -237,3 +237,10 @@ class ProductImageForm(forms.ModelForm):
 
 
 
+
+class StoreProductForm(forms.ModelForm):
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
+
+    class Meta:
+        model = StoreProduct
+        fields = ['custom_title', 'custom_description', 'custom_price', 'stock_quantity', 'category']

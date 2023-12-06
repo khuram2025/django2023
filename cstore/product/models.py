@@ -83,7 +83,7 @@ class Product(models.Model):
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"),blank=True, null=True )
     company = models.ForeignKey('companies.CompanyProfile', on_delete=models.SET_NULL, null=True, blank=True, related_name='products')
-
+    is_published = models.BooleanField(default=False, verbose_name=_("Published Site-wide"))
     
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
@@ -194,3 +194,48 @@ class CustomFieldValue(models.Model):
 
     def __str__(self):
         return f"{self.custom_field.name}: {self.value}"
+
+
+
+class StoreProduct(models.Model):
+    store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='store_products')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='store_products', null=True, blank=True)  # Nullable for store-exclusive products
+    custom_title = models.CharField(max_length=255, verbose_name=_("Custom Title"), blank=True, null=True)
+    custom_description = models.TextField(verbose_name=_("Custom Description"), blank=True, null=True)
+    custom_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Custom Price"), null=True, blank=True)
+    stock_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Stock Quantity"))
+    is_store_exclusive = models.BooleanField(default=False, verbose_name=_("Store Exclusive"))
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        if self.product:
+            return f"{self.store.name} - {self.custom_title or self.product.title}"
+        else:
+            return f"{self.store.name} - {self.custom_title} (Exclusive)"
+
+    # Function for site admin to publish a store's product changes or exclusive product site-wide
+    def publish_to_site(self, admin_user):
+        if admin_user.is_admin:  # Check if the user is a site admin
+            if self.product:
+                # Update and publish existing product
+                self.product.title = self.custom_title or self.product.title
+                self.product.description = self.custom_description or self.product.description
+                self.product.price = self.custom_price or self.product.price
+                self.product.is_published = True
+                self.product.save()
+            else:
+                # Create and publish a new product based on the store-exclusive product
+                new_product = Product(
+                    title=self.custom_title,
+                    description=self.custom_description,
+                    price=self.custom_price,
+                    # Set other necessary fields
+                    is_published=True
+                )
+                new_product.save()
+                self.product = new_product  # Link the new product to this store product
+                self.is_store_exclusive = False  # No longer exclusive to the store
+                self.save()
+

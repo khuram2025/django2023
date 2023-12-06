@@ -191,11 +191,13 @@ def list_companies(request):
 
 
 
-def company_dashboard(request):
-    return render(request, 'companies/company_dashboard.html')
+def company_dashboard(request, pk):
+    company = get_object_or_404(CompanyProfile, pk=pk)
+    return render(request, 'companies/company_dashboard.html', {'company': company})
 
-def company_inventory(request):
-    return render(request, 'companies/items_list.html')
+def company_inventory(request, pk):
+    company = get_object_or_404(CompanyProfile, pk=pk)
+    return render(request, 'companies/items_list.html', {'company': company})
 
 @login_required
 def add_inventory(request):

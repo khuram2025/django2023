@@ -1,7 +1,7 @@
 <div id="user-menu">
   <a href="https://epsilon.mb-themes.com/user/profile/demo" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
 
-  <a href="{%url 'companies:company-dashboard' %}" class="active">Dashboard</a>
+  <a href="{%url 'companies:company-dashboard' pk=company.id %}" class="active">Dashboard</a>
   <a href="https://epsilon.mb-themes.com/user/items?itemType=active" class="has-counter"> Active listings <span class="counter">1</span> </a>
 
   <a href="https://epsilon.mb-themes.com/user/alerts" class=""> Subscriptions <span class="counter">2</span> </a>
@@ -14,7 +14,7 @@
         <a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a>
       </li>
       <li class="opt_user_offers">
-        <a href="{%url 'companies:company-inventory' %}"><i class="fa fa-gavel"></i> Inventory</a>
+        <a href="{%url 'companies:company-inventory' pk=company.id %}"><i class="fa fa-gavel"></i> Inventory</a>
       </li>
       <li class="opt_instant_messenger">
         <a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>

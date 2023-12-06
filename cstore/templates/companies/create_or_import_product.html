@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+<!-- Extend your base template -->
+
+{% block content %}
+<h2>Create or Import Product for {{ company.name }}</h2>
+
+<!-- Display any messages -->
+{% for message in messages %}
+<div>{{ message }}</div>
+{% endfor %}
+
+<!-- Product Form -->
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form.as_p }}
+
+  <!-- Dropdown for importing existing products -->
+  <label for="product_id">Import Existing Product:</label>
+  <select name="product_id" id="product_id">
+    <option value="">--- Select Product ---</option>
+    {% for product in products %}
+    <option value="{{ product.id }}">{{ product.title }}</option>
+    {% endfor %}
+  </select>
+
+  <!-- Submit Buttons -->
+  <button type="submit" name="create_product">Create Product</button>
+  <button type="submit" name="import_product">Import Product</button>
+</form>
+{% endblock %}
