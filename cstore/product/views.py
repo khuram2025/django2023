@@ -326,10 +326,7 @@ def product_search(request):
 
     return render(request, 'product/product_listing.html', context)
 
-
-
 def create_or_import_product(request, company_id):
-    # Ensure the user is authorized to add products to this company/store
     company = CompanyProfile.objects.get(id=company_id)
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
@@ -341,32 +338,50 @@ def create_or_import_product(request, company_id):
             store_product.store = company
 
             if 'import_product' in request.POST:
-                # Import and customize a product
                 product_id = request.POST.get('product_id')
                 product = Product.objects.get(id=product_id)
                 store_product.product = product
                 store_product.is_store_exclusive = False
+
+                # Auto-fill category, city, and address if importing
+                store_product.category = product.category
+                store_product.city = product.city
+                store_product.address = product.address
             else:
-                # Create a new product exclusive to the store
-                store_product.is_store_exclusive = True
-                if store_product.custom_title:  # Create a new product if a custom title is provided
-                    selected_category = form.cleaned_data['category']
-                    new_product = Product(
-                        title=store_product.custom_title,
-                        description=store_product.custom_description,
-                        price=store_product.custom_price,
-                        category=selected_category,
-                        # Set other necessary fields
-                        is_published=False  # New product is not published site-wide by default
-                    )
-                    new_product.save()
-                    store_product.product = new_product
+                selected_category = form.cleaned_data['category']
+                selected_city = form.cleaned_data.get('city') or (company.address.city if company.address else None)
+                selected_address = form.cleaned_data.get('address') or (str(company.address) if company.address else None)
+
+                new_product = Product(
+                    title=store_product.custom_title,
+                    description=store_product.custom_description,
+                    price=store_product.custom_price,
+                    category=selected_category,
+                    city=selected_city,
+                    address=selected_address,
+                    is_published=False
+                )
+                new_product.save()
+                store_product.product = new_product
 
             store_product.save()
-            return redirect('some-view')  # Redirect to a relevant page after saving
+            return redirect('some-view')
+
     else:
-        form = StoreProductForm()
-        products = Product.objects.filter(is_published=True)  # Get site-wide published products
+        initial_city = company.address.city if company.address else None
+        initial_address = str(company.address) if company.address else None
+        form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
+        products = Product.objects.filter(is_published=True)
         return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company})
 
     return render(request, 'companies/create_or_import_product.html', {'form': form})
+
+
+
+def get_product_details(request):
+    product_id = request.GET.get('id')
+    if product_id:
+        product = Product.objects.filter(id=product_id).values('title', 'description', 'price', 'stock_quantity').first()
+        return JsonResponse(product)
+    else:
+        return JsonResponse({'error': 'Product not found'}, status=404)
