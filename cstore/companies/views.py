@@ -190,3 +190,13 @@ def list_companies(request):
     return render(request, 'companies/companies_list.html', context)
 
 
+
+def company_dashboard(request):
+    return render(request, 'companies/company_dashboard.html')
+
+def company_inventory(request):
+    return render(request, 'companies/items_list.html')
+
+@login_required
+def add_inventory(request):
+    return render(request, 'product/add_company_product.html')

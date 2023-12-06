@@ -1,0 +1,348 @@
+{% extends 'home/base.html' %} {% block content %}
+<style>
+  .realestate-details {
+  }
+  .realestate-details h3 {
+    margin-left: 40px;
+    margin-top: 20px;
+  }
+  .realestate-details .table-attributes {
+    margin-left: 20px;
+  }
+  .realestate-details .table-attributes table {
+    width: 100%;
+  }
+  .realestate-details .row-title {
+    width: 150px;
+  }
+  .realestate-details h4 {
+    margin-left: 20px;
+  }
+  .realestate-details .list-other-attributes li {
+    float: left;
+    width: 140px;
+  }
+  .realestate-details .list-other-attributes img {
+    height: 14px;
+    width: 14px;
+  }
+  .realestate-details .clear {
+    clear: both;
+  }
+</style>
+
+<body id="user-dashboard" class="body-ua demo">
+  {% include 'home/header.html' %}
+
+  <div class="content loc-user sec-dashboard">
+    <div id="breadcrumbs" class="container">
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"
+              ><span itemprop="name" class="home"
+                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path></svg> <span>Home</span></span
+              ></a
+            ><meta itemprop="position" content="1" />
+          </li>
+
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">&gt; <span itemprop="name">Dashboard</span><meta itemprop="position" content="2" /></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="flashbox" class="container">
+      <div class="wrap"><div class="wrap2"></div></div>
+    </div>
+    <div class="container primary">
+      {% include 'companies/company_menu.html' %}
+
+      <div id="search-main" class="grid">
+        <div class="top-bar">
+          <h1>558 results found</h1>
+        </div>
+
+        <div id="search-premium-items">
+          <h2>Premium listings</h2>
+
+          Chart will be here
+        </div>
+
+        <a href="#" id="open-search-filters" class="btn isMobile">
+          <div class="svg-wrap">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160h-80v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h336v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160H288V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h208v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h208c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z"></path></svg>
+          </div>
+          <span>Filter results</span>
+        </a>
+
+        <div class="ajax-load-failed flashmessage flashmessage-error" style="display: none">
+          <p>There was problem loading your listings, please try to refresh this page</p>
+          <a class="btn mini" onclick="window.location.reload();"><i class="fas fa-redo"></i> Refresh</a>
+        </div>
+
+        <div id="search-quick-bar">
+          <div id="search-alert" class="pos-top">
+            <a class="publish btn" href="{% url 'companies:add_inventory' %}" class="default-font font-size-16"> Add Prodcut </a>
+
+            <div class="alert-box logged" style="display: none">
+              <form action="#" method="post" name="sub_alert" id="alert-form" class="nocsrf"><input id="page" type="hidden" name="page" value="search" /> <input id="alert" type="hidden" name="alert" value="" /> <input id="alert_userId" type="hidden" name="alert_userId" value="5" /></form>
+            </div>
+
+            <script type="text/javascript">
+              $(document).on("submit", 'form[name="sub_alert"]', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var button = $(this).find("button");
+
+                form.addClass("loading");
+
+                $.ajax({
+                  url: form.attr("action"),
+                  type: "POST",
+                  data: {
+                    email: form.find('input[name="alert_email"]').val(),
+                    userid: form.find('input[name="alert_userId"]').val(),
+                    alert: form.find('input[name="alert"]').val(),
+                    page: "ajax",
+                    action: "alerts",
+                  },
+                  success: function (response) {
+                    form.removeClass("loading");
+                    form.find(".inputs").hide(0);
+                    form.find(".response .res-email").text(form.find('input[name="alert_email"]').val());
+                    form.find(".response").hide(0);
+
+                    if (response == 1) {
+                      form.find(".response.ok").show(0);
+                    } else if (response == 0) {
+                      form.find(".response.duplicate").show(0);
+                    } else {
+                      // response == -1
+                      form.find(".response.error").show(0);
+                    }
+                  },
+                  error: function (response) {
+                    console.log(response);
+
+                    form.removeClass("loading");
+                    form.find(".inputs").hide(0);
+                    form.find(".response.error").show(0);
+                  },
+                });
+              });
+            </script>
+          </div>
+
+          <div class="view-type">
+            <a href="https://epsilon.mb-themes.com/search/sShowAs,grid" title="Grid view" class="grid" data-view="grid">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="18" height="18"><path d="M120 0H24C10.75 0 0 10.74 0 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24V24c0-13.26-10.74-24-24-24zM96 96H48V48h48v48zM296 0h-96c-13.25 0-24 10.74-24 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24V24c0-13.26-10.74-24-24-24zm-24 96h-48V48h48v48zM120 368H24c-13.25 0-24 10.74-24 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24v-96c0-13.26-10.74-24-24-24zm-24 96H48v-48h48v48zm200-96h-96c-13.25 0-24 10.74-24 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24v-96c0-13.26-10.74-24-24-24zm-24 96h-48v-48h48v48zM120 184H24c-13.25 0-24 10.74-24 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24v-96c0-13.26-10.74-24-24-24zm-24 96H48v-48h48v48zm200-96h-96c-13.25 0-24 10.74-24 24v96c0 13.25 10.75 24 24 24h96c13.26 0 24-10.75 24-24v-96c0-13.26-10.74-24-24-24zm-24 96h-48v-48h48v48z"></path></svg>
+              <span>Grid</span>
+            </a>
+
+            <a href="https://epsilon.mb-themes.com/search/sShowAs,list" title="List view" class="list active" data-view="list">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="18" height="18"><path d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg>
+              <span>List</span>
+            </a>
+
+            <a href="https://epsilon.mb-themes.com/search/sShowAs,detail" title="Detail view" class="detail" data-view="detail">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="18" height="18"><path d="M288 48v32c0 6.627-5.373 12-12 12H12C5.373 92 0 86.627 0 80V48c0-6.627 5.373-12 12-12h264c6.627 0 12 5.373 12 12zM12 220h424c6.627 0 12-5.373 12-12v-32c0-6.627-5.373-12-12-12H12c-6.627 0-12 5.373-12 12v32c0 6.627 5.373 12 12 12zm0 256h424c6.627 0 12-5.373 12-12v-32c0-6.627-5.373-12-12-12H12c-6.627 0-12 5.373-12 12v32c0 6.627 5.373 12 12 12zm264-184H12c-6.627 0-12 5.373-12 12v32c0 6.627 5.373 12 12 12h264c6.627 0 12-5.373 12-12v-32c0-6.627-5.373-12-12-12z"></path></svg>
+              <span>Detail</span>
+            </a>
+          </div>
+
+          <div class="sort-type">
+            <label for="orderSelect">Sort</label>
+            <select class="orderSelect" id="orderSelect">
+              <option data-type="dt_pub_date" data-order="desc" data-link="https://epsilon.mb-themes.com/search/sOrder,dt_pub_date/iOrderType,desc?sShowAs=list" value="dt_pub_date-desc">Newly listed</option>
+              <option data-type="i_price" data-order="asc" data-link="https://epsilon.mb-themes.com/search/sOrder,i_price/iOrderType,asc?sShowAs=list" value="i_price-asc">Lower price first</option>
+              <option data-type="i_price" data-order="desc" data-link="https://epsilon.mb-themes.com/search/sOrder,i_price/iOrderType,desc?sShowAs=list" value="i_price-desc">Higher price first</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="filter-user-type">
+          <a class="all active" href="https://epsilon.mb-themes.com/search">All listings</a>
+          <a class="personal" href="https://epsilon.mb-themes.com/search/sCompany,0">Personal</a>
+          <a class="company" href="https://epsilon.mb-themes.com/search/sCompany,1">Company</a>
+        </div>
+
+        <div id="search-items">
+          <div id="banner-theme" class="banner-theme banner-search_top not767 is-demo">
+            <div class="myad">
+              <div class="text">
+                <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=a3194333" target="_top"><img src="//affiliates.a2hosting.com/accounts/default1/banners/a3194333.jpg" alt="" title="" width="728" height="90" ex2pnynnl="" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=a3194333" width="1" height="1" alt="" ex2pnynnl="" />
+              </div>
+            </div>
+          </div>
+          <div class="products list">
+            <div class="simple-prod o1">
+              <div class="simple-wrap" title="">
+                <div class="img-wrap">
+                  <a class="img" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">
+                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/3/1242_thumbnail.jpg" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" />
+                  </a>
+
+                  <a class="bar" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">
+                    <div class="price isGrid isDetail"><span>580.00 $</span></div>
+
+                    <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
+                  </a>
+
+                  <a href="https://epsilon.mb-themes.com/user/profile/peterclark" class="user-image isGrid isDetail">
+                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/4_BN8aL_20220323.png" alt="Peter Clark" style="display: block; transition: all 0.2s ease 0s" />
+
+                    <span class="business" title="Professional seller">Pro</span>
+                  </a>
+
+                  <div class="isGrid isDetail">
+                    <div class="favorite">
+                      <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="data">
+                  <div class="info">Kerens, United States</div>
+
+                  <a class="title" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">Canon Pix Z9</a>
+
+                  <div class="description isDetail">Sed vel venenatis dolor. Fusce lectus felis, tempor ut ex sed, cursus pharetra diam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In interdum dictum iaculis. Pellentesque eget luctus libero. Pellentesque non ipsum eget mi fringilla mattis sed vel lectus. Curabitur iaculis mattis rutrum. Phasellus condimentum mollis s...</div>
+
+                  <div class="price standalone isList"><span>580.00 $</span></div>
+
+                  <div class="extra">
+                    <span>1 year ago</span>
+                    <span>Cameras - Camera Accessories</span>
+
+                    <span>1649 people viewed</span>
+                  </div>
+
+                  <div class="action isDetail">
+                    <div class="price"><span>580.00 $</span></div>
+                  </div>
+
+                  <div class="contact isDetail">
+                    <a class="contact" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
+                  </div>
+                </div>
+
+                <div class="right isList">
+                  <div class="price"><span>580.00 $</span></div>
+
+                  <div class="favorite">
+                    <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                  </div>
+                </div>
+
+                <div class="labels isGrid"></div>
+              </div>
+            </div>
+
+            <div class="simple-prod o3 st-sold">
+              <div class="simple-wrap" title="Sold">
+                <div class="img-wrap">
+                  <a class="img" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">
+                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/2/1146_thumbnail.jpg" alt="Maserati One Z9" style="display: block; transition: all 0.2s ease 0s" />
+                  </a>
+
+                  <a class="bar" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">
+                    <div class="price isGrid isDetail"><span>128500.00 $</span></div>
+
+                    <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
+                  </a>
+
+                  <a href="https://epsilon.mb-themes.com/user/profile/johndoe" class="user-image isGrid isDetail">
+                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/2_Wp30T_20220323.png" alt="John Doe" style="display: block; transition: all 0.2s ease 0s" />
+                  </a>
+
+                  <div class="isGrid isDetail">
+                    <div class="favorite">
+                      <a href="javascript://" class="fi_save_favorite fi_save fi_fav_289" rel="289" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="data">
+                  <div class="info">
+                    <span class="label sold isList">Sold</span>
+
+                    Atlantic Highlands, United States
+                  </div>
+
+                  <a class="title" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">Maserati One Z9</a>
+
+                  <div class="description isDetail">Duis auctor nisl sed libero interdum, vel vulputate diam iaculis. Sed ultricies odio ac odio facilisis imperdiet. In posuere nisl est, sit amet semper lacus sagittis id. Aliquam justo augue, ullamcorper non augue sed, aliquam egestas velit. Fusce lacus tellus, faucibus at dui vel, efficitur venenatis enim. Curabitur fringilla viverra dolor, at sodales eros v...</div>
+
+                  <div class="price standalone isList"><span>128500.00 $</span></div>
+
+                  <div class="extra">
+                    <span>1 year ago</span>
+                    <span>Cars</span>
+
+                    <span>1593 people viewed</span>
+                  </div>
+
+                  <div class="action isDetail">
+                    <div class="price"><span>128500.00 $</span></div>
+                  </div>
+
+                  <div class="labels isDetail">
+                    <span class="label sold">Sold</span>
+                  </div>
+
+                  <div class="contact isDetail">
+                    <a class="contact" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
+                  </div>
+                </div>
+
+                <div class="right isList">
+                  <div class="price"><span>128500.00 $</span></div>
+
+                  <div class="favorite">
+                    <a href="javascript://" class="fi_save_favorite fi_save fi_fav_289" rel="289" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                  </div>
+                </div>
+
+                <div class="labels isGrid">
+                  <span class="label sold">Sold</span>
+                </div>
+              </div>
+            </div>
+            <div id="banner-theme" class="banner-theme banner-search_middle not767 is-demo">
+              <div class="myad">
+                <div class="text">
+                  <a href="https://www.a2hosting.com/wordpress-hosting/managed?aid=5ff74858d3bac&amp;bid=0ffde563" target="_top"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/0ffde563.jpg" alt="managed osclass hosting" title="managed osclass hosting" width="728" height="90" ex2pnynnl="" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=0ffde563" width="1" height="1" alt="" ex2pnynnl="" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="banner-theme" class="banner-theme banner-search_bottom not767 is-demo blank" title="You can define your own banner code from theme settings">
+            <div class="myad">
+              <div class="text">
+                <div class="demo-text"><span>Banner space</span><strong>[search bottom]</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="paginate">
+            <ul>
+              <li><span class="searchPaginationSelected list-first">1</span></li>
+              <li><a href="https://epsilon.mb-themes.com/search/iPage,2?sShowAs=list" class="searchPaginationNonSelected">2</a></li>
+              <li><a href="https://epsilon.mb-themes.com/search/iPage,3?sShowAs=list" class="searchPaginationNonSelected">3</a></li>
+              <li>
+                <a href="https://epsilon.mb-themes.com/search/iPage,2?sShowAs=list" class="searchPaginationNext"><i class="fas fa-angle-right"></i></a>
+              </li>
+              <li>
+                <a href="https://epsilon.mb-themes.com/search/iPage,47?sShowAs=list" class="searchPaginationLast list-last"><i class="fas fa-step-forward"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</body>
