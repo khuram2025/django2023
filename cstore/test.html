@@ -1,31 +1,322 @@
-<!-- your_template_name.html -->
+{% extends 'home/base.html' %} {% load humanize %} {% block content %}
 
-{% block content %}
-<h1>{{ company.name }}</h1>
-<div>
-  <img src="{{ company.logo.url }}" alt="Company Logo" />
-  <img src="{{ company.cover_pic.url }}" alt="Company Cover" />
-  <p>{{ company.about }}</p>
-  <!-- Other company details like social links -->
-</div>
+<body id="home" class="layout-default dvc-ios demo">
+  {% include 'home/header.html' %}
 
-<h2>Branches</h2>
-{% for branch in branches %}
-<div>
-  <h3>{{ branch.name }}</h3>
-  <h4>Schedules</h4>
-  {% for schedule in branch.schedules %}
-  <p>{{ schedule.day }}: {{ schedule.start_time }} - {{ schedule.end_time }}</p>
-  {% endfor %}
+  <div class="content loc-custom sec-bpr-seller">
+    <div id="breadcrumbs" class="container">
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child">
+            <a href="https://epsilon.mb-themes.com/" itemprop="item"><span itemprop="name" class="home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
+                  <path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z"></path>
+                </svg>
+                <span>Home</span></span></a>
+            <meta itemprop="position" content="1" />
+          </li>
 
-  <h4>Phone Numbers</h4>
-  {% for phone_number in branch.phone_numbers %}
-  <p>{{ phone_number.number }}</p>
-  {% endfor %}
+          <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child">
+            &gt; <span itemprop="name">Company profile</span>
+            <meta itemprop="position" content="2" />
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <h4>Locations</h4>
-  {% for location in branch.locations %}
-  <p>{{ location.address }}, {{ location.city }}, {{ location.country }}</p>
-  {% endfor %}
-</div>
-{% endfor %} {% endblock %}
+    <div id="flashbox" class="container">
+      <div class="wrap">
+        <div class="wrap2"></div>
+      </div>
+    </div>
+    <div class="container primary">
+      <script>
+        var bprSearch = "https://epsilon.mb-themes.com/company-filter/michal/city,{city};category,{category};";
+        var bprCity = "";
+        var bprCategory = "";
+        var bprPage = "";
+      </script>
+
+      <div id="bpr-seller" class="bpr-body">
+        <div class="bpr-inside">
+          <div class="bpr-cover">
+            <div class="bpr-wrap">
+              {% if company.cover_pic %}
+              <div class="bpr-wrap-img" style="background-image: url('{{ company.cover_pic.url }}')"></div>
+              {% else %}
+              <div class="bpr-wrap-img" style=""></div>
+              {% endif %}
+
+              <form class="nocsrf" method="POST" name="bpr_contact" id="sellerContact" action="https://epsilon.mb-themes.com/company/michal">
+                <input type="hidden" name="identifier" value="michal" />
+                <input type="hidden" name="what" value="contact" />
+                <input type="hidden" name="id" value="5" />
+                <input type="hidden" name="email" value="demo@demo.com" />
+
+                <fieldset>
+                  <a class="bpr-close bpr-has-tooltip" title=""><img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/close.png" /></a>
+                  <div class="bpr-title">Contact seller</div>
+                  <input type="text" name="name" placeholder="Name" required="" value="هشام فونز" />
+                  <input type="phone" name="phone" placeholder="Phone" value="077777777777" />
+                  <textarea name="message" required="" placeholder="Put your question there..."></textarea>
+
+                  <button type="submit" class="bpr-btn">Send</button>
+                </fieldset>
+              </form>
+            </div>
+
+            <div class="bpr-socials">
+              <div class="bpr-right-box">
+                <a target="_blank" href="https://google.com"><i class="fa fa-facebook"></i></a><a target="_blank" href="https://google.com"><i class="fa fa-twitter"></i></a><a target="_blank" href="https://google.com"><i class="fa fa-vimeo"></i></a>
+              </div>
+            </div>
+
+            <div class="bpr-contact-us">
+              <a href="#" class="bpr-btn bpr-go">Contact seller</a>
+            </div>
+          </div>
+
+          <div class="bpr-profile">
+            <div class="bpr-left">
+              <div class="bpr-icon">
+                {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="channab" />
+                {% else %}
+                <img src="" alt="channab" />
+                {% endif %}
+
+                <div class="bpr-type-wrap">
+                  <div class="bpr-user-type bpr-type-2">Pro</div>
+                </div>
+              </div>
+
+              <div class="bpr-box">
+                <div class="bpr-verified">
+                  <img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/verified.png" alt="Verified seller" />
+                </div>
+
+                <!-- New Blue Box -->
+
+                <h1>{{ company.name }}</h1>
+
+                <div class="bpr-category">
+                  <a href="https://epsilon.mb-themes.com/search/user,1/category,1,9,10,11,12,13">卖</a>
+                </div>
+
+                <div class="bpr-reg">Seller since 2022</div>
+
+                <div class="bpr-features" id="company-about">
+                  <p>{{ company.about|linebreaksbr }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bpr-right">
+              {% if branches_with_details %} {% with branch=branches_with_details.0 %}
+
+              <!-- Company Address -->
+              {% if company.address %}
+              <div class="bpr-location">
+                <i class="fa fa-map-marker"></i>
+                <div class="bpr-right-box"><span>{{ company.address.line1 }}{% if company.address.line2 %}, {{ company.address.line2 }}{% endif %}, {{ company.address.city.name }}, {{ company.address.city.country.name }}</span><br /></div>
+              </div>
+              {% elif branches_with_details %}
+              <div class="bpr-location">
+                <i class="fa fa-map-marker"></i>
+                <div class="bpr-right-box">
+                  {% with branch_detail=branches_with_details|first %} {% if branch_detail.address %}
+                  <span>{{ branch_detail.address.line1 }}{% if branch_detail.address.line2 %}, {{ branch_detail.address.line2 }}{% endif %}, {{ branch_detail.address.city.name }}, {{ branch_detail.address.city.country.name }}</span><br />
+                  {% endif %} {% endwith %}
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Branch Phone Numbers -->
+              {% if branch.phone_numbers %}
+              <div class="bpr-payments">
+                <i class="fa fa-phone"></i>
+                <div class="bpr-right-box">
+                  {% for phone_number in branch.phone_numbers %}
+                  <div>{{ phone_number.number }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+
+              <!-- Branch Schedule -->
+              {% if branch.schedules %}
+              <div class="bpr-hours">
+                <i class="fa fa-clock"></i>
+                <div class="bpr-right-box">
+                  {% for schedule in branch.schedules %}
+                  <div><span>{{ schedule.get_day_display }}:</span> <strong>{{ schedule.start_time }} - {{ schedule.end_time }}</strong></div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %} {% endwith %} {% endif %}
+
+              <!-- Other existing content ... -->
+            </div>
+          </div>
+
+          <div class="bpr-filters">
+            <strong>{{ company.name }}'s listings</strong>
+
+            <form action="{% url 'companies:company-public' pk=company.pk %}" method="GET">
+              <div class="bpr-select bpr-city">
+                <select name="city" id="bpr-city">
+                  <option value="">Select city</option>
+                  {% for city in cities %}
+                  <option value="{{ city.id }}" {% if request.GET.city == city.id|stringformat:"s" %}selected{% endif %}>
+                    {{ city.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="bpr-select bpr-category">
+                <select name="category" id="bpr-category">
+                  <option value="">Select category</option>
+                  {% for category in categories %}
+                  <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                    {{ category.title }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+        
+            </form>
+
+
+            <a class="bpr-show-all" href="{% url 'companies:company-public' pk=company.pk %}">Show all</a>
+          </div>
+        </div>
+
+        <div class="bpr-inside-trans">
+          <div class="bpr-items">
+            <div id="gallery-view" class="white search-items-wrap">
+              <div id="listing-card-list" class="block listing-card-list listing-grid">
+                <div class="wrap products grid">
+                  {% for product in company_products %}
+                  <div class="simple-prod o1">
+                    <div class="simple-wrap" title="">
+                      <div class="img-wrap">
+                        <a class="img" href="{% url 'product:product_detail' pk=product.pk %}">
+                          <img class="lazy loaded" src="product.images.all.0.image.url " alt="iPhone gonna be cool" style="display: block; transition: all 0.2s ease 0s" />
+                        </a>
+
+                        <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}">
+                          <div class="price isGrid isDetail"><span>{{ product.price }} Rs.</span></div>
+
+                          <div class="image-counter"><i class="fas fa-camera"></i> 3</div>
+                        </a>
+
+                        <div class="isGrid isDetail">
+                          <div class="favorite">
+                            <a href="javascript://" class="fi_save_favorite fi_save fi_fav_2" rel="2" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="data">
+                        <div class="info">Borkowice, Poland</div>
+
+                        <a class="title" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2">{{ product.title }}</a>
+
+                        <div class="description isDetail">{{ product.description }}</div>
+
+                        <div class="price standalone isList"><span>{{ product.price }} Rs.</span></div>
+
+                        <div class="extra">
+                          <span>{{ product.updated_at|timesince }} ago</span>
+
+                          <span>{{ product.category }} - {{ product.subcategory }}</span>
+
+                          <span>New</span>
+
+                          <span>{{ product.view_count }} people viewed</span>
+                        </div>
+
+                        <div class="action isDetail">
+                          <div class="price"><span>{{ product.price }} Rs.</span></div>
+                        </div>
+
+                        <div class="contact isDetail">
+                          <a class="contact" href="https://epsilon.mb-themes.com/for-sale/sporting-goods-bicycles/iphone-gonna-be-cool_i2#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
+
+                          <a class="phone masked" title="Click to see phone number" data-prefix="tel" href="#" data-part1="+2123123" data-part2="2122"><i class="fas fa-phone-alt"></i> <span>+2123123xxxx</span></a>
+                        </div>
+                      </div>
+
+                      <div class="right isList">
+                        <div class="price"><span>{{ product.price }} Rs.</span></div>
+
+                        <div class="favorite">
+                          <a href="javascript://" class="fi_save_favorite fi_save fi_fav_2" rel="2" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                        </div>
+                      </div>
+
+                      <div class="labels isGrid"></div>
+                    </div>
+                  </div>
+                  {%endfor%}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %}
+  <div id="body-banner" class="bleft" class="default-font font-size-14">
+    <div id="banner-theme" class="banner-theme banner-body_left not767 is-demo" class="default-font font-size-14">
+      <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
+        <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
+          <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=a504f205" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="body-banner" class="bright" class="default-font font-size-14">
+    <div id="banner-theme" class="banner-theme banner-body_right not767 is-demo" class="default-font font-size-14">
+      <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
+        <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
+          <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=a504f205" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a id="scroll-to-top" class="default-font font-size-14"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20" class="default-font font-size-14">
+      <path d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z" class="default-font font-size-14"></path>
+    </svg></a>
+
+  <div id="menu-cover" class="mobile-box" class="default-font font-size-14">
+    <svg class="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="32px" height="32px" class="default-font font-size-14">
+      <path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class="" class="default-font font-size-14"></path>
+    </svg>
+  </div>
+
+  {% include 'home/side_menu.html' %}
+</body>
+{% endblock %}
+{% block custom_js %}
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function () {
+    var cityDropdown = document.getElementById('bpr-city');
+    var categoryDropdown = document.getElementById('bpr-category');
+
+    cityDropdown.addEventListener('change', function () {
+      this.form.submit();
+    });
+
+    categoryDropdown.addEventListener('change', function () {
+      this.form.submit();
+    });
+  });
+</script>
+{% endblock %}

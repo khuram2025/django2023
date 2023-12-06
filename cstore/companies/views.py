@@ -132,31 +132,61 @@ def company_profile_detail(request, pk):
             'address': address
         })
         
-    company_products = Product.objects.filter(company=company)
+      # Get city and category filter values from request
+    city_id = request.GET.get('city')
+    category_id = request.GET.get('category')
+
+    # Apply filters to company products
+    product_filters = {'company': company}
+    if city_id:
+        product_filters['city_id'] = city_id
+    if category_id:
+        product_filters['category_id'] = category_id
+    company_products = Product.objects.filter(**product_filters)
+
+    # Fetch all cities and categories for filter dropdowns
+    cities = City.objects.all()
+    categories = Category.objects.all()
 
     # Prepare context
     context = {
         'company': company,
         'branches_with_details': branches_with_details,
         'company_products': company_products,
+        'cities': cities,
+        'categories': categories,
     }
+    
 
     return render(request, 'companies/company_public.html', context)
 
 
 def list_companies(request):
     city_id = request.GET.get('bpCity')  # Get the city ID from the request
+    category_id = request.GET.get('bpCategory')  # Get the category ID from the request
 
+    # Print the received city and category IDs for debugging
+    print("Received City ID: ", city_id)
+    print("Received Category ID: ", category_id)
+
+    # Filter by both city and category if provided
+    filters = {}
     if city_id:
-        companies = CompanyProfile.objects.filter(address__city_id=city_id)
-    else:
-        companies = CompanyProfile.objects.all()
+        filters['address__city_id'] = city_id
+    if category_id:
+        filters['working_categories__id'] = category_id
 
-    cities = City.objects.all()  # Get all cities for the dropdown
+    companies = CompanyProfile.objects.filter(**filters)
+
+    cities = City.objects.all()
+    categories = Category.objects.all()
 
     context = {
         'companies': companies,
         'cities': cities,
+        'categories': categories,
     }
 
     return render(request, 'companies/companies_list.html', context)
+
+

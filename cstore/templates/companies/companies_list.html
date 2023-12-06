@@ -31,38 +31,33 @@
       <div id="bpr-seller" class="bpr-body bpr-list">
         <div class="bpr-inside-all">
           <div class="bpr-top-search">
-            <form action="https://epsilon.mb-themes.com/companies" method="POST" class="nocsrf">
-              <input type="hidden" name="brpAction" value="search" />
-
+            <form action="{% url 'companies:list-companies' %}" method="GET" id="city-filter-form" class="nocsrf">
               <div class="bpr-search-left">
                 <input type="text" name="bpWord" id="bpr-word" value="" placeholder="Search company" />
                 <button id="bpr-submit" type="submit"><i class="fa fa-search"></i></button>
               </div>
 
               <div class="bpr-search-right">
-                <form id="city-filter-form" method="get" action="{% url 'companies:list-companies' %}">
-      <select class="bpr-city" name="bpCity" id="city-dropdown">
-        <option value="">All cities</option>
-        {% for city in cities %}
-        <option value="{{ city.id }}" {% if request.GET.bpCity == city.id|stringformat:"s" %}selected{% endif %}>
-          {{ city.name }}
-        </option>
-        {% endfor %}
-      </select>
-    </form>
-
-                <select class="bpr-category" name="bpCategory">
-                  <option value="">All categories</option>
-
-                  <option value="1">For sale</option>
-                  <option value="9">Animals</option>
-                  <option value="10">Art - Collectibles</option>
-                  <option value="11">Barter</option>
-                  <option value="12">Books - Magazines</option>
-                  <option value="13">Cameras - Camera Accessories</option>
+                <select class="bpr-city" name="bpCity" id="city-dropdown">
+                  <option value="">All cities</option>
+                  {% for city in cities %}
+                  <option value="{{ city.id }}" {% if request.GET.bpCity == city.id|stringformat:"s" %}selected{% endif %}>
+                    {{ city.name }}
+                  </option>
+                  {% endfor %}
                 </select>
+
+                <select class="bpr-category" name="bpCategory" id="bpr-category">
+    <option value="">All categories</option>
+    {% for category in categories %}
+    <option value="{{ category.id }}" {% if request.GET.bpCategory == category.id|stringformat:"s" %}selected{% endif %}>
+        {{ category.title }}
+    </option>
+    {% endfor %}
+</select>
               </div>
             </form>
+
           </div>
 
           {% for company in companies %}
@@ -140,23 +135,14 @@
 </body>
 {% endblock %}
 {% block custom_js %}
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var cityDropdown = document.getElementById('city-dropdown');
-    var cityForm = document.getElementById('city-filter-form');
+<script type="text/javascript">
+  document.getElementById('city-dropdown').addEventListener('change', function () {
+    this.form.submit();
+  });
 
-    console.log("City Dropdown:", cityDropdown);
-    console.log("City Form:", cityForm);
-
-    if (cityDropdown && cityForm) {
-      cityDropdown.addEventListener('change', function () {
-        console.log("Dropdown changed. Selected value:", cityDropdown.value);
-        cityForm.submit();
-        console.log("Form submitted.");
-      });
-    } else {
-      console.log("Dropdown or Form not found.");
-    }
+  document.getElementById('bpr-category').addEventListener('change', function () {
+    this.form.submit();
   });
 </script>
+
 {% endblock %}
