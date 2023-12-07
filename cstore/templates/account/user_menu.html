@@ -4,7 +4,12 @@
   <a href="https://epsilon.mb-themes.com/user/dashboard" class="active">Dashboard</a>
   <a href="https://epsilon.mb-themes.com/user/items?itemType=active" class="has-counter"> Active listings <span class="counter">1</span> </a>
 
-  <a href="https://epsilon.mb-themes.com/user/alerts" class=""> Subscriptions <span class="counter">2</span> </a>
+  <!-- Updated Link for Company Dashboard -->
+  {% if companies.count > 0 %}
+  <a href="{% url 'companies:company-dashboard' companies.first.pk %}" class="">Company Dashboard</a>
+  {% else %}
+  <a href="{% url 'companies:create_company' %}">Create Your Company</a>
+  {% endif %}
 
   <a href="{%url 'account:user_profile' %}" class="">My Profile</a>
 

@@ -241,7 +241,8 @@ class ProductImageForm(forms.ModelForm):
 class StoreProductForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
     city = forms.ModelChoiceField(queryset=City.objects.all(), required=False)
+    
 
     class Meta:
         model = StoreProduct
-        fields = ['custom_title', 'custom_description', 'custom_price', 'stock_quantity', 'category', 'city', ]
+        fields = ['custom_title', 'custom_description', 'custom_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold', 'current_stock']

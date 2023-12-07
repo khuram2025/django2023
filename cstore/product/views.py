@@ -326,8 +326,10 @@ def product_search(request):
 
     return render(request, 'product/product_listing.html', context)
 
-def create_or_import_product(request, company_id):
-    company = CompanyProfile.objects.get(id=company_id)
+def create_or_import_product(request, pk):
+    print("PK value:", pk) 
+    company = CompanyProfile.objects.get(pk=pk)
+    print("PK value c:", pk) 
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
 
@@ -372,7 +374,8 @@ def create_or_import_product(request, company_id):
         initial_address = str(company.address) if company.address else None
         form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
         products = Product.objects.filter(is_published=True)
-        return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company})
+        return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company,'pk': pk})
+        
 
     return render(request, 'companies/create_or_import_product.html', {'form': form})
 

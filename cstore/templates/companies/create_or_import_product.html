@@ -1,196 +1,191 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<body id="search">
-  {% include 'home/header.html' %}
-
-  <div class="container primary">
-    <div id="search-menu" class="filter-menu">
-      <div class="wrap">
-        <form action="/product/search/" method="GET" class="search-side-form nocsrf">
-          <input type="hidden" class="ajaxRun" value="" />
-          <input type="hidden" name="page" value="search" class="default-font font-size-15" />
-          <input type="hidden" name="sOrder" value="dt_pub_date" class="default-font font-size-15" />
-          <input type="hidden" name="iOrderType" value="desc" class="default-font font-size-15" />
-          <input type="hidden" name="sCountry" id="sCountry" value="" class="default-font font-size-15" />
-          <input type="hidden" name="sRegion" id="sRegion" value="" class="default-font font-size-15" />
-          <input type="hidden" name="sCity" id="sCity" value="" class="default-font font-size-15" />
-          <input type="hidden" name="iPage" id="iPage" value="" class="default-font font-size-15" />
-          <input type="hidden" name="sShowAs" id="sShowAs" value="" class="default-font font-size-15" />
-          <input type="hidden" name="userId" value="" class="default-font font-size-15" />
-          <input type="hidden" name="notFromUserId" value="" class="default-font font-size-15" />
-
-          <div class="row isMobile">
-            <label for="sCategory">Category</label>
-            <div class="input-box">
-              <select name="sCategory" id="sCategory" onchange="filterByCategory()">
-                <option value="">Category...</option>
-
-                <option value="1" data-slug="test">Test</option>
-
-                <option value="2" data-slug="test2">Test2</option>
-              </select>
-            </div>
+{% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
+<body id="home" class="layout-default dvc-ios demo">
+  <div class="form-container">
+    <div class="form-container">
+      <!-- Import Items Column -->
+      <div class="import-items">
+        <h2>Import Items</h2>
+        <div class="custom-dropdown">
+          <div class="dropdown-selected">
+            <img src="https://via.placeholder.com/40" alt="Select Product" width="40" height="40" />
+            <span>Select Product to Import</span>
           </div>
-
-          <div class="row">
-            <label for="sLocation" class="default-font font-size-14">Location</label>
-
-            <div class="input-box picker location only-search">
-              <input name="sLocation" type="text" class="location-pick" id="sLocation" placeholder="Region, city..." value="" autocomplete="off" />
-              <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
-              <div class="results" style="overflow: hidden"></div>
-            </div>
-          </div>
-
-          <!-- CONDITION -->
-          <div class="row condition">
-            <label for="" class="default-font font-size-14">Condition</label>
-            <div class="input-box">
-              <select class="sCondition" id="sCondition" name="sCondition">
-                <option value="" class="default-font font-size-15">All</option>
-                <option value="1" class="default-font font-size-15">New</option>
-                <option value="2" class="default-font font-size-15">Used</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- PRICE -->
-          <div class="row price">
-            <label for="sPriceMin" class="default-font font-size-14">Price range ($)</label>
-
-            <div class="line input-box">
-              <input type="number" class="priceMin" name="sPriceMin" id="sPriceMin" value="" size="6" maxlength="6" placeholder="Min" />
-              <span class="delim"></span>
-              <input type="number" class="priceMax" name="sPriceMax" id="sPriceMax" value="" size="6" maxlength="6" placeholder="Max" />
-            </div>
-
-            <div class="row check-only checkboxes">
-              <div class="input-box-check">
-                <input type="checkbox" name="bPriceCheckWithSeller" id="bPriceCheckWithSeller" value="1" class="default-font font-size-15" />
-                <label for="bPriceCheckWithSeller" class="only-check-label">Ask Seller</label>
-              </div>
-            </div>
-
-            <div class="row free-only checkboxes">
-              <div class="input-box-check">
-                <input type="checkbox" name="bPriceFree" id="bPriceFree" value="1" class="default-font font-size-15" />
-                <label for="bPriceFree" class="only-free-label">Free</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- PERIOD-->
-          <div class="row period">
-            <label for="sPriceMin" class="default-font font-size-14">Period</label>
-            <div class="input-box">
-              <select class="sPeriod" id="sPeriod" name="sPeriod" onchange="filterByPeriod()">
-                <option value="" class="default-font font-size-15">All</option>
-                <option value="1" class="default-font font-size-15">Yesterday</option>
-                <option value="7" class="default-font font-size-15">Last week</option>
-                <option value="14" class="default-font font-size-15">Last 2 weeks</option>
-                <option value="31" class="default-font font-size-15">Last month</option>
-                <option value="365" class="default-font font-size-15">Last year</option>
-              </select>
-            </div>
-          </div>
-          <!-- Existing search form fields -->
-
-          <!-- Existing form submit button -->
-
-          <!-- COMPANY -->
-          <div class="row buttons srch">
-            <button type="submit" class="btn mbBg init-search" id="search-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" class="default-font font-size-16"><path d="M508.5 468.9L387.1 347.5c-2.3-2.3-5.3-3.5-8.5-3.5h-13.2c31.5-36.5 50.6-84 50.6-136C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c52 0 99.5-19.1 136-50.6v13.2c0 3.2 1.3 6.2 3.5 8.5l121.4 121.4c4.7 4.7 12.3 4.7 17 0l22.6-22.6c4.7-4.7 4.7-12.3 0-17zM208 368c-88.4 0-160-71.6-160-160S119.6 48 208 48s160 71.6 160 160-71.6 160-160 160z" class="default-font font-size-16"></path></svg>
-              <span class="default-font font-size-16">Search</span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div id="search-category-box" class="default-font font-size-14">
-        <h3 class="default-font font-size-16">Select category</h3>
-        <div class="wrap nice-scroll-nothave-overflow">
-          <div class="catbox root nice-scroll">
-            <a href="/product/products/test/" class="child">
-              <div class="icon"></div>
-              <div>
-                <span class="name">Test</span>
-                <!-- Display product count if needed -->
-              </div>
-            </a>
-
-            <a href="/product/products/test2/" class="child">
-              <div class="icon"></div>
-              <div>
-                <span class="name">Test2</span>
-                <!-- Display product count if needed -->
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Display the products -->
-      <!-- Your code to display products goes here -->
-
-      <div id="banner-theme" class="banner-theme banner-search_sidebar not767 is-demo">
-        <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
-          <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
-            <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=8fc96e08" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/banners/8fc96e08.jpg" alt="A2 Hosting Springing Into Summer Sale" title="A2 Hosting Springing Into Summer Sale" width="250" height="250" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=8fc96e08" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <!-- Left Column for the Form -->
-
-      <div class="search-main">
-        <h1>Create or Import Product for {{ company.name }}</h1>
-        <form id="product-form" method="post" action="{% url 'product:create_or_import_product' company_id=company.id %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <!-- Dynamic Fields -->
-          {{ form.as_p }}
-
-          <!-- Submit Button -->
-          <button type="submit" class="btn btn-primary">Submit Product</button>
-        </form>
-      </div>
-
-      <!-- Right Column for Importing Products -->
-      <div class="col-md-6">
-        <div class="box">
-          <h2>Import Product</h2>
-          <label for="product_id">Select Product to Import:</label>
-          <select id="product_id" name="product_id" class="form-control">
-            <option value="">--- Select Product ---</option>
+          <div class="dropdown-list">
+            <!-- Dummy data for import items -->
             {% for product in products %}
-            <option value="{{ product.id }}">{{ product.title }}</option>
+            <div class="dropdown-item" onclick="selectDropdownItem(this, '{{ product.id }}', '{{ product.category.id }}', '{% if product.city %}{{ product.city.id }}{% else %}{% endif %}', '{% if product.address %}{{ product.address }}{% else %}{% endif %}')">
+              <img src="https://via.placeholder.com/40" alt="Product Image" width="40" height="40" />
+              <span>{{ product.title }}</span>
+            </div>
             {% endfor %}
-          </select>
+          </div>
         </div>
+        <button type="button" class="btn-import">Import</button>
+      </div>
+      <div class="add-product-form">
+        <h2>Add Product</h2>
+        <form action="{% url 'product:create_or_import_product' pk=pk %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="photo-upload-container">
+            <label for="product_images" class="photo-upload-box">
+              <div class="add-photo-text">
+                <i class="fa fa-camera"></i>
+                <span>Add Photo</span>
+              </div>
+            </label>
+            <input type="file" id="product_images" name="product_images" multiple hidden />
+            <div class="image-preview-container"></div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" name="{{ form.custom_title.name }}" placeholder="{{ form.custom_title.label }}" required />
+          </div>
+
+          <!-- Custom Description Field -->
+          <div class="form-group full-width-textarea">
+            <textarea name="{{ form.custom_description.name }}" placeholder="{{ form.custom_description.label }}" required></textarea>
+          </div>
+
+          <div class="form-group inline-group">
+            <input type="number" name="{{ form.purchase_price.name }}" placeholder="{{ form.purchase_price.label }}" required />
+            <input type="number" name="{{ form.opening_stock.name }}" placeholder="{{ form.opening_stock.label }}" required />
+          </div>
+
+          <!-- Inline Group for Low Stock Threshold and Current Stock -->
+          <div class="form-group inline-group">
+            <input type="number" name="{{ form.low_stock_threshold.name }}" placeholder="{{ form.low_stock_threshold.label }}" required />
+            <input type="number" name="{{ form.current_stock.name }}" placeholder="{{ form.current_stock.label }}" required />
+          </div>
+
+          <!-- Category and City Dropdowns -->
+          <div class="form-group inline-group">
+            <!-- Category Dropdown -->
+            <select name="{{ form.category.name }}" id="id_{{ form.category.name }}">
+              <option value="">Select Category</option>
+              {% for value, label in form.category.field.choices %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+            <!-- City Dropdown -->
+            <select name="{{ form.city.name }}" id="id_{{ form.city.name }}">
+              <option value="">Select City</option>
+              {% for value, label in form.city.field.choices %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group inline-group">
+            <input type="number" name="sale_price" placeholder="Sale Price" required />
+            <input type="number" name="purchase_price" placeholder="Purchase Price" required />
+          </div>
+
+          <div class="form-group inline-group">
+            <input type="number" name="opening_stock" placeholder="Opening Stock" required />
+            <input type="number" name="low_stock" placeholder="Low Stock" required />
+          </div>
+
+          <input type="submit" value="Add Product" />
+        </form>
       </div>
     </div>
   </div>
-
-  {% include 'home/footer.html' %}
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %} {% endblock %} {% block custom_js %}
   <script>
-    $(document).ready(function () {
-        $('#product_id').on('change', function () {
-            var productId = $(this).val();
-            if (productId) {
-                // AJAX call to get product details and fill the form
-                $.getJSON('{% url 'product:get_product_details' %}', {id: productId}, function (product) {
-                    // Assuming 'product' is the object with product details
-                    $('#id_custom_title').val(product.title);
-                    $('#id_custom_description').val(product.description);
-                    $('#id_custom_price').val(product.price);
-                    $('#id_stock_quantity').val(product.stock_quantity);
-                    // Add other fields as necessary
-                });
-            }
-        });
+    document.querySelector("#product_images").addEventListener("change", function () {
+      const files = this.files;
+      const previewContainer = document.querySelector(".image-preview-container");
+
+      Array.from(files).forEach((file, index) => {
+        if (index < 15 - previewContainer.children.length) {
+          // Limit total images to 15
+          const imgElement = document.createElement("img");
+          imgElement.src = URL.createObjectURL(file);
+
+          const deleteIcon = document.createElement("span");
+          deleteIcon.classList.add("delete-icon");
+          deleteIcon.innerHTML = "&times;";
+          deleteIcon.onclick = function () {
+            URL.revokeObjectURL(imgElement.src); // Free up memory
+            previewContainer.removeChild(imgContainer);
+          };
+
+          const imgContainer = document.createElement("div");
+          imgContainer.classList.add("image-preview-box");
+          imgContainer.appendChild(imgElement);
+          imgContainer.appendChild(deleteIcon);
+          previewContainer.appendChild(imgContainer);
+        }
+      });
+    });
+
+    // Function to handle dropdown selection
+    function selectDropdownItem(element, productId, categoryId, cityId, address) {
+      var selectedContainer = document.querySelector(".dropdown-selected");
+      selectedContainer.innerHTML = element.innerHTML; // Copy the HTML of the selected item
+      toggleDropdown(); // Close the dropdown
+
+      // Set form fields based on selected product
+      document.querySelector("[name='product_id']").value = productId;
+      document.querySelector("[name='category']").value = categoryId;
+      if (cityId) {
+        document.querySelector("[name='city']").value = cityId;
+      }
+      document.querySelector("[name='address']").value = address;
+    }
+
+    // Function to toggle dropdown list visibility
+    function toggleDropdown() {
+      var dropdownList = document.querySelector(".dropdown-list");
+      dropdownList.style.display = dropdownList.style.display === "none" ? "block" : "none";
+    }
+
+    // Event listener to open/close the custom dropdown
+    document.querySelector(".dropdown-selected").addEventListener("click", toggleDropdown);
+
+    // Get the selected product ID from the dropdown
+    var productId = this.value;
+    // Add an event listener to the Add Photo button
+    const addImageButton = document.querySelector(".add-image");
+    addImageButton.addEventListener("click", () => {
+      // Get the file input element
+      const productImageInput = document.querySelector("#product_image");
+
+      // Click the file input element to open the file dialog
+      productImageInput.click();
+    });
+
+    // Add an event listener to the file input element
+    productImageInput.addEventListener("change", () => {
+      // Get the selected file
+      const file = productImageInput.files[0];
+
+      // If a file is selected, preview it
+      if (file) {
+        const imagePreview = document.querySelector(".image-preview");
+        imagePreview.src = URL.createObjectURL(file);
+      }
+    });
+
+    // Add event listeners to the Change Image and Delete Image buttons
+    const changeImageButton = document.querySelector(".change-image");
+    const deleteImageButton = document.querySelector(".delete-image");
+
+    changeImageButton.addEventListener("click", () => {
+      // Click the file input element to open the file dialog
+      productImageInput.click();
+    });
+
+    deleteImageButton.addEventListener("click", () => {
+      // Clear the image preview
+      const imagePreview = document.querySelector(".image-preview");
+      imagePreview.src = "";
+
+      // Clear the file input element
+      productImageInput.value = "";
     });
   </script>
+
+  {% endblock %}
 </body>
-{% endblock %}

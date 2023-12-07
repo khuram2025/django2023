@@ -206,6 +206,11 @@ class StoreProduct(models.Model):
     stock_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Stock Quantity"))
     is_store_exclusive = models.BooleanField(default=False, verbose_name=_("Store Exclusive"))
 
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Purchase Price"), null=True, blank=True)
+    opening_stock = models.PositiveIntegerField(default=0, verbose_name=_("Opening Stock"))
+    low_stock_threshold = models.PositiveIntegerField(default=0, verbose_name=_("Low Stock Threshold"))
+    current_stock = models.PositiveIntegerField(default=0, verbose_name=_("Current Stock"))
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
