@@ -5,6 +5,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files import File
 from django.utils.translation import gettext_lazy as _
+from decimal import Decimal
 
 from locations.models import City
 from mptt.models import MPTTModel, TreeForeignKey
@@ -202,7 +203,7 @@ class StoreProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='store_products', null=True, blank=True)  # Nullable for store-exclusive products
     custom_title = models.CharField(max_length=255, verbose_name=_("Custom Title"), blank=True, null=True)
     custom_description = models.TextField(verbose_name=_("Custom Description"), blank=True, null=True)
-    custom_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Custom Price"), null=True, blank=True)
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Sale Price"), null=True, blank=True)
     stock_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Stock Quantity"))
     is_store_exclusive = models.BooleanField(default=False, verbose_name=_("Store Exclusive"))
 
@@ -227,7 +228,7 @@ class StoreProduct(models.Model):
                 # Update and publish existing product
                 self.product.title = self.custom_title or self.product.title
                 self.product.description = self.custom_description or self.product.description
-                self.product.price = self.custom_price or self.product.price
+                self.product.price = self.sale_price or self.product.price
                 self.product.is_published = True
                 self.product.save()
             else:

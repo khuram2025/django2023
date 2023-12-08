@@ -17,6 +17,7 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from django.http import HttpResponse
+from decimal import Decimal
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -330,14 +331,19 @@ def create_or_import_product(request, pk):
     print("PK value:", pk) 
     company = CompanyProfile.objects.get(pk=pk)
     print("PK value c:", pk) 
+
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
 
     if request.method == 'POST':
         form = StoreProductForm(request.POST)
+        print("Form Data Received:", request.POST)  # Print the data received from the form
+
         if form.is_valid():
             store_product = form.save(commit=False)
             store_product.store = company
+            sale_price = form.cleaned_data.get('sale_price')
+            print("Store Product (Before Saving):", store_product)  # Print store product details
 
             if 'import_product' in request.POST:
                 product_id = request.POST.get('product_id')
@@ -345,7 +351,6 @@ def create_or_import_product(request, pk):
                 store_product.product = product
                 store_product.is_store_exclusive = False
 
-                # Auto-fill category, city, and address if importing
                 store_product.category = product.category
                 store_product.city = product.city
                 store_product.address = product.address
@@ -354,30 +359,36 @@ def create_or_import_product(request, pk):
                 selected_city = form.cleaned_data.get('city') or (company.address.city if company.address else None)
                 selected_address = form.cleaned_data.get('address') or (str(company.address) if company.address else None)
 
+                sale_price = form.cleaned_data.get('sale_price')
+                print("Sale Price from Form Cleaned Data:", sale_price)
+
+
                 new_product = Product(
                     title=store_product.custom_title,
                     description=store_product.custom_description,
-                    price=store_product.custom_price,
+                    price=store_product.sale_price,
                     category=selected_category,
                     city=selected_city,
                     address=selected_address,
                     is_published=False
                 )
+                print("New Product (Before Saving):", new_product)  # Print new product details
                 new_product.save()
+                print("New Product Saved:", new_product)  # Print statement to confirm saving
                 store_product.product = new_product
 
             store_product.save()
+            print("Store Product Saved:", store_product)  # Print statement to confirm saving
             return redirect('some-view')
+        else:
+            print("Form Errors:", form.errors)  # Print form errors
 
-    else:
-        initial_city = company.address.city if company.address else None
-        initial_address = str(company.address) if company.address else None
-        form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
-        products = Product.objects.filter(is_published=True)
-        return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company,'pk': pk})
-        
+    initial_city = company.address.city if company.address else None
+    initial_address = str(company.address) if company.address else None
+    form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
+    products = Product.objects.filter(is_published=True)
+    return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company, 'pk': pk})
 
-    return render(request, 'companies/create_or_import_product.html', {'form': form})
 
 
 

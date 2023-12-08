@@ -245,4 +245,4 @@ class StoreProductForm(forms.ModelForm):
 
     class Meta:
         model = StoreProduct
-        fields = ['custom_title', 'custom_description', 'custom_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold', 'current_stock']
+        fields = ['custom_title', 'custom_description', 'sale_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold',]
