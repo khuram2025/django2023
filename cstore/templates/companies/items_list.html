@@ -60,14 +60,10 @@
 
       <div id="search-main" class="grid">
         <div class="top-bar">
-          <h1>558 results found</h1>
+          <h3>{{ total_unique_products }} Products, {{total_stock}} Total ITems</h3>
         </div>
 
-        <div id="search-premium-items">
-          <h2>Premium listings</h2>
-
-          Chart will be here
-        </div>
+        <div id="search-premium-items">Chart will be here</div>
 
         <a href="#" id="open-search-filters" class="btn isMobile">
           <div class="svg-wrap">
@@ -163,9 +159,9 @@
         </div>
 
         <div id="filter-user-type">
-          <a class="all active" href="https://epsilon.mb-themes.com/search">All listings</a>
-          <a class="personal" href="https://epsilon.mb-themes.com/search/sCompany,0">Personal</a>
-          <a class="company" href="https://epsilon.mb-themes.com/search/sCompany,1">Company</a>
+          <a class="all active" href="https://epsilon.mb-themes.com/search">Current Stock</a>
+          <a class="personal" href="https://epsilon.mb-themes.com/search/sCompany,0">Low Stock</a>
+          <a class="company" href="https://epsilon.mb-themes.com/search/sCompany,1">Finished Stock</a>
         </div>
 
         <div id="search-items">
@@ -177,14 +173,15 @@
             </div>
           </div>
           <div class="products list">
+            {% for product in store_products %}
             <div class="simple-prod o1">
               <div class="simple-wrap" title="">
                 <div class="img-wrap">
-                  <a class="img" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">
-                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/3/1242_thumbnail.jpg" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" />
+                  <a class="img" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
+                    <img class="lazy loaded" src="{{ product.product.images.all.0.image.url }}" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" />
                   </a>
 
-                  <a class="bar" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">
+                  <a class="bar" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
                     <div class="price isGrid isDetail"><span>580.00 $</span></div>
 
                     <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
@@ -204,23 +201,22 @@
                 </div>
 
                 <div class="data">
-                  <div class="info">Kerens, United States</div>
+                  <div class="info">{{ product.product.category }}</div>
 
-                  <a class="title" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313">Canon Pix Z9</a>
+                  <a class="title" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">{{ product.custom_title }}</a>
 
-                  <div class="description isDetail">Sed vel venenatis dolor. Fusce lectus felis, tempor ut ex sed, cursus pharetra diam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In interdum dictum iaculis. Pellentesque eget luctus libero. Pellentesque non ipsum eget mi fringilla mattis sed vel lectus. Curabitur iaculis mattis rutrum. Phasellus condimentum mollis s...</div>
+                  <div class="description isDetail">Description</div>
 
-                  <div class="price standalone isList"><span>580.00 $</span></div>
+                  <div class="price standalone isList"><span>{{ product.purchase_price }} Rs.</span></div>
 
                   <div class="extra">
-                    <span>1 year ago</span>
-                    <span>Cameras - Camera Accessories</span>
+                    <span>{{ product.sale_price }} Sale Price</span>
 
-                    <span>1649 people viewed</span>
+                    <span>{{ product.stock_quantity }} stock qty</span>
                   </div>
 
                   <div class="action isDetail">
-                    <div class="price"><span>580.00 $</span></div>
+                    <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
                   </div>
 
                   <div class="contact isDetail">
@@ -229,87 +225,18 @@
                 </div>
 
                 <div class="right isList">
-                  <div class="price"><span>580.00 $</span></div>
+                  <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
 
-                  <div class="favorite">
-                    <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
-                  </div>
+                  <button style="background-color: #3b49df; color: white; border: none; border-radius: 10px; width: 80px; height: 25px">Edit Stock</button>
                 </div>
 
                 <div class="labels isGrid"></div>
               </div>
             </div>
+            {% empty %}
+            <li>No products found.</li>
+            {% endfor %}
 
-            <div class="simple-prod o3 st-sold">
-              <div class="simple-wrap" title="Sold">
-                <div class="img-wrap">
-                  <a class="img" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">
-                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/2/1146_thumbnail.jpg" alt="Maserati One Z9" style="display: block; transition: all 0.2s ease 0s" />
-                  </a>
-
-                  <a class="bar" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">
-                    <div class="price isGrid isDetail"><span>128500.00 $</span></div>
-
-                    <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
-                  </a>
-
-                  <a href="https://epsilon.mb-themes.com/user/profile/johndoe" class="user-image isGrid isDetail">
-                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/2_Wp30T_20220323.png" alt="John Doe" style="display: block; transition: all 0.2s ease 0s" />
-                  </a>
-
-                  <div class="isGrid isDetail">
-                    <div class="favorite">
-                      <a href="javascript://" class="fi_save_favorite fi_save fi_fav_289" rel="289" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="data">
-                  <div class="info">
-                    <span class="label sold isList">Sold</span>
-
-                    Atlantic Highlands, United States
-                  </div>
-
-                  <a class="title" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289">Maserati One Z9</a>
-
-                  <div class="description isDetail">Duis auctor nisl sed libero interdum, vel vulputate diam iaculis. Sed ultricies odio ac odio facilisis imperdiet. In posuere nisl est, sit amet semper lacus sagittis id. Aliquam justo augue, ullamcorper non augue sed, aliquam egestas velit. Fusce lacus tellus, faucibus at dui vel, efficitur venenatis enim. Curabitur fringilla viverra dolor, at sodales eros v...</div>
-
-                  <div class="price standalone isList"><span>128500.00 $</span></div>
-
-                  <div class="extra">
-                    <span>1 year ago</span>
-                    <span>Cars</span>
-
-                    <span>1593 people viewed</span>
-                  </div>
-
-                  <div class="action isDetail">
-                    <div class="price"><span>128500.00 $</span></div>
-                  </div>
-
-                  <div class="labels isDetail">
-                    <span class="label sold">Sold</span>
-                  </div>
-
-                  <div class="contact isDetail">
-                    <a class="contact" href="https://epsilon.mb-themes.com/vehicles/cars/maserati-one-z9_i289#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
-                  </div>
-                </div>
-
-                <div class="right isList">
-                  <div class="price"><span>128500.00 $</span></div>
-
-                  <div class="favorite">
-                    <a href="javascript://" class="fi_save_favorite fi_save fi_fav_289" rel="289" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
-                  </div>
-                </div>
-
-                <div class="labels isGrid">
-                  <span class="label sold">Sold</span>
-                </div>
-              </div>
-            </div>
             <div id="banner-theme" class="banner-theme banner-search_middle not767 is-demo">
               <div class="myad">
                 <div class="text">

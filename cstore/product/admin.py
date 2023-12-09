@@ -143,18 +143,23 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 
-from .models import StoreProduct  # Import StoreProduct model
+from .models import StoreProduct, StoreProductStockEntry
+
+class StoreProductStockEntryInline(admin.TabularInline):
+    model = StoreProductStockEntry
+    extra = 1  # Number of extra forms to display
+    fields = ['quantity_added', 'purchase_price', 'date_added']
+    readonly_fields = ['date_added']  # Set date_added as read-only
 
 class StoreProductAdmin(admin.ModelAdmin):
     list_display = ('store', 'product_title', 'sale_price', 'stock_quantity', 'is_store_exclusive', 'created_at', 'updated_at')
     list_filter = ('store', 'is_store_exclusive')
     search_fields = ('store__name', 'custom_title', 'product__title')
+    inlines = [StoreProductStockEntryInline]  # Add the inline here
 
     def product_title(self, obj):
         return obj.custom_title if obj.custom_title else (obj.product.title if obj.product else "Exclusive Product")
     product_title.short_description = "Product Title"
 
 admin.site.register(StoreProduct, StoreProductAdmin)
-
-
 

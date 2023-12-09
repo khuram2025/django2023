@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Category, Product
+from product.models import Category, Product, StoreProduct
 
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -197,7 +197,37 @@ def company_dashboard(request, pk):
 
 def company_inventory(request, pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
-    return render(request, 'companies/items_list.html', {'company': company, 'pk': pk})
+    store_products = StoreProduct.objects.filter(store=company)
+    total_stock = sum(product.stock_quantity for product in store_products)
+    total_unique_products = store_products.count()
+    print("Total Stock:", total_stock)
+
+    context = {
+        'company': company,
+        'store_products': store_products,
+        'total_stock': total_stock,
+        'total_unique_products': total_unique_products,
+        'pk': pk
+    }
+
+    return render(request, 'companies/items_list.html', context)
+  
+
+def store_product_detail(request, pk, product_pk):
+    company = get_object_or_404(CompanyProfile, pk=pk)
+    store_product = get_object_or_404(StoreProduct, pk=product_pk, store=company)
+
+    # Optionally, you can include additional data, such as related stock entries
+    stock_entries = store_product.stock_entries.order_by('-date_added')
+
+    context = {
+        'company': company,
+        'store_product': store_product,
+        'stock_entries': stock_entries,
+        'pk': pk
+    }
+
+    return render(request, 'companies/product_detail.html', context)
 
 @login_required
 def add_inventory(request):

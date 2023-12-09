@@ -1,0 +1,477 @@
+Product Detail
+{% extends 'home/base.html' %}{% load youtube_filters %} {% block content %}
+
+<body id="item" class="">
+  {% include 'home/header.html' %}
+
+
+  <div class="content loc-item sec-default">
+
+    <div id="breadcrumbs" class="container">
+      <div class="bread-text">
+        <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <meta itemprop="name" content="Breadcrumb" />
+          <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child"><a href="{% url 'home:index' %}" itemprop="item"><span itemprop="name" class="home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16">
+                  <path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" /></svg> <span>Home</span></span></a>
+            <meta itemprop="position" content="1" />
+          </li>
+
+          <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem"> > <a href="../electronics.html" itemprop="item"><span itemprop="name">{{ product.category.title }}</span></a>
+            <meta itemprop="position" content="2" />
+          </li>
+
+          <li itemscope itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child"> > <span itemprop="name">{{ product.title }}, <b>{{ product.price }} Rs.</b></span>
+            <meta itemprop="position" content="3" />
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="navlinks">
+        <a href="samsung-s8-pro_i64.html" class="prev"><i class="fas fa-angle-left"></i> Previous</a> <a href="samsung-s7-with-cover_i66.html" class="next">Next <i class="fas fa-angle-right"></i></a> </div>
+    </div>
+
+    <div id="flashbox" class="container">
+      <div class="wrap">
+        <div class="wrap2"></div>
+      </div>
+    </div>
+    <div class="container primary">
+      <div id="banner-theme" class="banner-theme banner-item_top not767 is-demo">
+        <div class="myad">
+          <div class="text"><a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a3194333" target="_top"><img src="../../../affiliates.a2hosting.com/accounts/default1/banners/a3194333.jpg" alt="" title="" width="728" height="90" /></a><img style="border:0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=a3194333" width="1" height="1" alt="" /></div>
+        </div>
+      </div>
+      <div class="data-box" title="">
+        <div id="item-main">
+
+          <div id="item-image" class="">
+            <a href="../../search/category%2c19/country%2cUS/region%2c6862182/city%2c6862204.html" class="mlink back isMobile"><i class="fas fa-arrow-left"></i></a>
+
+            <a href="../../item/send-friend/657ca0.html?type=contact" data-type="contact" class="mlink contact isMobile open-form"><i class="fas fa-envelope-open"></i></a>
+
+            <a href="#" class="mlink share isMobile"><i class="fas fa-share-alt"></i></a>
+
+
+
+            <div class="swiper-container">
+              <div class="swiper-wrapper">
+                {% for image in product.images.all %}
+                <li class="swiper-slide ratio" style="padding-top:75.02%;">
+                  <a href="{{ image.image.url }}">
+                    <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+                  </a>
+                </li>
+                {% empty %}
+                <li>No images available.</li>
+                {% endfor %}
+
+              </div>
+
+              <div class="swiper-pg"></div>
+
+              <div class="swiper-button swiper-next"><i class="fas fa-caret-right"></i></div>
+              <div class="swiper-button swiper-prev"><i class="fas fa-caret-left"></i></div>
+            </div>
+
+
+            <div class="swiper-thumbs">
+              <ul>
+                {% for image in product.images.all %}
+                <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
+                  <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+                </li>
+                {% empty %}
+                <li>No thumbnails available.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="basic">
+            <h1 class="row">{{ product.title }}</h1>
+
+            <div class="labels">
+              <span class="premium">Premium</span> </div>
+
+            <div class="row details">
+              <span>{{ product.category.title }}</span>
+              <span>{{ product.view_count }} views</span>
+
+
+
+
+              <span>ID: {{ product.id }}</span>
+
+              {% for field_name, field_value in custom_fields.items %}
+        <span>{{ field_name }}: {{ field_value }}</span>
+    {% endfor %}
+              
+            </div>
+
+            <div class="row price under-header p-1100000000x">{{ product.price }}</div>
+
+            <a href="../../indexfacf.html?page=ajax&amp;action=runhook&amp;hook=mo_offers_list&amp;itemId=65&amp;currency=USD" class="mo-open-offer mo-button-create mo-make-offer-price">Make price offer</a>
+
+
+
+            <div class="row date">
+              <p>
+                Posted on {{ product.created_at }} </p>
+            </div>
+
+            <div class="favorite"><a href="javascript://" class="fi_save_favorite fi_save fi_fav_65" rel="65" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a></div>
+          </div>
+
+
+          <!-- CUSTOM FIELDS -->
+          <div class="props">
+
+
+            <div id="item-hook"></div>
+          </div>
+
+          <div id="banner-theme" class="banner-theme banner-item_description not767 is-demo">
+            <div class="myad">
+              <div class="text"><a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a3194333" target="_top"><img src="../../../affiliates.a2hosting.com/accounts/default1/banners/a3194333.jpg" alt="" title="" width="728" height="90" /></a><img style="border:0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=a3194333" width="1" height="1" alt="" /></div>
+            </div>
+          </div>
+          <!-- DESCRIPTION -->
+          <div class="row description">
+            <h2>Description</h2>
+
+            <div class="desc-parts">
+  <!-- ... other parts ... -->
+  <div class="desc-text">
+    {% if product.description|length > 50 %}
+      <div class="text visible">
+        {{ product.description|slice:":50" }}...
+        <a href="#" class="read-more-desc" onclick="toggleDescription(); return false;">Read more <i class="fas fa-angle-down"></i></a>
+      </div>
+      <div class="text hidden" style="display: none;">
+        {{ product.description }}
+      </div>
+    {% else %}
+      <div class="text">
+        {{ product.description }}
+      </div>
+    {% endif %}
+  </div>
+  <!-- ... -->
+</div>
+
+
+
+
+           
+          </div>
+
+          <!-- YOUTUBE VIDEO PLAYER -->
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+
+              <div class="swiper-slide">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                  {% if product.youtube_video_url %}
+                  <iframe src="{{ product.youtube_video_url|youtube_embed_url }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
+                {% endif %}
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+
+
+          <!-- COMMENTS BLOCK -->
+          <div class="box" id="comments">
+            <h2>Comments</h2>
+
+            <div class="wrap">
+              <div class="empty-comments">No comments has been added yet</div>
+
+            </div>
+          </div>
+
+          <div id="shortcuts">
+            <a href="#" class="print isDesktop"><i class="fas fa-print"></i> Print</a>
+            <a class="friend open-form" href="../../item/send-friend/65751c.html?type=friend" data-type="friend"><i class="fas fa-share-square"></i> Send to friend</a>
+
+            <div class="item-share">
+              <a class="whatsapp" href="whatsapp://send?text=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65" data-action="share/whatsapp/share"><i class="fab fa-whatsapp"></i></a></span>
+              <a class="facebook" title="Share on Facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65"><i class="fab fa-facebook"></i></a>
+              <a class="twitter" title="Share on Twitter" target="_blank" href="https://twitter.com/intent/tweet?text=iPhone+X+-+perfect+status&amp;url=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65"><i class="fab fa-twitter"></i></a>
+              <a class="pinterest" title="Share on Pinterest" target="_blank" href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65&amp;media=https%3A%2F%2Fepsilon.mb-themes.com%2Foc-content%2Fuploads%2F0%2F252.jpg&amp;description=iPhone%20X%20-%20perfect%20status"><i class="fab fa-pinterest"></i></a>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- SIDEBAR - RIGHT -->
+        <div id="item-side">
+
+
+          <a href="../../item/send-friend/657ca0.html?type=contact" class="open-form contact master-button" data-type="contact">
+            <i class="fas fa-envelope-open"></i>
+            <span>Send message</span>
+          </a>
+
+          <div class="box" id="seller">
+            <div class="line1">
+              <div class="img">
+                <img src="../../oc-content/uploads/user-images/3_51u7v_20220323.png" alt="Sam Haghard" />
+
+                <div class="online off" title="User is offline"></div>
+              </div>
+
+              <div class="data">
+    {% if product.company %}
+        <span class="name">{{ product.company.name }}</span>
+        <div class="phone">{{ product.company.phone_number }}</div>
+        <!-- Add more fields as needed -->
+    {% elif product.seller_information.user %}
+        <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
+            {{ product.seller_information.contact_name }}
+        </a>
+        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+    {% else %}
+        <span class="name">{{ product.seller_information.contact_name }}</span>
+        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+    {% endif %}
+</div>
+
+            </div>
+
+            <div class="line-rating">
+              <span class="ur-fdb">
+                <span class="strs"><a href="../../index47de.html?page=ajax&amp;action=runhook&amp;hook=ur_ajax_list&amp;userId=3&amp;itemId=65" id="show-rating" class="show-rating show-stars" title="Click to show user reviews">
+                    <div class="ur-rate ur-has-cl  color5"><span></span></div>
+                    <div class="ur-rate ur-has-cl  color5"><span></span></div>
+                    <div class="ur-rate ur-has-cl  color5"><span></span></div>
+                    <div class="ur-rate ur-has-cl  color5"><span></span></div>
+                    <div class="ur-rate ur-has-cl  color5"><span></span></div><span>5.0</span>
+                  </a></span>
+                <span class="lnk"><a href="../../indexbb1c.html?page=ajax&amp;action=runhook&amp;hook=ur_ajax_new_form&amp;userId=3&amp;itemId=65" id="add-new-rating" class="add-new-rating ur-button">Rate this user</a></span>
+              </span>
+            </div>
+
+            <div class="line2">
+              <div class="date">Last online 4 months ago</div>
+              <div class="reg">Registered for 1+ year</div>
+            </div>
+
+
+            <div class="line3">
+              <div class="address"><i class="fas fa-map-marked-alt"></i> Baboszewo, Mazovia, Poland</div>
+
+              <a class="phone-mobile phone masked" title="Click to see phone number" data-prefix="tel" href="#" data-part1="{{ product.seller_information.phone_number }}" data-part2="">
+                <i class="fas fa-phone-alt"></i>
+                <span>Show Number</span>
+              </a>
+            </div>
+          </div>
+          {% if product.seller_information.user %}
+
+          <a href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}" class="seller-button seller-profile">Seller's profile</a>
+          <a href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}" class="seller-button seller-items">All seller items ({{ product.seller_information.number_of_listings }})</a>
+          {% else %}
+
+          {% endif %}
+
+
+
+
+
+
+
+
+          <div id="banner-theme" class="banner-theme banner-item_sidebar not767 is-demo">
+            <div class="myad">
+              <div class="text"><a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=fb998930" target="_top"><img src="../../../affiliates.a2hosting.com/accounts/default1/banners/fb998930.jpg" alt="A2 Hosting Springing Into Summer Sale" title="A2 Hosting Springing Into Summer Sale" width="300" height="250" /></a><img style="border:0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=fb998930" width="1" height="1" alt="" /></div>
+            </div>
+          </div>
+
+          <div class="box" id="protection">
+            <h2>Be careful!</h2>
+
+            <div class="point">
+              <div class="icon i1"><i class="far fa-credit-card"></i></div>
+              <span>Never pay down a deposit in a bank account until you have met the seller, seen signed a purchase agreement.</span>
+            </div>
+
+            <div class="point">
+              <div class="icon i2"><i class="fas fa-cash-register"></i></div>
+              <span>No serious private advertisers ask for a down payment before you meet. </span>
+            </div>
+
+            <div class="point">
+              <div class="icon i3"><i class="fas fa-user-secret"></i></div>
+              <span>Receiving an email with an in-scanned ID does not mean that you have identified the sender. You do this on the spot, when you sign a purchase agreement.</span>
+            </div>
+          </div>
+
+          <a href="#" class="report-button">
+            <i class="fas fa-flag"></i>
+            <span>Report listing</span>
+          </a>
+
+          <div class="report-wrap" style="display:none;">
+            <div id="report">
+              <img src="../../oc-content/themes/epsilon/images/report.png" alt="Report" />
+              <div class="header">Report listing</div>
+              <div class="subheader">If you find this listing as inappropriate, offensive or spammy, please let us know about it. Select one of following reasons:</div>
+
+              <div class="text">
+                <a href="iphone-x-perfect-status_i65.html" rel="nofollow">Spam</a>
+                <a href="iphone-x-perfect-status_i65.html" rel="nofollow">Misclassified</a>
+                <a href="iphone-x-perfect-status_i65.html" rel="nofollow">Duplicated</a>
+                <a href="iphone-x-perfect-status_i65.html" rel="nofollow">Expired</a>
+                <a href="iphone-x-perfect-status_i65.html" rel="nofollow">Offensive</a>
+              </div>
+            </div>
+          </div>
+
+          <div id="banner-theme" class="banner-theme banner-item_sidebar_bottom not767 is-demo blank" title="You can define your own banner code from theme settings">
+            <div class="myad">
+              <div class="text">
+                <div class="demo-text"><span>Banner space</span><strong>[item sidebar bottom]</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+      <div id="banner-theme" class="banner-theme banner-item_bottom not767 is-demo blank" title="You can define your own banner code from theme settings">
+        <div class="myad">
+          <div class="text">
+            <div class="demo-text"><span>Banner space</span><strong>[item bottom]</strong></div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+
+    <a class="sticky-button btn disabled isMobile" title="No phone number" href="#" onclick="return false;">
+      <i class="fas fa-phone-alt"></i>
+      <span>No phone number</span>
+    </a>
+
+    <a href="../../item/send-friend/657ca0.html?type=contact" class="open-form contact btn btn-secondary sticky-button isMobile" data-type="contact">
+      <i class="fas fa-envelope-open"></i>
+      <span>Send message</span>
+    </a>
+
+    <div class="share-item-data" style="display:none">
+      <a class="whatsapp" href="whatsapp://send?text=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65" data-action="share/whatsapp/share"><i class="fab fa-whatsapp"></i> Share on Whatsapp</a></span>
+      <a class="facebook" title="Share on Facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65"><i class="fab fa-facebook"></i> Share on Facebook</a>
+      <a class="twitter" title="Share on Twitter" target="_blank" href="https://twitter.com/intent/tweet?text=iPhone+X+-+perfect+status&amp;url=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65"><i class="fab fa-twitter"></i> Share on Twitter</a>
+      <a class="pinterest" title="Share on Pinterest" target="_blank" href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fepsilon.mb-themes.com%2Ffor-sale%2Felectronics%2Fiphone-x-perfect-status_i65&amp;media=https%3A%2F%2Fepsilon.mb-themes.com%2Foc-content%2Fuploads%2F0%2F252.jpg&amp;description=iPhone%20X%20-%20perfect%20status"><i class="fab fa-pinterest"></i> Share on Pinterest</a>
+      <a class="friend open-form" href="../../item/send-friend/65751c.html?type=friend" data-type="friend"><i class="fas fa-user-friends"></i> Send to friend</a>
+    </div>
+
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+
+        // SHARE BUTTON
+        $('.mlink.share').on('click', () => {
+          if (navigator.share) {
+            navigator.share({
+              title: 'iPhone X - perfect status - 1100.00 $',
+              text: 'iPhone X - perfect status - 1100.00 $',
+              url: 'https://epsilon.mb-themes.com/for-sale/electronics/iphone-x-perfect-status_i65',
+            }).catch((error) => console.log('ERROR: ', error));
+          }
+
+          return false;
+        });
+
+
+        $('.main-data > .img .mlink.share').on('click', () => {
+          if (navigator.share) {
+            navigator.share({
+                title: 'iPhone X - perfect status - 1100.00 $',
+                text: 'iPhone X - perfect status - 1100.00 $',
+                url: 'https://epsilon.mb-themes.com/for-sale/electronics/iphone-x-perfect-status_i65',
+              })
+              .catch((error) => console.log('ER', error));
+          } else {
+            if (($('#item-summary').is(':hidden') || $('.share-item-data').is(':hidden')) && $('.main-data > .img .mlink.share').hasClass('shown')) {
+              $('.main-data > .img .mlink.share').removeClass('shown');
+            }
+
+            if (!$('.main-data > .img .mlink.share').hasClass('shown')) {
+              $('.share-item-data').fadeIn(200);
+
+              if (!$('#item-summary').hasClass('shown')) {
+                $('#item-summary').addClass('shown').show(0).css('overflow', 'visible').css('bottom', '-100px').css('opacity', '0').stop(false, false).animate({
+                  bottom: '8px',
+                  opacity: 1
+                }, 250);
+              }
+            } else {
+              $('.share-item-data').fadeOut(200);
+
+              if ($('#listing .item .data').offset().top - 50 > $(window).scrollTop()) {
+                $('#item-summary').removeClass('shown').stop(false, false).animate({
+                  bottom: '-100px',
+                  opacity: 0
+                }, 250, function () {
+                  $('#item-summary').hide(0);
+                });
+              }
+            }
+
+            $('.main-data > .img .mlink.share').toggleClass('shown');
+          }
+
+          return false;
+        });
+
+
+      });
+    </script>
+
+  </div>
+
+
+
+  {% include 'home/pro_seller.html' %}
+  {% include 'home/footer.html' %}
+
+
+
+  <div id="body-banner" class="bleft">
+    <div id="banner-theme" class="banner-theme banner-body_left not767 is-demo">
+      <div class="myad">
+        <div class="text"><a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a504f205" target="_top"><img src="../../../affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" /></a><img style="border:0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" /></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="body-banner" class="bright">
+    <div id="banner-theme" class="banner-theme banner-body_right not767 is-demo">
+      <div class="myad">
+        <div class="text"><a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a504f205" target="_top"><img src="../../../affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" /></a><img style="border:0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" /></div>
+      </div>
+    </div>
+  </div>
+
+  <a id="scroll-to-top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20">
+      <path d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z" /></svg></a>
+
+  <div id="menu-cover" class="mobile-box">
+    <svg class="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="32px" height="32px">
+      <path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path>
+    </svg>
+  </div>
+
+  {% include 'mobile_sidemenu.html' %}
+
+</body>
+
+</html> 
+{% endblock %}

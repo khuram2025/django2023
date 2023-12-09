@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
-from .models import CustomFieldValue, Product
+from .models import CustomFieldValue, Product, StoreProduct
 from .forms import CompanyProductForm, ProductForm, StoreProductForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
@@ -328,67 +328,88 @@ def product_search(request):
     return render(request, 'product/product_listing.html', context)
 
 def create_or_import_product(request, pk):
-    print("PK value:", pk) 
+    print("PK value:", pk)
     company = CompanyProfile.objects.get(pk=pk)
-    print("PK value c:", pk) 
+    print("Company found:", company)
 
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
 
     if request.method == 'POST':
+        print("Form Data Received:", request.POST)
         form = StoreProductForm(request.POST)
-        print("Form Data Received:", request.POST)  # Print the data received from the form
 
         if form.is_valid():
-            store_product = form.save(commit=False)
-            store_product.store = company
-            sale_price = form.cleaned_data.get('sale_price')
-            print("Store Product (Before Saving):", store_product)  # Print store product details
+            product_id = request.POST.get('product_id')
+            existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
 
-            if 'import_product' in request.POST:
-                product_id = request.POST.get('product_id')
-                product = Product.objects.get(id=product_id)
-                store_product.product = product
-                store_product.is_store_exclusive = False
-
-                store_product.category = product.category
-                store_product.city = product.city
-                store_product.address = product.address
+            if existing_store_product:
+                # Update existing StoreProduct instance
+                store_product = existing_store_product
+                store_product.stock_quantity += form.cleaned_data.get('stock_quantity')
+                store_product.current_stock += form.cleaned_data.get('stock_quantity')
+                # Update other fields as necessary
             else:
-                selected_category = form.cleaned_data['category']
-                selected_city = form.cleaned_data.get('city') or (company.address.city if company.address else None)
-                selected_address = form.cleaned_data.get('address') or (str(company.address) if company.address else None)
+                # Create a new StoreProduct instance
+                store_product = form.save(commit=False)
+                store_product.store = company
 
-                sale_price = form.cleaned_data.get('sale_price')
-                print("Sale Price from Form Cleaned Data:", sale_price)
+                if 'import_product' in request.POST:
+                    product = get_object_or_404(Product, id=product_id)
+                    store_product.product = product
+                    store_product.is_store_exclusive = False
+                    store_product.category = product.category
+                    store_product.city = product.city
+                    store_product.address = product.address
+                else:
+                    # Logic for a new product
+                    new_product = Product(
+                        title=store_product.custom_title,
+                        description=store_product.custom_description,
+                        price=store_product.sale_price,
+                        category=form.cleaned_data['category'],
+                        city=form.cleaned_data.get('city') or (company.address.city if company.address else None),
+                        address=form.cleaned_data.get('address') or (str(company.address) if company.address else None),
+                        is_published=False
+                    )
+                    new_product.save()
+                    store_product.product = new_product
 
-
-                new_product = Product(
-                    title=store_product.custom_title,
-                    description=store_product.custom_description,
-                    price=store_product.sale_price,
-                    category=selected_category,
-                    city=selected_city,
-                    address=selected_address,
-                    is_published=False
-                )
-                print("New Product (Before Saving):", new_product)  # Print new product details
-                new_product.save()
-                print("New Product Saved:", new_product)  # Print statement to confirm saving
-                store_product.product = new_product
-
+            store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
+            store_product.opening_stock = store_product.current_stock
             store_product.save()
-            print("Store Product Saved:", store_product)  # Print statement to confirm saving
+
+            print("Store Product Saved:", store_product)
             return redirect('some-view')
         else:
-            print("Form Errors:", form.errors)  # Print form errors
+            print("Form Errors:", form.errors)
 
     initial_city = company.address.city if company.address else None
     initial_address = str(company.address) if company.address else None
     form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
     products = Product.objects.filter(is_published=True)
-    return render(request, 'companies/create_or_import_product.html', {'form': form, 'products': products, 'company': company, 'pk': pk})
 
+    return render(request, 'companies/create_or_import_product.html', {
+        'form': form, 
+        'products': products, 
+        'company': company, 
+        'pk': pk
+    })
+
+
+def get_product(request, productId):
+    try:
+        product = Product.objects.get(id=productId)
+        data = {
+            'title': product.title,
+            'description': product.description,
+            'price': str(product.price),  # Convert Decimal to string for JSON serialization
+            'category_id': product.category.id if product.category else None,
+            'city_id': product.city.id if product.city else None
+        }
+        return JsonResponse(data)
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
 
 
 
@@ -399,3 +420,19 @@ def get_product_details(request):
         return JsonResponse(product)
     else:
         return JsonResponse({'error': 'Product not found'}, status=404)
+
+
+
+
+def list_store_products(request, store_id):
+    try:
+        store_products = StoreProduct.objects.filter(store_id=store_id)
+    except StoreProduct.DoesNotExist:
+        store_products = []
+
+    context = {
+        'store_products': store_products,
+        'store_id': store_id
+    }
+
+    return render(request, 'companies/items_list.html', context)

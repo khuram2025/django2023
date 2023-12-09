@@ -93,7 +93,6 @@
 
       Array.from(files).forEach((file, index) => {
         if (index < 15 - previewContainer.children.length) {
-          // Limit total images to 15
           const imgElement = document.createElement("img");
           imgElement.src = URL.createObjectURL(file);
 
@@ -101,7 +100,7 @@
           deleteIcon.classList.add("delete-icon");
           deleteIcon.innerHTML = "&times;";
           deleteIcon.onclick = function () {
-            URL.revokeObjectURL(imgElement.src); // Free up memory
+            URL.revokeObjectURL(imgElement.src);
             previewContainer.removeChild(imgContainer);
           };
 
@@ -117,16 +116,62 @@
     // Function to handle dropdown selection
     function selectDropdownItem(element, productId, categoryId, cityId, address) {
       var selectedContainer = document.querySelector(".dropdown-selected");
-      selectedContainer.innerHTML = element.innerHTML; // Copy the HTML of the selected item
-      toggleDropdown(); // Close the dropdown
+      selectedContainer.innerHTML = element.innerHTML;
 
-      // Set form fields based on selected product
-      document.querySelector("[name='product_id']").value = productId;
-      document.querySelector("[name='category']").value = categoryId;
-      if (cityId) {
-        document.querySelector("[name='city']").value = cityId;
-      }
-      document.querySelector("[name='address']").value = address;
+      // Debug: Log selected element details
+      console.log("Dropdown item selected:", element);
+      console.log("Product ID:", productId);
+      console.log("Category ID:", categoryId);
+      console.log("City ID:", cityId);
+      console.log("Address:", address);
+
+      // Assuming productTitle, productDescription, productCategory, and productCity are available within the dropdown item HTML
+      var productTitle = element.querySelector(".product-title") ? element.querySelector(".product-title").textContent : "";
+      var productDescription = element.querySelector(".product-description") ? element.querySelector(".product-description").textContent : "";
+      var productCategory = categoryId; // categoryId is passed as an argument
+      var productCity = cityId; // cityId is passed as an argument
+
+      // Debug: Log extracted details
+      console.log("Product Title:", productTitle);
+      console.log("Product Description:", productDescription);
+      console.log("Product Category:", productCategory);
+      console.log("Product City:", productCity);
+
+      // Update form fields - Ensure these selectors match your form field names
+      var customTitleField = document.querySelector("[name='custom_title']");
+      var customDescriptionField = document.querySelector("[name='custom_description']");
+      var categoryField = document.querySelector("[name='category']");
+      var cityField = document.querySelector("[name='city']");
+      var salePriceField = document.querySelector("[name='sale_price']"); // Assuming this is the correct name attribute
+
+      // Debug: Log if fields are found
+      console.log("Custom Title Field Found:", !!customTitleField);
+      console.log("Custom Description Field Found:", !!customDescriptionField);
+      console.log("Category Field Found:", !!categoryField);
+      console.log("City Field Found:", !!cityField);
+      console.log("Sale Price Field Found:", !!salePriceField);
+
+      fetch(`/product/get-product/${productId}/`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Product details not found");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Populate fields with the fetched data
+          if (customTitleField) customTitleField.value = data.title;
+          if (customDescriptionField) customDescriptionField.value = data.description;
+          if (salePriceField) salePriceField.value = data.price;
+
+          // Update category and city fields
+          if (categoryField && data.category_id) categoryField.value = data.category_id;
+          if (cityField && data.city_id) cityField.value = data.city_id;
+        })
+        .catch((error) => console.error("Error:", error));
+
+      // Close the dropdown
+      toggleDropdown();
     }
 
     // Function to toggle dropdown list visibility
@@ -138,24 +183,17 @@
     // Event listener to open/close the custom dropdown
     document.querySelector(".dropdown-selected").addEventListener("click", toggleDropdown);
 
-    // Get the selected product ID from the dropdown
-    var productId = this.value;
     // Add an event listener to the Add Photo button
     const addImageButton = document.querySelector(".add-image");
     addImageButton.addEventListener("click", () => {
-      // Get the file input element
       const productImageInput = document.querySelector("#product_image");
-
-      // Click the file input element to open the file dialog
       productImageInput.click();
     });
 
     // Add an event listener to the file input element
+    const productImageInput = document.querySelector("#product_image");
     productImageInput.addEventListener("change", () => {
-      // Get the selected file
       const file = productImageInput.files[0];
-
-      // If a file is selected, preview it
       if (file) {
         const imagePreview = document.querySelector(".image-preview");
         imagePreview.src = URL.createObjectURL(file);
@@ -167,16 +205,12 @@
     const deleteImageButton = document.querySelector(".delete-image");
 
     changeImageButton.addEventListener("click", () => {
-      // Click the file input element to open the file dialog
       productImageInput.click();
     });
 
     deleteImageButton.addEventListener("click", () => {
-      // Clear the image preview
       const imagePreview = document.querySelector(".image-preview");
       imagePreview.src = "";
-
-      // Clear the file input element
       productImageInput.value = "";
     });
   </script>

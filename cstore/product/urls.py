@@ -11,6 +11,9 @@ urlpatterns = [
     path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),  # URL for loading subcategories via AJAX
 
     path('company/<int:pk>/product/create', views.create_or_import_product, name='create_or_import_product'),
+    path('get-product/<int:productId>/', views.get_product, name='get_product'),
+    path('store-products/', views.list_store_products, name='store_product_list'),
+
 
     path('products/', views.product_list, name='product_list'),
     path('products/<slug:category_slug>/', views.product_list, name='product_list_by_category'),
