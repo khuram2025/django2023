@@ -1,7 +1,152 @@
 Product Detail
 {% extends 'home/base.html' %}{% load youtube_filters %} {% block content %}
 
+
 <body id="item" class="">
+  <style>
+    /* Base style for the tabs */
+    .nav-tabs {
+      display: flex;
+      justify-content: space-around;
+      background: #3b49df;
+      overflow-x: auto;
+      white-space: nowrap;
+      border-radius: 10px;
+      /* Rounded corners */
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 71px;
+      /* Adjusted height for desktop */
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      padding: 5px;
+      /* Adjusted padding */
+    }
+
+    .nav-link.active {
+      background-color: white;
+      /* White background for active tab */
+      color: #3b49df;
+      /* Text color for active tab */
+      border-radius: 10px;
+      /* Rounded corners */
+      padding: 0px 20px;
+      /* Adjusted padding for active tab */
+      border: 2px solid #3b49df;
+      /* Border color for active tab */
+
+      height: calc(71px * 0.7);
+    }
+
+    /* Scrollbar customization */
+    .nav-tabs::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .nav-tabs::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    .nav-tabs::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    /* Responsive adjustments for mobile screens */
+    @media (max-width: 768px) {
+      .nav-link {
+        height: 41px;
+        /* Adjusted height for mobile */
+        font-size: 14px;
+        /* Adjusted font size for mobile */
+      }
+
+      .nav-link.active {
+        height: calc(41px * 0.7);
+        /* 70% of 41px for mobile */
+
+        padding: 0px 10px;
+        /* Adjusted padding for active tab */
+      }
+    }
+    .tab-pane {
+    display: none; /* Hide all tab content by default */
+}
+
+.tab-pane.active {
+    display: block; /* Only show the content of the active tab */
+}
+
+
+    .responsive-table {
+      overflow-x: auto;
+      /* Allows table to scroll horizontally on small screens */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 8px;
+      min-width: 20px;
+      /* Minimum space around content */
+    }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    /* Ensure table headers and cells are never stacked */
+    @media screen and (max-width: 600px) {
+      .responsive-table {
+        overflow-x: auto;
+        /* Enable horizontal scrolling */
+      }
+
+      table {
+        min-width: unset;
+        /* Allow the table to adjust to content width */
+      }
+
+      th,
+      td {
+        white-space: nowrap;
+        /* Ensure text doesn't wrap */
+        padding: 8px;
+        /* Maintain padding */
+        border: 1px solid #ddd;
+        /* Consistent borders */
+      }
+
+      th {
+        background-color: #f2f2f2;
+        color: #333;
+      }
+    }
+  </style>
+
   {% include 'home/header.html' %}
 
 
@@ -87,6 +232,141 @@ Product Detail
               </ul>
             </div>
           </div>
+          <div class="tabs-bar">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="stock-status-tab" data-toggle="tab" href="#stock-status" role="tab" aria-controls="stock-status" aria-selected="false">Stock Status</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="vendors" aria-selected="false">Vendors</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="customers-tab" data-toggle="tab" href="#customers" role="tab" aria-controls="customers" aria-selected="false">Customers</a>
+              </li>
+            </ul>
+          </div>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+              <!-- Info content goes here -->
+                <div class="responsive-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Current Stock</td>
+                      <td>50 items</td>
+                    </tr>
+                    <tr>
+                      <td>Stock Threshold</td>
+                      <td>10%</td>
+                    </tr>
+                    <tr>
+                      <td>Yesterday Profit</td>
+                      <td>25%</td>
+                    </tr>
+                    <tr>
+                      <td>Yesterday Sale</td>
+                      <td>10 items</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="stock-status" role="tabpanel" aria-labelledby="stock-status-tab">
+              <h3>Stock Status</h3>
+              <div class="products list">
+            {% for product in store_products %}
+            <div class="simple-prod o1">
+              <div class="simple-wrap" title="">
+                <div class="img-wrap">
+                  <a class="img" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
+                    <img class="lazy loaded" src="{{ product.product.images.all.0.image.url }}" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" />
+                  </a>
+
+                  <a class="bar" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
+                    <div class="price isGrid isDetail"><span>580.00 $</span></div>
+
+                    <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
+                  </a>
+
+                  <a href="https://epsilon.mb-themes.com/user/profile/peterclark" class="user-image isGrid isDetail">
+                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/4_BN8aL_20220323.png" alt="Peter Clark" style="display: block; transition: all 0.2s ease 0s" />
+
+                    <span class="business" title="Professional seller">Pro</span>
+                  </a>
+
+                  <div class="isGrid isDetail">
+                    <div class="favorite">
+                      <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="data">
+                  <div class="info">{{ product.product.category }}</div>
+
+                  <a class="title" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">{{ product.custom_title }}</a>
+
+                  <div class="description isDetail">Description</div>
+
+                  <div class="price standalone isList"><span>{{ product.purchase_price }} Rs.</span></div>
+
+                  <div class="extra">
+                    <span>{{ product.sale_price }} Sale Price</span>
+
+                    <span>{{ product.stock_quantity }} stock qty</span>
+                  </div>
+
+                  <div class="action isDetail">
+                    <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
+                  </div>
+
+                  <div class="contact isDetail">
+                    <a class="contact" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
+                  </div>
+                </div>
+
+                <div class="right isList">
+                  <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
+
+                  <button style="background-color: #3b49df; color: white; border: none; border-radius: 10px; width: 80px; height: 25px">Edit Stock</button>
+                </div>
+
+                <div class="labels isGrid"></div>
+              </div>
+            </div>
+            {% empty %}
+            <li>No products found.</li>
+            {% endfor %}
+
+            <div id="banner-theme" class="banner-theme banner-search_middle not767 is-demo">
+              <div class="myad">
+                <div class="text">
+                  <a href="https://www.a2hosting.com/wordpress-hosting/managed?aid=5ff74858d3bac&amp;bid=0ffde563" target="_top"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/0ffde563.jpg" alt="managed osclass hosting" title="managed osclass hosting" width="728" height="90" ex2pnynnl="" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=0ffde563" width="1" height="1" alt="" ex2pnynnl="" />
+                </div>
+              </div>
+            </div>
+          </div>
+            </div>
+            <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
+              <h1>Vendor Status</h1>
+            </div>
+            <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
+              <!-- Customers content goes here -->
+            </div>
+          </div>
+          
+
+  
+
 
 
           <div class="basic">
@@ -105,10 +385,11 @@ Product Detail
               <span>ID: {{ product.id }}</span>
 
               {% for field_name, field_value in custom_fields.items %}
-        <span>{{ field_name }}: {{ field_value }}</span>
-    {% endfor %}
-              
+              <span>{{ field_name }}: {{ field_value }}</span>
+              {% endfor %}
+
             </div>
+
 
             <div class="row price under-header p-1100000000x">{{ product.price }}</div>
 
@@ -138,33 +419,38 @@ Product Detail
             </div>
           </div>
           <!-- DESCRIPTION -->
+
           <div class="row description">
-            <h2>Description</h2>
+
+
+
+
+
 
             <div class="desc-parts">
-  <!-- ... other parts ... -->
-  <div class="desc-text">
-    {% if product.description|length > 50 %}
-      <div class="text visible">
-        {{ product.description|slice:":50" }}...
-        <a href="#" class="read-more-desc" onclick="toggleDescription(); return false;">Read more <i class="fas fa-angle-down"></i></a>
-      </div>
-      <div class="text hidden" style="display: none;">
-        {{ product.description }}
-      </div>
-    {% else %}
-      <div class="text">
-        {{ product.description }}
-      </div>
-    {% endif %}
-  </div>
-  <!-- ... -->
-</div>
+              <!-- ... other parts ... -->
+              <div class="desc-text">
+                {% if product.description|length > 50 %}
+                <div class="text visible">
+                  {{ product.description|slice:":50" }}...
+                  <a href="#" class="read-more-desc" onclick="toggleDescription(); return false;">Read more <i class="fas fa-angle-down"></i></a>
+                </div>
+                <div class="text hidden" style="display: none;">
+                  {{ product.description }}
+                </div>
+                {% else %}
+                <div class="text">
+                  {{ product.description }}
+                </div>
+                {% endif %}
+              </div>
+              <!-- ... -->
+            </div>
 
 
 
 
-           
+
           </div>
 
           <!-- YOUTUBE VIDEO PLAYER -->
@@ -175,7 +461,7 @@ Product Detail
                 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
                   {% if product.youtube_video_url %}
                   <iframe src="{{ product.youtube_video_url|youtube_embed_url }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
-                {% endif %}
+                  {% endif %}
                 </div>
               </div>
 
@@ -227,20 +513,20 @@ Product Detail
               </div>
 
               <div class="data">
-    {% if product.company %}
-        <span class="name">{{ product.company.name }}</span>
-        <div class="phone">{{ product.company.phone_number }}</div>
-        <!-- Add more fields as needed -->
-    {% elif product.seller_information.user %}
-        <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
-            {{ product.seller_information.contact_name }}
-        </a>
-        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
-    {% else %}
-        <span class="name">{{ product.seller_information.contact_name }}</span>
-        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
-    {% endif %}
-</div>
+                {% if product.company %}
+                <span class="name">{{ product.company.name }}</span>
+                <div class="phone">{{ product.company.phone_number }}</div>
+                <!-- Add more fields as needed -->
+                {% elif product.seller_information.user %}
+                <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
+                  {{ product.seller_information.contact_name }}
+                </a>
+                <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+                {% else %}
+                <span class="name">{{ product.seller_information.contact_name }}</span>
+                <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+                {% endif %}
+              </div>
 
             </div>
 
@@ -343,7 +629,7 @@ Product Detail
         </div>
       </div>
 
-    
+
       <div id="banner-theme" class="banner-theme banner-item_bottom not767 is-demo blank" title="You can define your own banner code from theme settings">
         <div class="myad">
           <div class="text">
@@ -351,7 +637,7 @@ Product Detail
           </div>
         </div>
       </div>
-     
+
     </div>
 
     <a class="sticky-button btn disabled isMobile" title="No phone number" href="#" onclick="return false;">
@@ -473,5 +759,32 @@ Product Detail
 
 </body>
 
-</html> 
+</html>
+{% endblock %}
+{% block custom_js %}
+<!-- Include the full jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Debugging the tab click event
+    $('a[data-toggle="tab"]').on('click', function(e) {
+        console.log('Tab clicked:', $(this).attr('id'));
+        console.log('Target panel:', $(this).attr('href'));
+    });
+
+    // Checking if the Bootstrap tab show event is firing
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        console.log('Tab shown:', $(e.target).attr('href')); // newly activated tab
+        console.log('Previous tab:', $(e.relatedTarget).attr('href')); // previous active tab
+    });
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  var target = $(this).attr('href');
+  $('.tab-pane').not(target).css('display', 'none');
+  $(target).css('display', 'block');
+});
+
+});
+</script>
 {% endblock %}
