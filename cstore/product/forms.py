@@ -1,7 +1,7 @@
 from django import forms
 
 from companies.models import CompanyProfile
-from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField
+from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField, StoreProductStockEntry
 from django import forms
 from .models import Product, SellerInformation, Category, City ,StoreProduct
 
@@ -279,6 +279,27 @@ class AddStockForm(forms.Form):
 
     def clean_additional_quantity(self):
         quantity = self.cleaned_data['additional_quantity']
+        if quantity <= 0:
+            raise forms.ValidationError("Quantity must be greater than zero.")
+        return quantity
+
+
+
+class EditStockEntryForm(forms.ModelForm):
+    class Meta:
+        model = StoreProductStockEntry
+        fields = ['quantity_added', 'purchase_price']
+        labels = {
+            'quantity_added': 'Quantity Added',
+            'purchase_price': 'Purchase Price',
+        }
+        help_texts = {
+            'quantity_added': 'Enter the updated quantity of stock added',
+            'purchase_price': 'Enter the updated purchase price per unit',
+        }
+
+    def clean_quantity_added(self):
+        quantity = self.cleaned_data['quantity_added']
         if quantity <= 0:
             raise forms.ValidationError("Quantity must be greater than zero.")
         return quantity

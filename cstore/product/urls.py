@@ -14,14 +14,8 @@ urlpatterns = [
     path('get-product/<int:productId>/', views.get_product, name='get_product'),
     path('store-products/', views.list_store_products, name='store_product_list'),
     path('store/<int:store_id>/product/<int:product_id>/add_stock/', views.add_stock_to_store_product, name='add_stock_to_store_product'),
-    path('store/<int:store_id>/product/<int:product_id>/edit/', views.edit_store_product, name='edit_store_product'),
     path('stock_entry/edit/<int:entry_id>/', views.edit_stock_entry, name='edit_stock_entry'),
-
-
-    path('store/<int:store_id>/product/<int:product_id>/delete/', views.delete_store_product, name='delete_store_product'),
-
-    
-
+    path('stock_entry/delete/<int:entry_id>/', views.delete_stock_entry, name='delete_stock_entry'),
 
     path('products/', views.product_list, name='product_list'),
     path('products/<slug:category_slug>/', views.product_list, name='product_list_by_category'),

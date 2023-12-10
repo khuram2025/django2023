@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
-from .models import CustomFieldValue, Product, StoreProduct
-from .forms import CompanyProductForm, ProductForm, StoreProductForm,AddStockForm
+from .models import CustomFieldValue, Product, StoreProduct, StoreProductStockEntry
+from .forms import CompanyProductForm, EditStockEntryForm, ProductForm, StoreProductForm,AddStockForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
@@ -443,19 +443,6 @@ def add_stock_to_store_product(request, store_id, product_id):
 
     return render(request, 'companies/add_stock.html', {'form': form, 'store_product': store_product})
 
-def edit_store_product(request, store_id, product_id):
-    store_product = get_object_or_404(StoreProduct, store_id=store_id, product_id=product_id)
-
-    if request.method == 'POST':
-        form = StoreProductForm(request.POST, instance=store_product)
-        if form.is_valid():
-            form.save()
-            return redirect('success_view')  # redirect to a success or detail view
-    else:
-        form = StoreProductForm(instance=store_product)
-
-    return render(request, 'companies/edit_store_product.html', {'form': form, 'store_product': store_product})
-
 def edit_stock_entry(request, entry_id):
     stock_entry = get_object_or_404(StoreProductStockEntry, id=entry_id)
 
@@ -463,21 +450,24 @@ def edit_stock_entry(request, entry_id):
         form = EditStockEntryForm(request.POST, instance=stock_entry)
         if form.is_valid():
             form.save()
-            return redirect('some_success_view')
+            return redirect('stock_detail_view', stock_entry.store_product.id)  # Redirect to stock detail view
     else:
         form = EditStockEntryForm(instance=stock_entry)
 
-    return render(request, 'companies/edit_store_product.html', {'form': form})
+    return render(request, 'companies/edit_stock_entry.html', {'form': form, 'entry_id': entry_id})
 
-
-def delete_store_product(request, store_id, product_id):
-    store_product = get_object_or_404(StoreProduct, store_id=store_id, product_id=product_id)
+def delete_stock_entry(request, entry_id):
+    stock_entry = get_object_or_404(StoreProductStockEntry, id=entry_id)
 
     if request.method == 'POST':
-        store_product.delete()
-        return redirect('success_view')  # redirect to a list view or home page
+        store_product_id = stock_entry.store_product.id
+        stock_entry.delete()
+        return redirect('stock_detail_view', store_product_id)  # Redirect to stock detail view
 
-    return render(request, 'companies/confirm_delete.html', {'store_product': store_product})
+    return render(request, 'companies/confirm_delete_stock_entry.html', {'entry_id': entry_id})
+
+
+
 
 
 def get_product_details(request):

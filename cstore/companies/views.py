@@ -198,19 +198,41 @@ def company_dashboard(request, pk):
 def company_inventory(request, pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
     store_products = StoreProduct.objects.filter(store=company)
+
+    total_stock_value = 0
+    total_profit = 0
+    total_purchase_value = 0
+
+    for product in store_products:
+        current_stock_value = product.current_stock * (product.purchase_price or 0)
+        total_stock_value += current_stock_value
+
+        profit_per_unit = (product.sale_price or 0) - (product.purchase_price or 0)
+        total_profit += profit_per_unit * product.current_stock
+
+        total_purchase_value += (product.purchase_price or 0) * product.current_stock
+
+    # Calculating average profit percentage
+    average_profit_percentage = 0
+    if total_purchase_value > 0:
+        average_profit_percentage = (total_profit / total_purchase_value) * 100
+
     total_stock = sum(product.stock_quantity for product in store_products)
     total_unique_products = store_products.count()
-    print("Total Stock:", total_stock)
 
     context = {
         'company': company,
         'store_products': store_products,
         'total_stock': total_stock,
         'total_unique_products': total_unique_products,
+        'total_stock_value': total_stock_value,
+        'total_profit': total_profit,
+        'average_profit_percentage': average_profit_percentage,
         'pk': pk
     }
 
     return render(request, 'companies/items_list.html', context)
+
   
 
 def store_product_detail(request, pk, product_pk):
