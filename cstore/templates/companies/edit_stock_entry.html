@@ -1,0 +1,12 @@
+<!-- edit_store_product.html -->
+{% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
+
+<div class="form-container">
+  <h2>Edit Product</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form.as_p }}
+    <input type="submit" value="Save Changes" />
+  </form>
+</div>
+
+{% include 'home/footer.html' %} {% endblock %}

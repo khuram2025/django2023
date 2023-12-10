@@ -1,0 +1,56 @@
+{% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
+
+<body id="home" class="layout-default dvc-ios demo">
+  <div class="form-container">
+    <div class="add-product-form">
+      <h2>Add Stock to Product</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Existing Product Information -->
+        <div class="photo-upload-container">
+          <img src="{{ store_product.product.image.url }}" alt="{{ store_product.product.title }}" class="image-preview" />
+        </div>
+
+        <div class="form-group">
+          <input type="text" name="title" placeholder="Product Title" value="{{ store_product.custom_title|default:store_product.product.title }}" readonly />
+        </div>
+
+        <div class="form-group full-width-textarea">
+          <textarea name="description" placeholder="Product Description" readonly>{{ store_product.custom_description|default:store_product.product.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="stock_quantity" placeholder="Current Stock" value="{{ store_product.stock_quantity }}" readonly />
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="sale_price" placeholder="Sale Price" value="{{ store_product.sale_price }}" readonly />
+        </div>
+
+        <!-- Add Stock Form Fields -->
+        <div class="form-group">
+          <select name="{{ form.vendor.name }}">
+            {% for vendor in form.vendor.queryset %}
+            <option value="{{ vendor.id }}">{{ vendor.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="{{ form.additional_quantity.name }}" placeholder="{{ form.additional_quantity.label }}" />
+        </div>
+
+        <div class="form-group">
+          <input type="number" name="{{ form.purchase_price.name }}" placeholder="{{ form.purchase_price.label }}" />
+        </div>
+
+        <input type="submit" value="Add Stock" />
+      </form>
+    </div>
+  </div>
+
+  {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %} {% endblock %} {% block custom_js %}
+  <!-- Include your custom JavaScript here -->
+  {% endblock %}
+</body>

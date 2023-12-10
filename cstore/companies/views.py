@@ -216,18 +216,27 @@ def company_inventory(request, pk):
 def store_product_detail(request, pk, product_pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
     store_product = get_object_or_404(StoreProduct, pk=product_pk, store=company)
-
-    # Optionally, you can include additional data, such as related stock entries
     stock_entries = store_product.stock_entries.order_by('-date_added')
+
+    # Fetch other vendors who have the same product
+    similar_store_products = StoreProduct.objects.filter(
+        product=store_product.product
+    ).exclude(
+        store=company
+    )
 
     context = {
         'company': company,
         'store_product': store_product,
         'stock_entries': stock_entries,
+        'similar_store_products': similar_store_products,
+        'store_id': company.id,  # Adding store_id to context
+        'product_id': store_product.id,
         'pk': pk
     }
 
     return render(request, 'companies/product_detail.html', context)
+
 
 @login_required
 def add_inventory(request):

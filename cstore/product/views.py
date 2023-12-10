@@ -4,7 +4,7 @@ from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
 from .models import CustomFieldValue, Product, StoreProduct
-from .forms import CompanyProductForm, ProductForm, StoreProductForm
+from .forms import CompanyProductForm, ProductForm, StoreProductForm,AddStockForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
@@ -411,6 +411,73 @@ def get_product(request, productId):
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Product not found'}, status=404)
 
+
+def add_stock_to_store_product(request, store_id, product_id):
+    # Ensure the user is authenticated and has permission to add stock
+    if not request.user.is_authenticated:
+        return HttpResponse("Unauthorized", status=401)
+
+    # Retrieve the StoreProduct instance using store_id and product_id
+    store_product = get_object_or_404(StoreProduct, store_id=store_id, product_id=product_id)
+
+    # Additional permission checks can be added here
+
+    if request.method == 'POST':
+        form = AddStockForm(request.POST, store_owner=request.user)
+
+        if form.is_valid():
+            additional_quantity = form.cleaned_data.get('additional_quantity')
+            purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
+
+            # Call the add_stock method of StoreProduct
+            store_product.add_stock(additional_quantity, purchase_price)
+
+            # Redirect to a success page or back to the product detail page
+            return redirect('some-success-view')
+        else:
+            # Handle the form errors
+            return HttpResponse("Form is invalid", status=400)
+    else:
+        # If GET request, create an empty form
+        form = AddStockForm(store_owner=request.user)
+
+    return render(request, 'companies/add_stock.html', {'form': form, 'store_product': store_product})
+
+def edit_store_product(request, store_id, product_id):
+    store_product = get_object_or_404(StoreProduct, store_id=store_id, product_id=product_id)
+
+    if request.method == 'POST':
+        form = StoreProductForm(request.POST, instance=store_product)
+        if form.is_valid():
+            form.save()
+            return redirect('success_view')  # redirect to a success or detail view
+    else:
+        form = StoreProductForm(instance=store_product)
+
+    return render(request, 'companies/edit_store_product.html', {'form': form, 'store_product': store_product})
+
+def edit_stock_entry(request, entry_id):
+    stock_entry = get_object_or_404(StoreProductStockEntry, id=entry_id)
+
+    if request.method == 'POST':
+        form = EditStockEntryForm(request.POST, instance=stock_entry)
+        if form.is_valid():
+            form.save()
+            return redirect('some_success_view')
+    else:
+        form = EditStockEntryForm(instance=stock_entry)
+
+    return render(request, 'companies/edit_store_product.html', {'form': form})
+
+
+def delete_store_product(request, store_id, product_id):
+    store_product = get_object_or_404(StoreProduct, store_id=store_id, product_id=product_id)
+
+    if request.method == 'POST':
+        store_product.delete()
+        return redirect('success_view')  # redirect to a list view or home page
+
+    return render(request, 'companies/confirm_delete.html', {'store_product': store_product})
 
 
 def get_product_details(request):

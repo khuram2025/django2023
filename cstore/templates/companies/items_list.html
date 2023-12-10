@@ -227,7 +227,11 @@
                 <div class="right isList">
                   <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
 
-                  <button style="background-color: #3b49df; color: white; border: none; border-radius: 10px; width: 80px; height: 25px">Edit Stock</button>
+                  <!-- Other product details -->
+
+                  <a href="{% url 'product:add_stock_to_store_product' store_id=company.id product_id=product.product.id %}">
+                    <button style="background-color: #3b49df; color: white; border: none; border-radius: 10px; width: 80px; height: 25px">Add Stock</button>
+                  </a>
                 </div>
 
                 <div class="labels isGrid"></div>

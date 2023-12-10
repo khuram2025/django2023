@@ -246,3 +246,39 @@ class StoreProductForm(forms.ModelForm):
     class Meta:
         model = StoreProduct
         fields = ['custom_title', 'custom_description', 'sale_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold',]
+
+class AddStockForm(forms.Form):
+    vendor = forms.ModelChoiceField(
+        queryset=CompanyProfile.objects.none(),  # Initially empty queryset
+        required=False,
+        label="Vendor",
+        help_text="Select the vendor company"
+    )
+    
+    additional_quantity = forms.IntegerField(
+        min_value=1, 
+        required=True,
+        label="Additional Quantity",
+        help_text="Enter the quantity of stock to be added"
+    )
+
+    purchase_price = forms.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        required=False,
+        label="Purchase Price",
+        help_text="Enter the purchase price per unit (optional)"
+    )
+
+    def __init__(self, *args, **kwargs):
+        store_owner = kwargs.pop('store_owner', None)
+        super(AddStockForm, self).__init__(*args, **kwargs)
+        if store_owner:
+            # Exclude the current company from the list of vendors
+            self.fields['vendor'].queryset = CompanyProfile.objects.exclude(owner=store_owner)
+
+    def clean_additional_quantity(self):
+        quantity = self.cleaned_data['additional_quantity']
+        if quantity <= 0:
+            raise forms.ValidationError("Quantity must be greater than zero.")
+        return quantity

@@ -80,13 +80,16 @@ Product Detail
         /* Adjusted padding for active tab */
       }
     }
-    .tab-pane {
-    display: none; /* Hide all tab content by default */
-}
 
-.tab-pane.active {
-    display: block; /* Only show the content of the active tab */
-}
+    .tab-pane {
+      display: none;
+      /* Hide all tab content by default */
+    }
+
+    .tab-pane.active {
+      display: block;
+      /* Only show the content of the active tab */
+    }
 
 
     .responsive-table {
@@ -251,7 +254,7 @@ Product Detail
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
               <!-- Info content goes here -->
-                <div class="responsive-table">
+              <div class="responsive-table">
                 <table>
                   <thead>
                     <tr>
@@ -281,94 +284,92 @@ Product Detail
               </div>
             </div>
             <div class="tab-pane fade" id="stock-status" role="tabpanel" aria-labelledby="stock-status-tab">
-              <h3>Stock Status</h3>
-              <div class="products list">
-            {% for product in store_products %}
-            <div class="simple-prod o1">
-              <div class="simple-wrap" title="">
-                <div class="img-wrap">
-                  <a class="img" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
-                    <img class="lazy loaded" src="{{ product.product.images.all.0.image.url }}" alt="Canon Pix Z9" style="display: block; transition: all 0.2s ease 0s" />
-                  </a>
 
-                  <a class="bar" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">
-                    <div class="price isGrid isDetail"><span>580.00 $</span></div>
-
-                    <div class="image-counter"><i class="fas fa-camera"></i> 4</div>
-                  </a>
-
-                  <a href="https://epsilon.mb-themes.com/user/profile/peterclark" class="user-image isGrid isDetail">
-                    <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/4_BN8aL_20220323.png" alt="Peter Clark" style="display: block; transition: all 0.2s ease 0s" />
-
-                    <span class="business" title="Professional seller">Pro</span>
-                  </a>
-
-                  <div class="isGrid isDetail">
-                    <div class="favorite">
-                      <a href="javascript://" class="fi_save_favorite fi_save fi_fav_313" rel="313" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
-                    </div>
-                  </div>
+              <!-- Product Detail -->
+              <!-- Iterate over stock entries and display each entry in the given format -->
+              {% for entry in stock_entries %}
+              <div class="mo-two mo-twi" data-offer-id="{{ entry.id }}">
+                <div class="mo-img">
+                  <!-- Display a relevant image or a placeholder -->
+                  <img src="{% if entry.vendor.logo %}{{ entry.vendor.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
                 </div>
 
-                <div class="data">
-                  <div class="info">{{ product.product.category }}</div>
+                <div class="mo-box-left">
+                  <!-- Vendor Name -->
+                  <a class="mo-line-link" href="#">{{ entry.vendor.name }}</a>
 
-                  <a class="title" href="{% url 'companies:store_product_detail' pk=company.pk product_pk=product.id %}">{{ product.custom_title }}</a>
-
-                  <div class="description isDetail">Description</div>
-
-                  <div class="price standalone isList"><span>{{ product.purchase_price }} Rs.</span></div>
-
-                  <div class="extra">
-                    <span>{{ product.sale_price }} Sale Price</span>
-
-                    <span>{{ product.stock_quantity }} stock qty</span>
+                  <div class="mo-line-title">
+                    <!-- Display the date of the stock entry -->
+                    <span>{{ entry.date_added|date:"d. M Y" }}</span>
                   </div>
 
-                  <div class="action isDetail">
-                    <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
-                  </div>
-
-                  <div class="contact isDetail">
-                    <a class="contact" href="https://epsilon.mb-themes.com/for-sale/cameras-camera-accessories/canon-pix-z9_i313#contact"><i class="fas fa-envelope-open"></i> <span>Send message</span></a>
+                  <div class="mo-line-sub">
+                    <!-- Purchase price and quantity -->
+                    <span class="mo-prc">Purchase Price: {{ entry.purchase_price }} Rs.</span>
+                    <span class="mo-qt">Qty: {{ entry.quantity_added }}x</span>
                   </div>
                 </div>
+                <div class="mo-box-right">
+                  <!-- Edit Button -->
+                  <a href="">
+                    <button style="background-color: #4CAF50; color: white; border: none; border-radius: 10px; width: 70px; height: 20px; margin-top: 10px;">Edit</button>
+                  </a>
 
-                <div class="right isList">
-                  <div class="price"><span>{{ product.purchase_price }} Rs.</span></div>
+                  <!-- Spacing between buttons -->
+                  <div style="height: 10px;"></div>
 
-                  <button style="background-color: #3b49df; color: white; border: none; border-radius: 10px; width: 80px; height: 25px">Edit Stock</button>
-                </div>
+                  <!-- Delete Button -->
+                  <a href="">
+                    <button style="background-color: #f44336; color: white; border: none; border-radius: 10px; width: 70px; height: 20px;">Delete</button>
+                  </a>
 
-                <div class="labels isGrid"></div>
-              </div>
-            </div>
-            {% empty %}
-            <li>No products found.</li>
-            {% endfor %}
-
-            <div id="banner-theme" class="banner-theme banner-search_middle not767 is-demo">
-              <div class="myad">
-                <div class="text">
-                  <a href="https://www.a2hosting.com/wordpress-hosting/managed?aid=5ff74858d3bac&amp;bid=0ffde563" target="_top"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/0ffde563.jpg" alt="managed osclass hosting" title="managed osclass hosting" width="728" height="90" ex2pnynnl="" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=0ffde563" width="1" height="1" alt="" ex2pnynnl="" />
                 </div>
               </div>
-            </div>
-          </div>
+              {% empty %}
+              <!-- Display this section if no stock entries are found -->
+              <p>No stock entries found for this product.</p>
+              {% endfor %}
+
+
+
             </div>
             <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
-              <h1>Vendor Status</h1>
+              <!-- Other Vendors Section -->
+
+              {% if similar_store_products %}
+              {% for vendor_product in similar_store_products %}
+              <div class="mo-two mo-twi" data-offer-id="{{ vendor_product.id }}">
+                <div class="mo-img">
+                  <!-- Display vendor's logo or a placeholder -->
+                  <img src="{% if vendor_product.store.logo %}{{ vendor_product.store.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
+                </div>
+
+                <div class="mo-box-left">
+                  <!-- Vendor Name -->
+                  <a class="mo-line-link" href="#">{{ vendor_product.store.name }}</a>
+
+                  <div class="mo-line-title">
+                    <!-- Optionally display additional information about the stock -->
+                  </div>
+
+                  <div class="mo-line-sub">
+                    <!-- Stock quantity -->
+                    <span class="mo-prc">Stock Quantity: {{ vendor_product.stock_quantity }}</span>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <!-- Display this if no other vendors are found -->
+              <p>No other vendors found for this product.</p>
+              {% endif %}
+
+
             </div>
             <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
               <!-- Customers content goes here -->
             </div>
           </div>
-          
-
-  
-
-
-
           <div class="basic">
             <h1 class="row">{{ product.title }}</h1>
 
@@ -767,24 +768,24 @@ Product Detail
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script>
-$(document).ready(function() {
+  $(document).ready(function () {
     // Debugging the tab click event
-    $('a[data-toggle="tab"]').on('click', function(e) {
-        console.log('Tab clicked:', $(this).attr('id'));
-        console.log('Target panel:', $(this).attr('href'));
+    $('a[data-toggle="tab"]').on('click', function (e) {
+      console.log('Tab clicked:', $(this).attr('id'));
+      console.log('Target panel:', $(this).attr('href'));
     });
 
     // Checking if the Bootstrap tab show event is firing
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-        console.log('Tab shown:', $(e.target).attr('href')); // newly activated tab
-        console.log('Previous tab:', $(e.relatedTarget).attr('href')); // previous active tab
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      console.log('Tab shown:', $(e.target).attr('href')); // newly activated tab
+      console.log('Previous tab:', $(e.relatedTarget).attr('href')); // previous active tab
     });
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  var target = $(this).attr('href');
-  $('.tab-pane').not(target).css('display', 'none');
-  $(target).css('display', 'block');
-});
+      var target = $(this).attr('href');
+      $('.tab-pane').not(target).css('display', 'none');
+      $(target).css('display', 'block');
+    });
 
-});
+  });
 </script>
 {% endblock %}

@@ -1,60 +1,201 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<body id="search">
-  {% include 'home/header.html' %}
+{% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
+<body id="home" class="layout-default dvc-ios demo">
+  <div class="form-container">
+    <div class="form-container">
+      <!-- Import Items Column -->
 
-  <div class="container">
-    <div class="row">
-      <!-- Left Column for the Form -->
-      <div class="col-md-6">
-        <div class="box">
-          <h1>Create or Import Product for {{ company.name }}</h1>
-          <form id="product-form" method="post" action="{% url 'product:create_or_import_product' company_id=company.id %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <!-- Dynamic Fields -->
-            {{ form.as_p }}
+      <div class="add-product-form">
+        <h2>Add Product</h2>
+        <form action="{% url 'product:create_or_import_product' pk=pk %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Submit Product</button>
-          </form>
-        </div>
-      </div>
+          <div class="photo-upload-container">
+            <label for="product_images" class="photo-upload-box">
+              <div class="add-photo-text">
+                <i class="fa fa-camera"></i>
+                <span>Add Photo</span>
+              </div>
+            </label>
+            <input type="file" id="product_images" name="product_images" multiple hidden />
+            <div class="image-preview-container"></div>
+          </div>
 
-      <!-- Right Column for Importing Products -->
-      <div class="col-md-6">
-        <div class="box">
-          <h2>Import Product</h2>
-          <label for="product_id">Select Product to Import:</label>
-          <select id="product_id" name="product_id" class="form-control">
-            <option value="">--- Select Product ---</option>
-            {% for product in products %}
-            <option value="{{ product.id }}">{{ product.title }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="form-group">
+            <input type="text" name="{{ form.custom_title.name }}" placeholder="{{ form.custom_title.label }}" required />
+          </div>
+
+          <!-- Custom Description Field -->
+          <div class="form-group full-width-textarea">
+            <textarea name="{{ form.custom_description.name }}" placeholder="{{ form.custom_description.label }}" required></textarea>
+          </div>
+          <div class="form-group">
+            <input type="number" name="{{ form.stock_quantity.name }}" placeholder="{{ form.stock_quantity.label }}" required />
+          </div>
+
+          <div class="form-group inline-group">
+            <input type="number" name="{{ form.purchase_price.name }}" placeholder="{{ form.purchase_price.label }}" required />
+            <input type="number" name="sale_price" placeholder="Sale Price" required />
+          </div>
+
+          <!-- Inline Group for Low Stock Threshold and Current Stock -->
+
+          <!-- Category and City Dropdowns -->
+          <div class="form-group inline-group">
+            <!-- Category Dropdown -->
+            <select name="{{ form.category.name }}" id="id_{{ form.category.name }}">
+              <option value="">Select Category</option>
+              {% for value, label in form.category.field.choices %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+            <!-- City Dropdown -->
+            <select name="{{ form.city.name }}" id="id_{{ form.city.name }}">
+              <option value="">Select City</option>
+              {% for value, label in form.city.field.choices %}
+              <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group inline-group">
+            <input type="number" name="opening_stock" placeholder="Opening Stock" />
+            <input type="number" name="{{ form.low_stock_threshold.name }}" placeholder="{{ form.low_stock_threshold.label }}" />
+          </div>
+
+          <input type="submit" value="Add Product" />
+        </form>
       </div>
     </div>
   </div>
-
-  {% include 'home/footer.html' %}
-
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %} {% endblock %} {% block custom_js %}
   <script>
-    $(document).ready(function () {
-        $('#product_id').on('change', function () {
-            var productId = $(this).val();
-            if (productId) {
-                // AJAX call to get product details and fill the form
-                $.getJSON('{% url 'product:get_product_details' %}', {id: productId}, function (product) {
-                    // Assuming 'product' is the object with product details
-                    $('#id_custom_title').val(product.title);
-                    $('#id_custom_description').val(product.description);
-                    $('#id_custom_price').val(product.price);
-                    $('#id_stock_quantity').val(product.stock_quantity);
-                    // Add other fields as necessary
-                });
-            }
-        });
+    document.querySelector("#product_images").addEventListener("change", function () {
+      const files = this.files;
+      const previewContainer = document.querySelector(".image-preview-container");
+
+      Array.from(files).forEach((file, index) => {
+        if (index < 15 - previewContainer.children.length) {
+          const imgElement = document.createElement("img");
+          imgElement.src = URL.createObjectURL(file);
+
+          const deleteIcon = document.createElement("span");
+          deleteIcon.classList.add("delete-icon");
+          deleteIcon.innerHTML = "&times;";
+          deleteIcon.onclick = function () {
+            URL.revokeObjectURL(imgElement.src);
+            previewContainer.removeChild(imgContainer);
+          };
+
+          const imgContainer = document.createElement("div");
+          imgContainer.classList.add("image-preview-box");
+          imgContainer.appendChild(imgElement);
+          imgContainer.appendChild(deleteIcon);
+          previewContainer.appendChild(imgContainer);
+        }
+      });
+    });
+
+    // Function to handle dropdown selection
+    function selectDropdownItem(element, productId, categoryId, cityId, address) {
+      var selectedContainer = document.querySelector(".dropdown-selected");
+      selectedContainer.innerHTML = element.innerHTML;
+
+      // Debug: Log selected element details
+      console.log("Dropdown item selected:", element);
+      console.log("Product ID:", productId);
+      console.log("Category ID:", categoryId);
+      console.log("City ID:", cityId);
+      console.log("Address:", address);
+
+      // Assuming productTitle, productDescription, productCategory, and productCity are available within the dropdown item HTML
+      var productTitle = element.querySelector(".product-title") ? element.querySelector(".product-title").textContent : "";
+      var productDescription = element.querySelector(".product-description") ? element.querySelector(".product-description").textContent : "";
+      var productCategory = categoryId; // categoryId is passed as an argument
+      var productCity = cityId; // cityId is passed as an argument
+
+      // Debug: Log extracted details
+      console.log("Product Title:", productTitle);
+      console.log("Product Description:", productDescription);
+      console.log("Product Category:", productCategory);
+      console.log("Product City:", productCity);
+
+      // Update form fields - Ensure these selectors match your form field names
+      var customTitleField = document.querySelector("[name='custom_title']");
+      var customDescriptionField = document.querySelector("[name='custom_description']");
+      var categoryField = document.querySelector("[name='category']");
+      var cityField = document.querySelector("[name='city']");
+      var salePriceField = document.querySelector("[name='sale_price']"); // Assuming this is the correct name attribute
+
+      // Debug: Log if fields are found
+      console.log("Custom Title Field Found:", !!customTitleField);
+      console.log("Custom Description Field Found:", !!customDescriptionField);
+      console.log("Category Field Found:", !!categoryField);
+      console.log("City Field Found:", !!cityField);
+      console.log("Sale Price Field Found:", !!salePriceField);
+
+      fetch(`/product/get-product/${productId}/`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Product details not found");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Populate fields with the fetched data
+          if (customTitleField) customTitleField.value = data.title;
+          if (customDescriptionField) customDescriptionField.value = data.description;
+          if (salePriceField) salePriceField.value = data.price;
+
+          // Update category and city fields
+          if (categoryField && data.category_id) categoryField.value = data.category_id;
+          if (cityField && data.city_id) cityField.value = data.city_id;
+        })
+        .catch((error) => console.error("Error:", error));
+
+      // Close the dropdown
+      toggleDropdown();
+    }
+
+    // Function to toggle dropdown list visibility
+    function toggleDropdown() {
+      var dropdownList = document.querySelector(".dropdown-list");
+      dropdownList.style.display = dropdownList.style.display === "none" ? "block" : "none";
+    }
+
+    // Event listener to open/close the custom dropdown
+    document.querySelector(".dropdown-selected").addEventListener("click", toggleDropdown);
+
+    // Add an event listener to the Add Photo button
+    const addImageButton = document.querySelector(".add-image");
+    addImageButton.addEventListener("click", () => {
+      const productImageInput = document.querySelector("#product_image");
+      productImageInput.click();
+    });
+
+    // Add an event listener to the file input element
+    const productImageInput = document.querySelector("#product_image");
+    productImageInput.addEventListener("change", () => {
+      const file = productImageInput.files[0];
+      if (file) {
+        const imagePreview = document.querySelector(".image-preview");
+        imagePreview.src = URL.createObjectURL(file);
+      }
+    });
+
+    // Add event listeners to the Change Image and Delete Image buttons
+    const changeImageButton = document.querySelector(".change-image");
+    const deleteImageButton = document.querySelector(".delete-image");
+
+    changeImageButton.addEventListener("click", () => {
+      productImageInput.click();
+    });
+
+    deleteImageButton.addEventListener("click", () => {
+      const imagePreview = document.querySelector(".image-preview");
+      imagePreview.src = "";
+      productImageInput.value = "";
     });
   </script>
+
+  {% endblock %}
 </body>
-{% endblock %}
