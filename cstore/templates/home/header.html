@@ -50,6 +50,8 @@
         <a class="maccount btn btn-white isMobile" href="{%url 'account:dashboard' %}" class="default-font font-size-14">
           <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/default-user-image.png" alt="Non-logged user" width="36" height="36" class="default-font font-size-14" />
         </a>
+        
+{% if request.path == '/' %}
 
         <a class="location btn btn-white" href="#" class="default-font font-size-14">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="18" height="18" class="default-font font-size-14">
@@ -58,6 +60,7 @@
 
           {{ selected_city }}
         </a>
+        {% endif %}
 
         <a class="search btn btn-white isMobile" href="0" class="default-font font-size-14">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" class="default-font font-size-14">

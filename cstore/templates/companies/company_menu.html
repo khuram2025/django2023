@@ -1,26 +1,28 @@
 <div id="user-menu">
-  <a href="https://epsilon.mb-themes.com/user/profile/demo" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
+  <a href="{% url 'companies:company-public' pk=company.id %}" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
 
   <a href="{%url 'companies:company-dashboard' pk=company.id %}" class="active">Dashboard</a>
-  <a href="https://epsilon.mb-themes.com/user/items?itemType=active" class="has-counter"> Active listings <span class="counter">1</span> </a>
+  <a href="{% url 'companies:company-public' pk=company.id %}" class="has-counter"> Active listings <span class="counter">1</span> </a>
 
-  <a href="https://epsilon.mb-themes.com/user/alerts" class=""> Subscriptions <span class="counter">2</span> </a>
+  {% comment %} <a href="https://epsilon.mb-themes.com/user/alerts" class=""> Subscriptions <span class="counter">2</span> </a> {% endcomment %}
 
   <a href="{%url 'account:user_profile' %}" class="">My Profile</a>
 
   <div class="menu-hooks">
     <div class="menu-hooks">
+      {% comment %}
       <li class="opt_favorite_items">
         <a href="https://epsilon.mb-themes.com/fi-favorite-items"><i class="fa fa-star-o"></i> Favorite listings</a>
       </li>
+      {% endcomment %}
       <li class="opt_user_offers">
         <a href="{%url 'companies:company-inventory' pk=company.id %}"><i class="fa fa-gavel"></i> Inventory</a>
       </li>
       <li class="opt_instant_messenger">
-        <a href="https://epsilon.mb-themes.com/im-threads"><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
+        <a href=""><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
       </li>
       <li class="opt_user_rating">
-        <a href="https://epsilon.mb-themes.com/user/rating"><i class="fa fa-star"></i> Ratings</a>
+        <a href=""><i class="fa fa-star"></i> Ratings</a>
       </li>
       <li class="opt_bpr_profile">
         <a href="{%url 'companies:company_detail' %}"><i class="fa fa-briefcase"></i> Business profile</a>
