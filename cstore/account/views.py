@@ -26,7 +26,7 @@ def register(request):
             # You don't need to set user.username = user.mobile if mobile is the USERNAME_FIELD
             user.save()
             messages.success(request, 'Registration successful. Please log in.')
-            return redirect(reverse('accounts:login'))  # Redirect to login page after registration
+            return redirect(reverse('account:login'))  # Redirect to login page after registration
         else:
             # If the form is not valid, print the errors to the console and display them to the user
             print(form.errors)

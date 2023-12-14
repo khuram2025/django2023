@@ -458,13 +458,17 @@ def edit_stock_entry(request, entry_id):
 
 def delete_stock_entry(request, entry_id):
     stock_entry = get_object_or_404(StoreProductStockEntry, id=entry_id)
+    store_product = stock_entry.store_product
 
     if request.method == 'POST':
-        store_product_id = stock_entry.store_product.id
+        store_product_id = store_product.id
         stock_entry.delete()
-        return redirect('stock_detail_view', store_product_id)  # Redirect to stock detail view
+        return redirect('some_list_view', store_product_id)
 
-    return render(request, 'companies/confirm_delete_stock_entry.html', {'entry_id': entry_id})
+    return render(request, 'companies/confirm_delete_stock_entry.html', {'entry_id': entry_id, 'store_product': store_product})
+
+
+
 
 
 

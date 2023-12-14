@@ -1,13 +1,13 @@
-<!-- confirm_delete.html -->
 {% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
 
 <div class="form-container">
   <h2>Are you sure you want to delete "{{ store_product.custom_title|default:store_product.product.title }}"?</h2>
-  <form method="post">
+  <form method="post" action="{% url 'product:delete_stock_entry' entry_id=entry_id %}">
     {% csrf_token %}
     <input type="submit" value="Confirm Delete" />
   </form>
-  <a href="{% url 'some_cancel_url' %}">Cancel</a>
+  <a href="#">Cancel</a>
+  <!-- Replace 'cancel_deletion_url' with the actual URL name -->
 </div>
 
 {% include 'home/footer.html' %} {% endblock %}

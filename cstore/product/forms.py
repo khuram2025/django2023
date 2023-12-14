@@ -158,9 +158,11 @@ class CompanyProductForm(forms.ModelForm):
         self.fields['city'].queryset = City.objects.all()
 
         if self.user and self.user.is_authenticated:
-            company_profile = CompanyProfile.objects.get(owner=self.user)
-            self.fields['address'].initial = company_profile.address
-            self.fields['phone_number'].initial = company_profile.phone_number
+            self.fields['company'].queryset = CompanyProfile.objects.filter(owner=self.user)
+            company_profile = CompanyProfile.objects.filter(owner=self.user).first()
+            if company_profile:
+                self.fields['address'].initial = company_profile.address
+                self.fields['phone_number'].initial = company_profile.phone_number
 
         # Custom fields setup as in the original ProductForm
     def get_field_for_type(self, field_type):

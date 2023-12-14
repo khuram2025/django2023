@@ -1,7 +1,8 @@
 <div id="user-menu">
-  <a href="https://epsilon.mb-themes.com/user/profile/demo" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
+  <a href="{% url 'account:dashboard' %}" class="public">Public profile <i class="ext fas fa-external-link-alt"></i></a>
 
-  <a href="{%url 'account:dashboard' %}" class="active">Dashboard</a>
+  <a href="{% url 'account:dashboard' %}" class="active">Dashboard</a>
+  <a href="" class="has-counter"> Active listings <span class="counter">1</span> </a>
 
   <!-- Updated Link for Company Dashboard -->
   {% if companies.count > 0 %}
@@ -15,15 +16,12 @@
   <a href="{% url 'companies:list-companies' %}" class="">My Companies</a>
   {% elif single_company %}
   <a href="{% url 'companies:company-public' single_company.pk %}" class="">My Company</a>
-  {% else %}
-  <a href="{% url 'companies:create_company' %}">Create Your Company</a>
-  {% endif %} {% endcomment %}
+  {% else %} {% endif %}
 
   <div class="menu-hooks">
     <div class="menu-hooks">
-      {% comment %}
       <li class="opt_user_offers">
-        <a href="https://epsilon.mb-themes.com/user/offers"><i class="fa fa-gavel"></i> Offers</a>
+        <a href=""><i class="fa fa-gavel"></i> Offers</a>
       </li>
       {% endcomment %}
       <li class="opt_instant_messenger">

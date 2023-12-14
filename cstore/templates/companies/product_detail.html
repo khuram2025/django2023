@@ -5,6 +5,7 @@ Product Detail
 <body id="item" class="">
   <style>
     /* Base style for the tabs */
+    
     .nav-tabs {
       display: flex;
       justify-content: space-around;
@@ -319,9 +320,11 @@ Product Detail
                   <div style="height: 10px;"></div>
 
                   <!-- Delete Button -->
-                  <a href="">
+                  <a href="{% url 'product:delete_stock_entry' entry_id=entry.id %}">
                     <button style="background-color: #f44336; color: white; border: none; border-radius: 10px; width: 70px; height: 20px;">Delete</button>
                   </a>
+
+
 
                 </div>
               </div>
