@@ -16,20 +16,21 @@
   <a href="{% url 'companies:list-companies' %}" class="">My Companies</a>
   {% elif single_company %}
   <a href="{% url 'companies:company-public' single_company.pk %}" class="">My Company</a>
-  {% else %} {% endif %}
-
+  {% else %} {% endif %} {% endcomment %}
   <div class="menu-hooks">
     <div class="menu-hooks">
+      {% comment %}
       <li class="opt_user_offers">
         <a href=""><i class="fa fa-gavel"></i> Offers</a>
       </li>
-      {% endcomment %}
+
       <li class="opt_instant_messenger">
         <a href=""><i class="fa fa-envelope-o"></i> Messages<span class="im-user-account-count im-count-0">0</span></a>
       </li>
       <li class="opt_user_rating">
         <a href=""><i class="fa fa-star"></i> Ratings</a>
       </li>
+      {% endcomment %}
       <li class="opt_bpr_profile">
         <a href="{%url 'companies:company_detail' %}"><i class="fa fa-briefcase"></i> Business profile</a>
       </li>
