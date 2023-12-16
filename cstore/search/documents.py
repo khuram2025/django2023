@@ -18,6 +18,6 @@ class ProductDocument(Document):
             'title',
             'description',
             'price',
-            'condition',
+           
             # ... other fields you want to include
         ]

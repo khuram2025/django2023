@@ -74,11 +74,7 @@ class SellerInformation(models.Model):
 
 
 class Product(models.Model):
-    CONDITION_CHOICES = [
-        ('new', _('New')),
-        ('used', _('Used')),
-    ]
-
+    
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     city = models.ForeignKey('locations.City', on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
@@ -89,7 +85,7 @@ class Product(models.Model):
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
     check_with_seller = models.BooleanField(default=False, verbose_name=_("Check with Seller"))
-    condition = models.CharField(max_length=50, choices=CONDITION_CHOICES, verbose_name=_("Condition"))
+   
 
     # Listing Information
     title = models.CharField(max_length=255, verbose_name=_("Listing Title"))

@@ -51,8 +51,7 @@ class CustomFieldForm(forms.ModelForm):
             return forms.CheckboxSelectMultiple()
         elif field_type == 'radio':
             return forms.RadioSelect()
-        # Add other conditions for different field types
-        # ...
+      
         return forms.TextInput()  # Default widget
 
 class CategoryCustomFieldForm(forms.ModelForm):
@@ -110,7 +109,7 @@ class CustomFieldValueInline(admin.TabularInline):
 from django.utils.html import format_html
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'price', 'condition', 'created_at', 'view_custom_fields', 'seller_or_company')
+    list_display = ('title', 'category', 'price',  'created_at', 'view_custom_fields', 'seller_or_company')
 
     def seller_or_company(self, obj):
         if hasattr(obj, 'seller_information') and obj.seller_information:
@@ -124,7 +123,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     seller_or_company.short_description = "Seller/Company"
 
-    list_filter = ('category', 'condition')
+    
     search_fields = ('title', 'description')
 
     inlines = [ProductImageInline, CustomFieldValueInline]

@@ -1,7 +1,7 @@
 from django import forms
 from product.models import Category
 from locations.models import Address, City
-from .models import CompanyProfile
+from .models import CompanyProfile, PhoneNumber
 from django.utils.translation import gettext_lazy as _
 
 class CompanyProfileForm(forms.ModelForm):
@@ -18,11 +18,19 @@ class CompanyProfileForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,  # Or any other widget you prefer
         label=_("Working Categories")
     )
+    phone_numbers = forms.ModelMultipleChoiceField(
+        queryset=PhoneNumber.objects.all(), 
+        required=False, 
+        widget=forms.SelectMultiple,  # Change this for testing
+        label=_("Phone Numbers")
+    )
 
 
     class Meta:
         model = CompanyProfile
-        fields = ['name', 'about', 'logo', 'cover_pic', 'twitter_link', 'facebook_link', 'youtube_link', 'instagram_link', 'line1', 'city', 'working_categories']
+        fields = ['name', 'about', 'logo', 'cover_pic', 'twitter_link', 'facebook_link',
+                   'youtube_link', 'instagram_link', 'line1', 'city', 'working_categories',
+                   'phone_numbers']
 
     def __init__(self, *args, **kwargs):
         super(CompanyProfileForm, self).__init__(*args, **kwargs)
@@ -30,6 +38,9 @@ class CompanyProfileForm(forms.ModelForm):
             self.fields['line1'].initial = self.instance.address.line1
             self.fields['working_categories'].initial = self.instance.working_categories.all()
             self.fields['city'].initial = self.instance.address.city
+        if self.instance.pk:
+            self.fields['phone_numbers'].initial = self.instance.phone_numbers.all()
+            # Schedule initialization would be more complex
         
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -48,6 +59,9 @@ class CompanyProfileForm(forms.ModelForm):
 
         if commit:
             instance.save()
+            self._save_phone_numbers(instance)
 
         return instance
+    def _save_phone_numbers(self, instance):
+        instance.phone_numbers.set(self.cleaned_data['phone_numbers'])
 

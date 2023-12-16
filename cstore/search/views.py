@@ -24,7 +24,7 @@ class ProductSearchViewSet(DocumentViewSet):
     )
     filter_fields = {
         'price': 'price',
-        'condition': 'condition',
+        
     }
     ordering_fields = {
         'title': 'title',

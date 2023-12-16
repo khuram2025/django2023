@@ -23,6 +23,8 @@ class CompanyProfile(models.Model):
     )
     about = models.TextField()
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True)
+    phone_numbers = models.ManyToManyField('PhoneNumber', related_name='company_phone_numbers')
+
     cover_pic = models.ImageField(upload_to='company_covers/', blank=True, null=True)
     twitter_link = models.URLField(blank=True, null=True)
     facebook_link = models.URLField(blank=True, null=True)
