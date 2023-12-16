@@ -1,6 +1,53 @@
 {% extends 'home/base.html' %} {% load static %} {% block content %}
 <link href="{% static 'create_company.css' %}" rel="stylesheet" type="text/css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<!-- Include Bootstrap Multiselect CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+<link href="{% static 'choices.min.css' %}" rel="stylesheet" type="text/css" />
+
+<style>
+  element.style {
+    width: 100;
+  }
+  .phone-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .choices__inner {
+    width: 100%;
+  }
+
+  .country-flag img {
+    width: 24px;
+    height: auto;
+    margin-right: 10px;
+  }
+
+  .country-code {
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  input[type="tel"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+  }
+  .social-input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .social-icon img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+</style>
 
 <body id="user-dashboard" class="item-publish">
   {% include 'home/header.html' %}
@@ -53,28 +100,53 @@
                 <label for="id_about">{{ form.about.label }}</label>
                 <textarea name="about" id="id_about" class="textarea-fullwidth" required>{{ form.about.value }}</textarea>
               </div>
+
+              <!-- Phone Number -->
+
               <div class="form-section form-full">
-                <label>Phone Numbers</label>
-                {{ form.phone_numbers }}
+                <label for="id_phone_number">{{ form.phone_number.label }}</label>
+                {{ form.phone_number }}
               </div>
-              
 
               <!-- Social Media Links -->
               <div class="form-section form-full">
                 <label for="id_twitter_link">{{ form.twitter_link.label }}</label>
-                {{ form.twitter_link }}
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="path_to_twitter_icon.png" alt="Twitter Icon" />
+                  </span>
+                  {{ form.twitter_link }}
+                </div>
               </div>
+
               <div class="form-section form-full">
                 <label for="id_facebook_link">{{ form.facebook_link.label }}</label>
-                {{ form.facebook_link }}
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="path_to_facebook_icon.png" alt="Facebook Icon" />
+                  </span>
+                  {{ form.facebook_link }}
+                </div>
               </div>
+
               <div class="form-section form-full">
                 <label for="id_youtube_link">{{ form.youtube_link.label }}</label>
-                {{ form.youtube_link }}
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="path_to_youtube_icon.png" alt="YouTube Icon" />
+                  </span>
+                  {{ form.youtube_link }}
+                </div>
               </div>
+
               <div class="form-section form-full">
                 <label for="id_instagram_link">{{ form.instagram_link.label }}</label>
-                {{ form.instagram_link }}
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="path_to_instagram_icon.png" alt="Instagram Icon" />
+                  </span>
+                  {{ form.instagram_link }}
+                </div>
               </div>
 
               <!-- Address Line 1 -->
@@ -83,10 +155,15 @@
                 {{ form.line1 }}
               </div>
 
-              <!-- Working Categories -->
-              <div class="form-section form-full">
-                <label>{{ form.working_categories.label }}</label>
-                {{ form.working_categories }}
+              <div class="row d-flex justify-content-center mt-100">
+                <div class="col-md-12">
+                  <label for="choices-multiple-remove-button">{{ form.working_categories.label }}</label>
+                  <select id="choices-multiple-remove-button" placeholder="Select up to 5 tags" multiple>
+                    {% for category in form.working_categories.field.queryset %}
+                    <option value="{{ category.pk }}">{{ category }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
 
               <!-- Submit Button -->
@@ -99,7 +176,27 @@
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
   <script>
+    $(document).ready(function () {
+      var multipleCancelButton = new Choices("#choices-multiple-remove-button", {
+        removeItemButton: true,
+        maxItemCount: 5,
+        searchResultLimit: 5,
+        renderChoiceLimit: 5,
+      });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      var form = document.querySelector(".form-section.form-full"); // Change this selector to your form's selector
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var phoneNumberInput = document.getElementById("phone_number");
+        var fullPhoneNumber = "+92" + phoneNumberInput.value.replace(/\s+/g, ""); // Concatenating +92 and removing any spaces from the input
+        console.log("Full Phone Number:", fullPhoneNumber); // Do something with the full phone number
+        // You can now submit the form or make an AJAX request with the full phone number
+      });
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
       // Sync Custom File Input with Django Form Field for Cover Picture
       document.getElementById("upload-cover-button").addEventListener("click", function () {
