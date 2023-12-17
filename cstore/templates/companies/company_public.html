@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %} {% load humanize %} {% block content %}
+{% extends 'home/base.html' %}{% load static %} {% load humanize %} {% block content %}
 
 <body id="home" class="layout-default dvc-ios demo">
   {% include 'home/header.html' %}
@@ -44,8 +44,9 @@
               {% if company.cover_pic %}
               <div class="bpr-wrap-img" style="background-image: url('{{ company.cover_pic.url }}')"></div>
               {% else %}
-              <div class="bpr-wrap-img" style=""></div>
+              <div class="bpr-wrap-img" style="background-image: url('{% static 'icons/default_cover.png' %}')"></div>
               {% endif %}
+
 
               <form class="nocsrf" method="POST" name="bpr_contact" id="sellerContact" action="https://epsilon.mb-themes.com/company/michal">
                 <input type="hidden" name="identifier" value="michal" />
@@ -67,8 +68,20 @@
 
             <div class="bpr-socials">
               <div class="bpr-right-box">
-                <a target="_blank" href="https://google.com"><i class="fa fa-facebook"></i></a><a target="_blank" href="https://google.com"><i class="fa fa-twitter"></i></a><a target="_blank" href="https://google.com"><i class="fa fa-vimeo"></i></a>
+                {% if company.facebook_link %}
+                <a target="_blank" href="{{ company.facebook_link }}"><i class="fa fa-facebook"></i></a>
+                {% endif %}
+                {% if company.twitter_link %}
+                <a target="_blank" href="{{ company.twitter_link }}"><i class="fa fa-twitter"></i></a>
+                {% endif %}
+                {% if company.youtube_link %}
+                <a target="_blank" href="{{ company.youtube_link }}"><i class="fa fa-youtube"></i></a>
+                {% endif %}
+                {% if company.instagram_link %}
+                <a target="_blank" href="{{ company.instagram_link }}"><i class="fa fa-instagram"></i></a>
+                {% endif %}
               </div>
+
             </div>
 
             <div class="bpr-contact-us">
@@ -82,7 +95,7 @@
                 {% if company.logo %}
                 <img src="{{ company.logo.url }}" alt="channab" />
                 {% else %}
-                <img src="" alt="channab" />
+                <img src="{% static 'icons/default_logo.png' %}" alt="channab" />
                 {% endif %}
 
                 <div class="bpr-type-wrap">
@@ -91,17 +104,27 @@
               </div>
 
               <div class="bpr-box">
+                {% if company.verified %}
                 <div class="bpr-verified">
                   <img src="https://epsilon.mb-themes.com/oc-content/plugins/business_profile/img/verified.png" alt="Verified seller" />
                 </div>
+                {% endif %}
 
                 <!-- New Blue Box -->
 
-                <h1>{{ company.name }}</h1>
+                <h1>{{ company.name|title }}</h1>
+
 
                 <div class="bpr-category">
-                  <a href="https://epsilon.mb-themes.com/search/user,1/category,1,9,10,11,12,13">卖</a>
+                  {% for category in company.working_categories.all %}
+                  {% if forloop.counter <= 3 %}
+                  <a href="#">{{ category.title }}</a>
+                  {% endif %}
+                  {% empty %}
+                  <p></p>
+                  {% endfor %}
                 </div>
+
 
                 <div class="bpr-reg">Seller since 2022</div>
 
@@ -127,6 +150,17 @@
                   {% with branch_detail=branches_with_details|first %} {% if branch_detail.address %}
                   <span>{{ branch_detail.address.line1 }}{% if branch_detail.address.line2 %}, {{ branch_detail.address.line2 }}{% endif %}, {{ branch_detail.address.city.name }}, {{ branch_detail.address.city.country.name }}</span><br />
                   {% endif %} {% endwith %}
+                </div>
+              </div>
+              {% endif %}
+              <!-- Branch Phone Numbers -->
+              {% if company.phone_number %}
+              <div class="bpr-payments">
+                <i class="fa fa-phone"></i>
+                <div class="bpr-right-box">
+
+                  <div>{{ company.phone_number }}</div>
+
                 </div>
               </div>
               {% endif %}
@@ -185,7 +219,7 @@
                 </select>
               </div>
 
-        
+
             </form>
 
 

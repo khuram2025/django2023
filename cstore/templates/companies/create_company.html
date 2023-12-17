@@ -7,6 +7,11 @@
 <link href="{% static 'choices.min.css' %}" rel="stylesheet" type="text/css" />
 
 <style>
+  #id_about::placeholder {
+    color: #a9a9a9; /* Light grey color */
+    font-style: italic;
+  }
+
   element.style {
     width: 100;
   }
@@ -98,14 +103,14 @@
               <!-- About -->
               <div class="form-section form-full">
                 <label for="id_about">{{ form.about.label }}</label>
-                <textarea name="about" id="id_about" class="textarea-fullwidth" required>{{ form.about.value }}</textarea>
+                <textarea name="about" id="id_about" class="textarea-fullwidth" required placeholder="Describe your company in about 500 words. Include key information that explains what your company does, its mission, and what makes it unique."></textarea>
               </div>
 
               <!-- Phone Number -->
 
               <div class="form-section form-full">
                 <label for="id_phone_number">{{ form.phone_number.label }}</label>
-                {{ form.phone_number }}
+                <input type="text" name="phone_number" id="id_phone_number" class="form-control" placeholder="+923106301527" value="{{ form.phone_number.value|default_if_none:'' }}" />
               </div>
 
               <!-- Social Media Links -->
@@ -113,7 +118,7 @@
                 <label for="id_twitter_link">{{ form.twitter_link.label }}</label>
                 <div class="social-input-container">
                   <span class="social-icon">
-                    <img src="path_to_twitter_icon.png" alt="Twitter Icon" />
+                    <img src="{% static 'icons/x.svg' %}" alt="Twitter Icon" />
                   </span>
                   {{ form.twitter_link }}
                 </div>
@@ -123,7 +128,7 @@
                 <label for="id_facebook_link">{{ form.facebook_link.label }}</label>
                 <div class="social-input-container">
                   <span class="social-icon">
-                    <img src="path_to_facebook_icon.png" alt="Facebook Icon" />
+                    <img src="{% static 'icons/facebook.svg' %}" alt="Facebook Icon" />
                   </span>
                   {{ form.facebook_link }}
                 </div>
@@ -133,7 +138,7 @@
                 <label for="id_youtube_link">{{ form.youtube_link.label }}</label>
                 <div class="social-input-container">
                   <span class="social-icon">
-                    <img src="path_to_youtube_icon.png" alt="YouTube Icon" />
+                    <img src="{% static 'icons/youtube.svg' %}" alt="YouTube Icon" />
                   </span>
                   {{ form.youtube_link }}
                 </div>
@@ -143,7 +148,7 @@
                 <label for="id_instagram_link">{{ form.instagram_link.label }}</label>
                 <div class="social-input-container">
                   <span class="social-icon">
-                    <img src="path_to_instagram_icon.png" alt="Instagram Icon" />
+                    <img src="{% static 'icons/instagram.svg' %}" alt="Instagram Icon" />
                   </span>
                   {{ form.instagram_link }}
                 </div>
@@ -155,15 +160,13 @@
                 {{ form.line1 }}
               </div>
 
-              <div class="row d-flex justify-content-center mt-100">
-                <div class="col-md-12">
-                  <label for="choices-multiple-remove-button">{{ form.working_categories.label }}</label>
-                  <select id="choices-multiple-remove-button" placeholder="Select up to 5 tags" multiple>
-                    {% for category in form.working_categories.field.queryset %}
-                    <option value="{{ category.pk }}">{{ category }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
+              <div class="form-section form-full">
+                <label for="choices-multiple-remove-button">{{ form.working_categories.label }}</label>
+                <select id="choices-multiple-remove-button" name="working_categories" placeholder="Select up to 5 tags" multiple>
+                  {% for category in form.working_categories.field.queryset %}
+                  <option value="{{ category.pk }}">{{ category }}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <!-- Submit Button -->
@@ -178,23 +181,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
   <script>
-    $(document).ready(function () {
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize Choices.js for the "Working categories" select field
       var multipleCancelButton = new Choices("#choices-multiple-remove-button", {
         removeItemButton: true,
         maxItemCount: 5,
         searchResultLimit: 5,
         renderChoiceLimit: 5,
       });
-    });
-    document.addEventListener("DOMContentLoaded", function () {
-      var form = document.querySelector(".form-section.form-full"); // Change this selector to your form's selector
+
+      // Single event listener for form submission
+      var form = document.querySelector("form[name='company']");
       form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        var phoneNumberInput = document.getElementById("phone_number");
-        var fullPhoneNumber = "+92" + phoneNumberInput.value.replace(/\s+/g, ""); // Concatenating +92 and removing any spaces from the input
-        console.log("Full Phone Number:", fullPhoneNumber); // Do something with the full phone number
-        // You can now submit the form or make an AJAX request with the full phone number
+        // Get selected working categories using form element API
+        var selectedCategories = [];
+        for (var option of form.elements["working_categories"].selectedOptions) {
+          selectedCategories.push(option.value);
+        }
+
+        // Log selected categories for debugging
+        console.log("Selected Working Categories:", selectedCategories);
+
+        // Submit the form
+        form.submit();
       });
+
+      // Rest of your custom JavaScript for file input synchronization...
     });
 
     document.addEventListener("DOMContentLoaded", function () {

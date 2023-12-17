@@ -45,16 +45,22 @@ class CompanyProfileForm(forms.ModelForm):
         if instance.address:
             address = instance.address
             address.line1 = line1
-            address.city = city  # Directly assign the City object
+            address.city = city
             address.save()
         else:
             address = Address.objects.create(line1=line1, city=city)
             instance.address = address
 
+        # Save the instance to get an ID, but avoid saving m2m fields
+        instance.save()
+
+        # Handle the many-to-many relationship
+        if 'working_categories' in self.cleaned_data:
+            # Clear any existing categories and add the new ones
+            instance.working_categories.set(self.cleaned_data['working_categories'])
+
+        # Save m2m fields if commit is True
         if commit:
-            instance.save()
-            
+            self.save_m2m()
 
         return instance
-
-

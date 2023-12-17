@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import CompanyProfile, Branch, PhoneNumber, Schedule
 
 class CompanyProfileAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'verified')
+    list_display = ('id','name', 'owner', 'verified', )
     search_fields = ('name', 'owner__full_name', 'owner__mobile')
     list_filter = ('verified',)
 
