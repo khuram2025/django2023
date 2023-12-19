@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse
@@ -16,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 from .models import CustomUser, UserProfile
 from .forms import UserProfileForm
 import requests
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 
 def register(request):
@@ -71,7 +74,40 @@ def user_login(request):
     return render(request, 'account/login.html')
 
 
+@csrf_exempt
+def mobile_login_api(request):
+    print("Request received:", request.method)  # Print the request method
 
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        mobile = data.get('mobile')
+        password = data.get('password')
+
+        print(f"Received mobile: {mobile}")  # Print the received mobile
+        print(f"Received password: {password}")  # Print the received password
+
+        try:
+            user = CustomUser.objects.get(mobile=mobile)
+            if not user.check_password(password):
+                print("Incorrect password")
+                return JsonResponse({'status': 'error', 'message': 'Incorrect password'}, status=401)
+        except CustomUser.DoesNotExist:
+
+            user = authenticate(username=user.username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                print("Login successful")  # Debug print
+                return JsonResponse({'status': 'success', 'message': 'Login successful'}, status=200)
+            else:
+                print("Account disabled")  # Debug print
+                return JsonResponse({'status': 'error', 'message': 'Account disabled'}, status=403)
+        else:
+            print("Invalid credentials")  # Debug print
+            return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=401)
+
+    print("Invalid request method")  # Debug print
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 @login_required
 def dashboard(request):

@@ -8,6 +8,7 @@ app_name = 'account'
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
+    path('api/mobile-login/', views.mobile_login_api, name='mobile-login-api'),
 
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/', views.user_profile, name='user_profile'),

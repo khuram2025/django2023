@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from product.models import Category, Product, StoreProduct
@@ -50,6 +51,44 @@ def create_company(request):
     print("City field choices:", form.fields['city'].queryset)
     return render(request, 'companies/create_company.html', {'form': form})
 
+
+
+@login_required
+def create_or_edit_company(request, pk=None):
+    # If pk is provided, we're editing an existing company
+    if pk:
+        company = get_object_or_404(CompanyProfile, pk=pk, owner=request.user)
+        form = CompanyProfileForm(request.POST or None, request.FILES or None, instance=company)
+    else:
+        # Otherwise, we're creating a new company
+        form = CompanyProfileForm(request.POST or None, request.FILES or None)
+
+    if request.method == 'POST':
+        # Shorten the filenames if they are too long
+        for field in ['logo', 'cover_pic']:
+            if field in request.FILES:
+                file = request.FILES[field]
+                if len(file.name) > 100:
+                    name, ext = os.path.splitext(file.name)
+                    file.name = name[:100 - len(ext)] + ext
+
+        print("POST Data:", request.POST)
+        print("FILES Data:", request.FILES)
+
+        if form.is_valid():
+            company = form.save(commit=False)
+            if not pk:  # Set the owner only if creating a new company
+                company.owner = request.user
+            company.save()
+            return redirect('companies:company-public', pk=company.pk)
+        else:
+            print("Form Errors:", form.errors)
+
+    context = {
+        'form': form,
+        'is_editing': pk is not None  # Pass this to the template to change the UI based on create/edit
+    }
+    return render(request, 'companies/create_or_edit_company.html', context)
 
 
 
@@ -233,7 +272,61 @@ def company_inventory(request, pk):
 
     return render(request, 'companies/items_list.html', context)
 
+
+
+def company_inventory_api(request, pk):
+    company = get_object_or_404(CompanyProfile, pk=pk)
+    store_products = StoreProduct.objects.filter(store=company)
+
+    total_stock_value = 0
+    total_profit = 0
+    total_purchase_value = 0
+
+    for product in store_products:
+        current_stock_value = product.current_stock * (product.purchase_price or 0)
+        total_stock_value += current_stock_value
+
+        profit_per_unit = (product.sale_price or 0) - (product.purchase_price or 0)
+        total_profit += profit_per_unit * product.current_stock
+
+        total_purchase_value += (product.purchase_price or 0) * product.current_stock
+
+    average_profit_percentage = 0
+    if total_purchase_value > 0:
+        average_profit_percentage = (total_profit / total_purchase_value) * 100
+
+    total_stock = sum(product.stock_quantity for product in store_products)
+    total_unique_products = store_products.count()
+
+    # Serialize the data
+    store_products_data = [
+        {
+            'id': product.id,
+            'name': product.name,
+            'current_stock': product.current_stock,
+            'purchase_price': product.purchase_price,
+            'sale_price': product.sale_price
+            # Add more fields as needed
+        }
+        for product in store_products
+    ]
+
+    context = {
+        'company_id': company.id,
+        'company_name': company.name,  # or however you want to represent the company
+        'store_products': store_products_data,
+        'total_stock': total_stock,
+        'total_unique_products': total_unique_products,
+        'total_stock_value': total_stock_value,
+        'total_profit': total_profit,
+        'average_profit_percentage': average_profit_percentage,
+    }
+
+    return JsonResponse(context)
+
+
   
+
 
 def store_product_detail(request, pk, product_pk):
     company = get_object_or_404(CompanyProfile, pk=pk)

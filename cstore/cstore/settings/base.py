@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'product',
     'search',
     'companies',
+    'corsheaders',
     # 'django_elasticsearch_dsl',
     # 'django_elasticsearch_dsl_drf',
     'django.contrib.humanize',
@@ -71,12 +72,13 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'cstore.urls'
 import os
 

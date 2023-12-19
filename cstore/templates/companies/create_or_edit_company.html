@@ -1,0 +1,62 @@
+{% extends 'home/base.html' %} 
+{% load static %} 
+
+{% block content %}
+<link href="{% static 'create_company.css' %}" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+<link href="{% static 'choices.min.css' %}" rel="stylesheet" type="text/css" />
+
+<!-- Additional styles here -->
+
+<body id="user-dashboard" class="item-publish">
+  {% include 'home/header.html' %}
+
+  <div class="content loc-user sec-dashboard">
+    <div class="container primary">
+      {% include 'account/user_menu.html' %}
+
+      <div id="user-main">
+        <div class="user-custom-box">
+          <div id="bpr-prof" class="bpr-body bpr-prof">
+            <h2>{% if is_editing %}Edit{% else %}Create{% endif %} Company Profile</h2>
+
+            <form name="company" method="post" enctype="multipart/form-data" class="form-container" 
+                  action="{% if is_editing %}{% url 'companies:edit_company' pk=company.pk %}{% else %}{% url 'create_company' %}{% endif %}">
+              {% csrf_token %}
+              
+              <!-- Hidden fields for file uploads -->
+              <div style="display: none">{{ form.logo }} {{ form.cover_pic }}</div>
+
+              <!-- Custom Interface for Image Upload -->
+              <!-- Adjust as needed based on your existing setup -->
+
+              <!-- Form fields here -->
+              <div class="form-row">
+                <div class="form-section form-half">
+                  <label for="id_name">{{ form.name.label }}</label>
+                  {{ form.name }}
+                </div>
+                <div class="form-section form-half">
+                  <label for="id_city">{{ form.city.label }}</label>
+                  {{ form.city }}
+                </div>
+              </div>
+
+              <!-- Other form sections -->
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn">{% if is_editing %}Update{% else %}Create{% endif %} Profile</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for form functionality -->
+  <!-- Your existing JavaScript setup -->
+
+{% endblock %}
+</body>
