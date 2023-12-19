@@ -299,17 +299,21 @@ def company_inventory_api(request, pk):
     total_unique_products = store_products.count()
 
     # Serialize the data
-    store_products_data = [
-        {
+    store_products_data = []
+    for product in store_products:
+        # Assuming product.product.images.all() returns a queryset of Image objects
+        image_url = product.product.images.all()[0].image.url if product.product.images.exists() else None
+
+        store_products_data.append({
             'id': product.id,
-            'name': product.name,
+            'name': product.custom_title if product.custom_title else (product.product.title if product.product else "Exclusive Product"),
             'current_stock': product.current_stock,
             'purchase_price': product.purchase_price,
-            'sale_price': product.sale_price
+            'sale_price': product.sale_price,
+            'image_url': image_url,  # Add the image URL
             # Add more fields as needed
-        }
-        for product in store_products
-    ]
+        })
+
 
     context = {
         'company_id': company.id,
@@ -321,6 +325,8 @@ def company_inventory_api(request, pk):
         'total_profit': total_profit,
         'average_profit_percentage': average_profit_percentage,
     }
+
+    print("Sending API response data:", context)
 
     return JsonResponse(context)
 
