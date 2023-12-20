@@ -333,11 +333,11 @@ def company_inventory_api(request, pk):
 
 def pos_api(request, store_id):
     store = get_object_or_404(CompanyProfile, pk=store_id)
-    store_products = StoreProduct.objects.filter(store=store, current_stock__gt=0)
+    store_products = StoreProduct.objects.filter(store=store)
 
     products_data = []
     for product in store_products:
-        category_name = product.product.category.name if product.product and product.product.category else "Uncategorized"
+        category_name = product.product.category.title if product.product and product.product.category else "Uncategorized"
         image_url = product.product.images.all()[0].image.url if product.product.images.exists() else None
 
         products_data.append({
