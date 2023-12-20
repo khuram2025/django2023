@@ -331,6 +331,35 @@ def company_inventory_api(request, pk):
     return JsonResponse(context)
 
 
+def pos_api(request, store_id):
+    store = get_object_or_404(CompanyProfile, pk=store_id)
+    store_products = StoreProduct.objects.filter(store=store, current_stock__gt=0)
+
+    products_data = []
+    for product in store_products:
+        category_name = product.product.category.name if product.product and product.product.category else "Uncategorized"
+        image_url = product.product.images.all()[0].image.url if product.product.images.exists() else None
+
+        products_data.append({
+            'id': product.id,
+            'name': product.custom_title or product.product.title,
+            'stock_quantity': product.current_stock,
+            'category': category_name,
+            'sale_price': product.sale_price,
+            'purchase_price': product.purchase_price,
+            'image_url': image_url,
+        })
+
+    context = {
+        'store_id': store.id,
+        'store_name': store.name,
+        'products': products_data,
+    }
+
+    print("POS API response data:", context)
+
+    return JsonResponse(context)
+
   
 
 

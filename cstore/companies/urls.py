@@ -11,9 +11,14 @@ urlpatterns = [
     path('add-inventory/', views.add_inventory, name='add_inventory'),
     path('inventory/<int:pk>/', views.company_inventory, name='company-inventory'),
     path('api/inventory/<int:pk>/', views.company_inventory_api, name='company-inventory-api'),
+
+
     path('company/<int:pk>/product/<int:product_pk>/', views.store_product_detail, name='store_product_detail'),
     path('company/', views.company_edit, name='company_detail'),
     path('companies/<int:pk>/', views.company_profile_detail, name='company-public'),
     path('companies/', views.list_companies, name='list-companies'),
      
+
+
+     path('api/pos/<int:store_id>/', views.pos_api, name='pos-api'),
 ]
