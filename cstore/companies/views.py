@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Category, Product, StoreProduct
+from product.models import Category, Customer, Product, StoreProduct
 
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -360,7 +360,34 @@ def pos_api(request, store_id):
 
     return JsonResponse(context)
 
-  
+def order_summary(request, store_id):
+    if request.method == 'POST':
+        # Extract order data from request
+        order_data = request.POST.get('order_data')  # Ensure this contains items and quantities
+
+        # Handle customer information
+        customer_id = order_data.get('customer_id', None)
+        customer = Customer.objects.get(id=customer_id) if customer_id else None
+
+        # Process order
+        order = process_order(store_id, order_data, customer)
+
+        return JsonResponse({'order_id': order.id, 'summary': format_order_summary(order)})
+    else:
+        return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def process_order(store_id, order_data, customer):
+    # Logic to create or update an order
+    # Add items to order, calculate totals, etc.
+    pass
+
+def format_order_summary(order):
+    # Format the order summary to send back to frontend
+    pass
+
+
+
 
 
 def store_product_detail(request, pk, product_pk):

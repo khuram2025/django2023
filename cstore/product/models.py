@@ -72,6 +72,26 @@ class SellerInformation(models.Model):
         return 0
 
 
+from django.db import models
+from django.core.validators import RegexValidator
+
+class Customer(models.Model):
+    # Mobile number with a basic validation for format
+    mobile = models.CharField(
+        max_length=15, 
+        unique=True, 
+        verbose_name="Mobile Number"
+    )
+    # Additional fields as needed
+    name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Name")
+    email = models.EmailField(blank=True, null=True, verbose_name="Email Address")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.mobile
+
+    # Additional methods as needed
 
 class Product(models.Model):
     
