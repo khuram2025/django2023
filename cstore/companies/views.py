@@ -350,11 +350,16 @@ def pos_api(request, store_id):
             'purchase_price': product.purchase_price,
             'image_url': image_url,
         })
+        
+    # Fetch customers for the store
+    customers = Customer.objects.filter(store=store)
+    customers_data = [{'id': cust.id, 'name': cust.name, 'email': cust.email, 'mobile': cust.mobile} for cust in customers]
 
     context = {
         'store_id': store.id,
         'store_name': store.name,
         'products': products_data,
+        'customers': customers_data,
     }
 
     print("POS API response data:", context)
@@ -368,6 +373,9 @@ def order_summary(request, store_id):
             # Decode JSON from request body
             order_data = json.loads(request.body.decode('utf-8'))
 
+            # Print the received order data for debugging
+            print("Received order data:", order_data)
+
             # Extract and handle data
             customer_id = order_data.get('customer_id', None)
             customer = Customer.objects.get(id=customer_id) if customer_id else None
@@ -375,9 +383,15 @@ def order_summary(request, store_id):
             # Process the order
             order = process_order(store_id, order_data, customer)
 
-            return JsonResponse({'order_id': order.id, 'summary': format_order_summary(order)})
+            # Fetch customers for the store
+            customers = Customer.objects.filter(store_id=store_id)
+            customers_list = [{'id': cust.id, 'name': cust.name, 'email': cust.email} for cust in customers]
+
+            return JsonResponse({'order_id': order.id, 'summary': format_order_summary(order), 'customers': customers_list})
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Customer.DoesNotExist:
+            return JsonResponse({'error': 'Customer not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     else:
