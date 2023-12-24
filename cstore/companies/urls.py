@@ -22,4 +22,6 @@ urlpatterns = [
 
     path('api/pos/<int:store_id>/', views.pos_api, name='pos-api'),
     path('api/submit-order/<int:store_id>/', views.order_summary, name='submit-order'),
+
+    path('api/companies/<int:company_id>/customers/', views.list_customers_api, name='list_customers_api'),
 ]

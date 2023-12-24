@@ -453,6 +453,61 @@ def store_product_detail(request, pk, product_pk):
     return render(request, 'companies/product_detail.html', context)
 
 
+
+def list_customers_api(request, company_id):
+    # Fetch the company profile by ID
+    company_profile = get_object_or_404(CompanyProfile, pk=company_id)
+
+    # Fetch customers belonging to the company
+    customers = Customer.objects.filter(store=company_profile)
+
+    # Serialize customer data along with their orders
+    customers_data = []
+    for customer in customers:
+        # Serialize each customer's orders
+        customer_orders = []
+        for order in customer.customer_orders.all():
+            # Serialize each order item
+            order_items = []
+            for item in order.items.all():
+                order_items.append({
+                    'id': item.id,
+                    'product_title': item.product.product.title,  # Adjust field based on your model
+                    'quantity': item.quantity,
+                    'price': item.price,
+                    'total_price': item.total_price
+                })
+
+            customer_orders.append({
+                'id': order.id,
+                'total_price': order.total_price,
+                'created_at': order.created_at.isoformat(),
+                'updated_at': order.updated_at.isoformat(),
+                'items': order_items
+            })
+
+        customers_data.append({
+            'id': customer.id,
+            'mobile': customer.mobile,
+            'name': customer.name,
+            'email': customer.email,
+            'created_at': customer.created_at.isoformat(),
+            'updated_at': customer.updated_at.isoformat(),
+            'orders': customer_orders  # Add orders to customer data
+        })
+
+    # Context to be returned
+    context = {
+        'company_id': company_profile.id,
+        'company_name': company_profile.name,  # Assuming CompanyProfile has a name field
+        'customers': customers_data,
+    }
+
+    print("Sending API response data:", context)
+
+    return JsonResponse(context)
+
+
 @login_required
 def add_inventory(request):
     return render(request, 'product/add_company_product.html')

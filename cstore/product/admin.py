@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation
+from .models import Customer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -198,3 +198,12 @@ class OrderItemAdmin(admin.ModelAdmin):
     search_fields = ('order__id', 'product__product__title')
 
 admin.site.register(OrderItem, OrderItemAdmin)
+
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('mobile', 'name', 'email', 'store', 'created_at', 'updated_at')  # Fields to display in admin list view
+    search_fields = ('mobile', 'name', 'email')  # Fields to be searchable in admin
+    list_filter = ('store', 'created_at')  # Fields to filter by in admin
+    ordering = ('-created_at',)  # Default ordering
+
+# Register your models here.
+admin.site.register(Customer, CustomerAdmin)

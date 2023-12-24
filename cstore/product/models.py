@@ -85,6 +85,7 @@ class Customer(models.Model):
     )
     # Additional fields as needed
     name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Name")
+    store = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE, related_name='customers', null=True)
     email = models.EmailField(blank=True, null=True, verbose_name="Email Address")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
