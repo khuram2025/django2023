@@ -1,8 +1,9 @@
+from decimal import Decimal
 from django.http import JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Category, Customer, Product, StoreProduct
-
+from product.models import Category, Customer, Order, OrderItem, Product, StoreProduct
+from django.views.decorators.csrf import csrf_exempt
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
 from .models import CompanyProfile, Schedule
@@ -11,7 +12,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse
 from django.contrib import messages
 from .forms import CompanyProfileForm
-
+import json
 from companies.models import CompanyProfile
 
 from django.contrib.auth.models import User
@@ -360,35 +361,72 @@ def pos_api(request, store_id):
 
     return JsonResponse(context)
 
+@csrf_exempt
 def order_summary(request, store_id):
     if request.method == 'POST':
-        # Extract order data from request
-        order_data = request.POST.get('order_data')  # Ensure this contains items and quantities
+        try:
+            # Decode JSON from request body
+            order_data = json.loads(request.body.decode('utf-8'))
 
-        # Handle customer information
-        customer_id = order_data.get('customer_id', None)
-        customer = Customer.objects.get(id=customer_id) if customer_id else None
+            # Extract and handle data
+            customer_id = order_data.get('customer_id', None)
+            customer = Customer.objects.get(id=customer_id) if customer_id else None
 
-        # Process order
-        order = process_order(store_id, order_data, customer)
+            # Process the order
+            order = process_order(store_id, order_data, customer)
 
-        return JsonResponse({'order_id': order.id, 'summary': format_order_summary(order)})
+            return JsonResponse({'order_id': order.id, 'summary': format_order_summary(order)})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
-
 def process_order(store_id, order_data, customer):
-    # Logic to create or update an order
-    # Add items to order, calculate totals, etc.
-    pass
+    store = get_object_or_404(CompanyProfile, pk=store_id)
+
+    # Validate stock
+    for item_data in order_data['items']:
+        store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
+        quantity = item_data['quantity']
+        if store_product.current_stock < quantity:
+            raise ValueError(f"Not enough stock for product {store_product.product.title}")
+
+    # Create the order with the total price received from Flutter
+    total_price = Decimal(order_data['total_price'])
+    order = Order.objects.create(
+        store=store,
+        customer=customer,
+        total_price=total_price
+    )
+
+    # Update stock and create order items
+    for item_data in order_data['items']:
+        store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
+        quantity = item_data['quantity']
+
+        # Update stock
+        store_product.current_stock -= quantity
+        store_product.save()
+
+        # Create OrderItem
+        OrderItem.objects.create(
+            order=order,
+            product=store_product,
+            quantity=quantity,
+            price=store_product.sale_price
+        )
+
+    return order
 
 def format_order_summary(order):
-    # Format the order summary to send back to frontend
-    pass
-
-
-
-
+    # Format the order summary data
+    summary = {
+        'order_id': order.id,
+        # Add other necessary order details
+    }
+    return summary
 
 def store_product_detail(request, pk, product_pk):
     company = get_object_or_404(CompanyProfile, pk=pk)

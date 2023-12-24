@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, CustomFieldValue, SellerInformation
+from .models import Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -156,9 +156,45 @@ class StoreProductAdmin(admin.ModelAdmin):
     search_fields = ('store__name', 'custom_title', 'product__title')
     inlines = [StoreProductStockEntryInline]  # Add the inline here
 
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        # Assuming you have fields to input stock addition in your admin
+        added_stock = form.cleaned_data.get('added_stock', 0)
+        purchase_price = form.cleaned_data.get('purchase_price', None)
+        if added_stock:
+            obj.add_stock(added_stock, purchase_price)
+
     def product_title(self, obj):
         return obj.custom_title if obj.custom_title else (obj.product.title if obj.product else "Exclusive Product")
     product_title.short_description = "Product Title"
 
 admin.site.register(StoreProduct, StoreProductAdmin)
 
+# OrderItem Inline Admin
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0  # Number of extra forms to display
+    fields = ['product', 'quantity', 'price']
+    readonly_fields = ['total_price']
+
+# Order Admin
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'store', 'customer', 'total_price', 'created_at', 'updated_at')
+    list_filter = ('store', 'created_at')
+    search_fields = ('store__name', 'customer__name')
+    inlines = [OrderItemInline]  # Add the inline here
+
+    def total_price(self, obj):
+        return sum(item.total_price for item in obj.items.all())
+    total_price.short_description = "Total Price"
+
+admin.site.register(Order, OrderAdmin)
+
+# OrderItem Admin (Optional)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'price', 'total_price')
+    list_filter = ('order', 'product')
+    search_fields = ('order__id', 'product__product__title')
+
+admin.site.register(OrderItem, OrderItemAdmin)

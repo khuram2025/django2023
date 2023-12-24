@@ -354,6 +354,9 @@ def create_or_import_product(request, pk):
                 store_product = form.save(commit=False)
                 store_product.store = company
 
+                new_stock_quantity = form.cleaned_data.get('stock_quantity')
+                store_product.current_stock = new_stock_quantity
+
                 if 'import_product' in request.POST:
                     product = get_object_or_404(Product, id=product_id)
                     store_product.product = product
@@ -373,6 +376,7 @@ def create_or_import_product(request, pk):
                         is_published=False
                     )
                     new_product.save()
+                    print(f"New store_product created with stock_quantity: {store_product.stock_quantity}, current_stock: {store_product.current_stock}")
                     store_product.product = new_product
 
             store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
@@ -442,6 +446,10 @@ def add_stock_to_store_product(request, store_id, product_id):
         form = AddStockForm(store_owner=request.user)
 
     return render(request, 'companies/add_stock.html', {'form': form, 'store_product': store_product})
+
+
+
+
 
 def edit_stock_entry(request, entry_id):
     stock_entry = get_object_or_404(StoreProductStockEntry, id=entry_id)

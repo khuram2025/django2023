@@ -42,3 +42,10 @@ psql -U channab -h localhost -d channabdb
 
 
 DROP DATABASE channabdb;
+
+
+
+cd..                           
+.\dev\venv\Scripts\activate    
+cd .\Django2023\cstore\        
+python manage.py runserver 0.0.0.0:80

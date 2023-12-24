@@ -6,6 +6,7 @@ from io import BytesIO
 from django.core.files import File
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
+from companies.models import CompanyProfile
 
 from locations.models import City
 from mptt.models import MPTTModel, TreeForeignKey
@@ -95,7 +96,7 @@ class Customer(models.Model):
 
 class Product(models.Model):
     
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey('product.Category', on_delete=models.CASCADE, related_name='products')
     city = models.ForeignKey('locations.City', on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
     seller_information = models.ForeignKey(SellerInformation, on_delete=models.CASCADE, related_name='products', verbose_name=_("Seller Information"),blank=True, null=True )
@@ -231,6 +232,27 @@ class StoreProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        # If the store product is being created (not updated), set the current_stock
+        if not self.pk:  # pk is None when the object is being created
+            self.current_stock = self.opening_stock
+        super(StoreProduct, self).save(*args, **kwargs)
+
+    def add_stock(self, quantity, purchase_price=None):
+            # Update the stock quantity
+            self.stock_quantity += quantity
+            self.current_stock += quantity
+            if purchase_price:
+                self.purchase_price = purchase_price
+            self.save()
+
+            # Optionally, record this in a stock entry log
+            StoreProductStockEntry.objects.create(
+                store_product=self, 
+                quantity_added=quantity, 
+                purchase_price=purchase_price or self.purchase_price
+            )
+            
     def __str__(self):
         if self.product:
             return f"{self.store.name} - {self.custom_title or self.product.title}"
@@ -275,8 +297,6 @@ class StoreProduct(models.Model):
             purchase_price=purchase_price or self.purchase_price
         )
 
-
-
 class StoreProductStockEntry(models.Model):
     store_product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='stock_entries')
     quantity_added = models.PositiveIntegerField(verbose_name=_("Quantity Added"))
@@ -287,3 +307,28 @@ class StoreProductStockEntry(models.Model):
 
     def __str__(self):
         return f"{self.store_product} - Added {self.quantity_added} on {self.date_added} at {self.purchase_price}"
+
+
+class Order(models.Model):
+    store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='store_orders',default=1)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name='customer_orders')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Total Price"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Order {self.id} from {self.store.name}"
+    
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='order_items')
+    quantity = models.PositiveIntegerField(verbose_name=_("Quantity"))
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
+    
+    def __str__(self):
+        return f"{self.quantity} x {self.product.product.title} in Order {self.order.id}"
+
+    @property
+    def total_price(self):
+        return self.quantity * self.price
+    
