@@ -26,5 +26,7 @@ urlpatterns = [
     path('user/<int:user_pk>/products/', views.user_product_list, name='user_product_list'),
     path('ajax/load-custom-fields/', views.ajax_load_custom_fields, name='ajax_load_custom_fields'),
     path('ajax/get-product-details/', views.get_product_details, name='get_product_details'),
+
+    path('api/customers/', views.create_customer, name='create-customer'),
     
 ]

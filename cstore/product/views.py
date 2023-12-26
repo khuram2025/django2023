@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from account.models import CustomUser, UserProfile
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import CustomerSerializer
 from .models import CustomFieldValue, Product, StoreProduct, StoreProductStockEntry
 from .forms import CompanyProductForm, EditStockEntryForm, ProductForm, StoreProductForm,AddStockForm
 from django.http import JsonResponse
@@ -505,3 +509,14 @@ def list_store_products(request, store_id):
     }
 
     return render(request, 'companies/items_list.html', context)
+
+
+@api_view(['POST'])
+def create_customer(request):
+    if request.method == 'POST':
+        print("Received Customer Create API:", request.data)
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

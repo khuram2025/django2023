@@ -10,7 +10,7 @@ urlpatterns = [
     path('company-dashboard/<int:pk>/', views.company_dashboard, name='company-dashboard'),
     path('add-inventory/', views.add_inventory, name='add_inventory'),
     path('inventory/<int:pk>/', views.company_inventory, name='company-inventory'),
-    path('api/inventory/<int:pk>/', views.company_inventory_api, name='company-inventory-api'),
+   
 
 
     path('company/<int:pk>/product/<int:product_pk>/', views.store_product_detail, name='store_product_detail'),
@@ -19,9 +19,11 @@ urlpatterns = [
     path('companies/', views.list_companies, name='list-companies'),
      
 
-
+    path('api/inventory/<int:pk>/', views.company_inventory_api, name='company-inventory-api'),
     path('api/pos/<int:store_id>/', views.pos_api, name='pos-api'),
     path('api/submit-order/<int:store_id>/', views.order_summary, name='submit-order'),
 
     path('api/companies/<int:company_id>/customers/', views.list_customers_api, name='list_customers_api'),
+    path('api/companies/<int:company_id>/customers/<int:customer_id>/', views.customer_detail_api, name='customer_detail_api'),
+    path('api/<int:customerId>/orders', views.fetch_customer_orders, name='fetch_customer_orders'),
 ]

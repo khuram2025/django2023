@@ -521,6 +521,50 @@ def list_customers_api(request, company_id):
 
     return JsonResponse(context)
 
+def customer_detail_api(request, company_id, customer_id):
+    # Fetch the customer by ID within the specified company
+    customer = get_object_or_404(Customer, pk=customer_id, store_id=company_id)
+
+    # Serialize customer's orders
+    orders_data = []
+    for order in customer.customer_orders.all():
+        orders_data.append({
+            'id': order.id,
+            'total_price': order.total_price,
+            'created_at': order.created_at.isoformat(),
+            'updated_at': order.updated_at.isoformat(),
+            # Include other order fields as necessary
+        })
+
+    # Serialize customer data
+    customer_data = {
+        'id': customer.id,
+        'mobile': customer.mobile,
+        'name': customer.name,
+        'email': customer.email,
+        'created_at': customer.created_at.isoformat(),
+        'updated_at': customer.updated_at.isoformat(),
+        'orders': orders_data  # Add orders to customer data
+    }
+
+    return JsonResponse(customer_data)
+
+def fetch_customer_orders(request, customerId):
+    orders = Order.objects.filter(customer_id=customerId)
+
+    orders_data = [{
+        'id': order.id,
+        'imageUrl': order.image_url if hasattr(order, 'image_url') else None,  # Correct field name
+        'customerName': order.customer_name if hasattr(order, 'customer_name') else None,  # Correct field name
+        'mobileNumber': order.mobile_number if hasattr(order, 'mobile_number') else None,  # Correct field name
+        'date': order.order_date.strftime('%Y-%m-%d') if hasattr(order, 'order_date') else None,  # Format date
+        'transactionType': order.transaction_type if hasattr(order, 'transaction_type') else None,  # Correct field name
+        'totalAmount': order.total_price if hasattr(order, 'total_price') else None,  # Correct field name
+    } for order in orders]
+
+    print("Sending Customer Orders:", orders_data)
+    return JsonResponse({'orders': orders_data})
+
 
 @login_required
 def add_inventory(request):
