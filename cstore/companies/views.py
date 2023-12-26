@@ -331,6 +331,26 @@ def company_inventory_api(request, pk):
 
     return JsonResponse(context)
 
+def store_product_detail_api(request, store_product_id):
+    # Fetch the store product by ID
+    store_product = get_object_or_404(StoreProduct, pk=store_product_id)
+
+    # Serialize the store product data
+    store_product_data = {
+        'id': store_product.id,
+        'custom_title': store_product.custom_title,
+        'custom_description': store_product.custom_description,
+        'sale_price': store_product.sale_price,
+        'stock_quantity': store_product.stock_quantity,
+        'is_store_exclusive': store_product.is_store_exclusive,
+        'purchase_price': store_product.purchase_price,
+        'opening_stock': store_product.opening_stock,
+        'low_stock_threshold': store_product.low_stock_threshold,
+        'current_stock': store_product.current_stock,
+        # Add more fields as needed
+    }
+
+    return JsonResponse(store_product_data)
 
 def pos_api(request, store_id):
     store = get_object_or_404(CompanyProfile, pk=store_id)
