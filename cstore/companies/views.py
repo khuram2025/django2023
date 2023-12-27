@@ -348,7 +348,6 @@ def store_product_detail_api(request, store_product_id):
         'opening_stock': store_product.opening_stock,
         'low_stock_threshold': store_product.low_stock_threshold,
         'current_stock': store_product.current_stock,
-        # Add more fields as needed
     }
 
     # Include product details if it's linked
@@ -357,13 +356,30 @@ def store_product_detail_api(request, store_product_id):
             'id': store_product.product.id,
             'title': store_product.product.title,
             'description': store_product.product.description,
-            # Add other relevant product fields
         }
 
+    # Fetch and serialize sales data
+    sales_data = []
+    order_items = OrderItem.objects.filter(product=store_product)
+    for item in order_items:
+        order = item.order
+        customer = order.customer
+        sales_data.append({
+            'order_id': order.id,
+            'customer_name': customer.name if customer else 'N/A',
+            'customer_mobile': customer.mobile if customer else 'N/A',
+            'quantity_sold': item.quantity,
+            'selling_price': item.price,
+            'total_price': item.total_price
+        })
+
+    store_product_data['sales'] = sales_data
 
     print("Product Detail response data:", store_product_data)
 
     return JsonResponse(store_product_data)
+
+
 def pos_api(request, store_id):
     store = get_object_or_404(CompanyProfile, pk=store_id)
     store_products = StoreProduct.objects.filter(store=store)
