@@ -212,6 +212,35 @@ class CustomFieldValue(models.Model):
     def __str__(self):
         return f"{self.custom_field.name}: {self.value}"
 
+class StoreConfig(models.Model):
+    store = models.OneToOneField('companies.CompanyProfile', on_delete=models.CASCADE, related_name='config')
+    default_discount_type = models.CharField(max_length=10, choices=[('amount', 'Amount'), ('percentage', 'Percentage')], default='percentage')
+    default_discount_value = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # Define fields for tax configurations and custom charges
+
+    def __str__(self):
+        return f"Config for {self.store.name}"
+
+
+class TaxConfig(models.Model):
+    store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='tax_configs')
+    name = models.CharField(max_length=100)
+    rate = models.DecimalField(max_digits=5, decimal_places=2)  # Percentage value
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.rate}%"
+
+class CustomCharge(models.Model):
+    store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='custom_charges')
+    name = models.CharField(max_length=100)
+    charge_type = models.CharField(max_length=10, choices=[('amount', 'Amount'), ('percentage', 'Percentage')], default='amount')
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.name} - {self.value}"
+
+
 
 
 class StoreProduct(models.Model):
@@ -307,7 +336,6 @@ class StoreProductStockEntry(models.Model):
     def __str__(self):
         return f"{self.store_product} - Added {self.quantity_added} on {self.date_added} at {self.purchase_price}"
 
-
 class Order(models.Model):
     store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='store_orders',default=1)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name='customer_orders')
@@ -315,6 +343,17 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    discount_type = models.CharField(max_length=10, choices=[('amount', 'Amount'), ('percentage', 'Percentage')], null=True, blank=True)
+    discount_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    taxes = models.ManyToManyField(TaxConfig, blank=True)
+    custom_charges = models.ManyToManyField(CustomCharge, blank=True)
+
+    # Method to calculate total tax
+    def calculate_tax(self):
+        total_tax = sum([tax.rate for tax in self.taxes.all()])
+        return (self.total_price * total_tax) / 100
+
+
     def __str__(self):
         return f"Order {self.id} from {self.store.name}"
     
@@ -323,6 +362,9 @@ class OrderItem(models.Model):
     product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='order_items')
     quantity = models.PositiveIntegerField(verbose_name=_("Quantity"))
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
+
+    discount_type = models.CharField(max_length=10, choices=[('amount', 'Amount'), ('percentage', 'Percentage')], null=True, blank=True)
+    discount_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     
     def __str__(self):
         return f"{self.quantity} x {self.product.product.title} in Order {self.order.id}"
