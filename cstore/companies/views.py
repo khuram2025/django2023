@@ -379,27 +379,41 @@ def store_product_detail_api(request, store_product_id):
 
     return JsonResponse(store_product_data)
 
-
 def pos_api(request, store_id):
     store = get_object_or_404(CompanyProfile, pk=store_id)
-    store_products = StoreProduct.objects.filter(store=store)
+    store_products = StoreProduct.objects.filter(store=store).select_related('product__category')
 
     products_data = []
+    categories_set = set()  # Use a set to store unique category ids
+    categories_data = []  # List to store category data
+
     for product in store_products:
-        category_name = product.product.category.title if product.product and product.product.category else "Uncategorized"
-        image_url = product.product.images.all()[0].image.url if product.product.images.exists() else None
+        category = product.product.category if product.product and product.product.category else None
+        if category and category.id not in categories_set:
+            categories_set.add(category.id)
+            categories_data.append({
+                'id': category.id,
+                'title': category.title,
+                'description': category.description,
+                'status': category.status,
+                'icon': category.icon.url if category.icon else None,
+                'image': category.image.url if category.image else None,
+                # Additional category fields as needed
+            })
+
+        image_url = product.product.images.first().image.url if product.product and product.product.images.exists() else None
 
         products_data.append({
             'id': product.id,
-            'name': product.custom_title or product.product.title,
+            'name': product.custom_title or (product.product.title if product.product else ''),
             'stock_quantity': product.current_stock,
-            'category': category_name,
+            'category': category.title if category else "Uncategorized",
             'sale_price': product.sale_price,
             'purchase_price': product.purchase_price,
             'image_url': image_url,
+            # Additional product fields as needed
         })
-        
-    # Fetch customers for the store
+
     customers = Customer.objects.filter(store=store)
     customers_data = [{'id': cust.id, 'name': cust.name, 'email': cust.email, 'mobile': cust.mobile} for cust in customers]
 
@@ -407,12 +421,13 @@ def pos_api(request, store_id):
         'store_id': store.id,
         'store_name': store.name,
         'products': products_data,
+        'categories': categories_data,  # Include categories in the context
         'customers': customers_data,
     }
 
     print("POS API response data:", context)
-
     return JsonResponse(context)
+
 
 @csrf_exempt
 def order_summary(request, store_id):
