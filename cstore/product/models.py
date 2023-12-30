@@ -221,7 +221,6 @@ class StoreConfig(models.Model):
     def __str__(self):
         return f"Config for {self.store.name}"
 
-
 class TaxConfig(models.Model):
     store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='tax_configs')
     name = models.CharField(max_length=100)

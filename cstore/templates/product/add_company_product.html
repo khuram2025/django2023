@@ -24,11 +24,14 @@
         </div>
         <!-- Company Name Field -->
         <div class="form-section">
-          <label for="id_company_name">{{ form.company.label }}</label>
-          {{ form.company }} {% if form.company.errors %} {% for error in form.company.errors %}
-          <div class="alert alert-danger">{{ error }}</div>
-          {% endfor %} {% endif %}
-        </div>
+          <label for="id_company">{{ form.company.label }}</label>
+          {{ form.company }}
+          {% if form.company.errors %}
+              {% for error in form.company.errors %}
+                  <div class="alert alert-danger">{{ error }}</div>
+              {% endfor %}
+          {% endif %}
+      </div>
 
         <!-- City Field -->
         <div class="form-section">

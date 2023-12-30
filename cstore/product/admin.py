@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation
+from .models import CustomCharge, Customer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation, StoreConfig, TaxConfig
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -207,3 +207,22 @@ class CustomerAdmin(admin.ModelAdmin):
 
 # Register your models here.
 admin.site.register(Customer, CustomerAdmin)
+
+
+@admin.register(StoreConfig)
+class StoreConfigAdmin(admin.ModelAdmin):
+    list_display = ['store', 'default_discount_type', 'default_discount_value']
+    search_fields = ['store__name']
+
+@admin.register(TaxConfig)
+class TaxConfigAdmin(admin.ModelAdmin):
+    list_display = ['store', 'name', 'rate', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'store__name']
+
+@admin.register(CustomCharge)
+class CustomChargeAdmin(admin.ModelAdmin):
+    list_display = ['store', 'name', 'charge_type', 'value']
+    search_fields = ['name', 'store__name']
+
+

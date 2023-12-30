@@ -428,7 +428,6 @@ def pos_api(request, store_id):
     print("POS API response data:", context)
     return JsonResponse(context)
 
-
 @csrf_exempt
 def order_summary(request, store_id):
     if request.method == 'POST':
@@ -460,10 +459,12 @@ def order_summary(request, store_id):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
 def process_order(store_id, order_data, customer):
+    # Retrieve the store based on the store_id
     store = get_object_or_404(CompanyProfile, pk=store_id)
 
-    # Validate stock
+    # Validate stock and process each item
     for item_data in order_data['items']:
         store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
         quantity = item_data['quantity']
@@ -478,24 +479,37 @@ def process_order(store_id, order_data, customer):
         total_price=total_price
     )
 
-    # Update stock and create order items
+    # Update stock and create order items, applying item-level taxes
     for item_data in order_data['items']:
         store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
         quantity = item_data['quantity']
+        tax_ids = item_data.get('tax_ids', [])
 
         # Update stock
         store_product.current_stock -= quantity
         store_product.save()
 
-        # Create OrderItem
-        OrderItem.objects.create(
+        # Create OrderItem with taxes
+        order_item = OrderItem.objects.create(
             order=order,
             product=store_product,
             quantity=quantity,
             price=store_product.sale_price
         )
 
+        # Apply taxes to the item
+        for tax_id in tax_ids:
+            tax = get_object_or_404(TaxConfig, pk=tax_id)
+            order_item.taxes.add(tax)
+
+    # Apply overall taxes to the order
+    overall_tax_ids = order_data.get('overall_tax_ids', [])
+    for tax_id in overall_tax_ids:
+        tax = get_object_or_404(TaxConfig, pk=tax_id)
+        order.taxes.add(tax)
+
     return order
+
 
 def format_order_summary(order):
     # Format the order summary data

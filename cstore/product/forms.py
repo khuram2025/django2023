@@ -153,18 +153,24 @@ class CompanyProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        company_profiles = kwargs.pop('company_profiles', None)
         super(CompanyProductForm, self).__init__(*args, **kwargs)
+
+        # Set querysets for category, city, and company fields
         self.fields['category'].queryset = Category.objects.filter(parent__isnull=True, status=True)
         self.fields['city'].queryset = City.objects.all()
 
         if self.user and self.user.is_authenticated:
-            self.fields['company'].queryset = CompanyProfile.objects.filter(owner=self.user)
+            if company_profiles:
+                self.fields['company'].queryset = company_profiles
+            else:
+                self.fields['company'].queryset = CompanyProfile.objects.filter(owner=self.user)
+
             company_profile = CompanyProfile.objects.filter(owner=self.user).first()
             if company_profile:
                 self.fields['address'].initial = company_profile.address
                 self.fields['phone_number'].initial = company_profile.phone_number
 
-        # Custom fields setup as in the original ProductForm
     def get_field_for_type(self, field_type):
         field_class = forms.CharField
         field_kwargs = {'required': False}
@@ -200,18 +206,20 @@ class CompanyProductForm(forms.ModelForm):
 
         return field_class(**field_kwargs)
 
-
     def save(self, commit=True):
         product = super(CompanyProductForm, self).save(commit=False)
         
-        if self.user and self.user.is_authenticated:
-            company_profile = CompanyProfile.objects.get(owner=self.user)
-            product.company_information = company_profile
+        # Use the selected company from the form
+        if self.cleaned_data.get('company'):
+            product.company_information = self.cleaned_data['company']
+        else:
+            # Handle the case where no company is selected
+            # You might want to raise a validation error or handle this scenario as per your business logic
+            pass
 
         product.youtube_video_url = self.cleaned_data.get('youtube_video_url')
         product.facebook_video_url = self.cleaned_data.get('facebook_video_url')
         product.web_link = self.cleaned_data.get('web_link')
-
 
         if commit:
             product.save()

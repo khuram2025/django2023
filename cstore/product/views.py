@@ -68,40 +68,26 @@ def create_product(request):
 
 @login_required
 def create_company_product(request):
-    try:
-        company_profile = CompanyProfile.objects.get(owner=request.user)
-    except CompanyProfile.DoesNotExist:
+    company_profiles = CompanyProfile.objects.filter(owner=request.user)
+
+    if not company_profiles.exists():
         # Redirect to create company page if no company is found
         messages.error(request, "You need to create a company before adding a product.")
         return redirect('home:company_create_message')
-    
+
     if request.method == 'POST':
-        form = CompanyProductForm(request.POST, request.FILES, user=request.user)
-        
-        print("Form Received: POST =", request.POST)  # Print the POST data received
-        print("Form Received: FILES =", request.FILES)  # Print the FILES data received
+        form = CompanyProductForm(request.POST, request.FILES, user=request.user, company_profiles=company_profiles)
 
         if form.is_valid():
             product = form.save(commit=False)
             product.view_count = 0
-            print("View Count Set:", product.view_count)
 
-            # Check if company information is being received
-            print("Form company data:", form.cleaned_data.get('company'))
-
-            # Check if company is found for the current user
-            if request.user and request.user.is_authenticated:
-                company_profile = CompanyProfile.objects.get(owner=request.user)
-                print("Company Profile Found:", company_profile)
-            
             if 'company' in form.cleaned_data and form.cleaned_data['company']:
                 product.company = form.cleaned_data['company']
-                print("Company Assigned to Product:", product.company)
             else:
-                print("No Company Assigned")
+                messages.error(request, "No Company Assigned")
+                return redirect('some_error_handling_view')
             product.save()
-
-            print("Product saved:", product)  # Print the saved product
 
             # Handle custom fields
             for key, value in request.POST.items():
@@ -118,16 +104,20 @@ def create_company_product(request):
             images = request.FILES.getlist('images')
             for image in images:
                 ProductImage.objects.create(product=product, image=image)
-            
-            print("Product images uploaded")  # Confirmation of image upload
 
             messages.success(request, 'Product added successfully!')
             return redirect('product:product_detail', pk=product.pk)
+
         else:
-            print("Form errors:", form.errors)  # Print form errors
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
-        form = CompanyProductForm(user=request.user)
+        if request.method == 'POST':
+            form = CompanyProductForm(request.POST, request.FILES, user=request.user, company_profiles=company_profiles)
+            # ... [rest of your POST handling code]
+        else:
+            form = CompanyProductForm(user=request.user, company_profiles=company_profiles)
+    # ... [rest of your GET handling code]
+
 
     return render(request, 'product/add_company_product.html', {'form': form})
 
