@@ -346,11 +346,12 @@ class Order(models.Model):
     discount_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     taxes = models.ManyToManyField(TaxConfig, blank=True)
     custom_charges = models.ManyToManyField(CustomCharge, blank=True)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Subtotal"))
 
     # Method to calculate total tax
     def calculate_tax(self):
         total_tax = sum([tax.rate for tax in self.taxes.all()])
-        return (self.total_price * total_tax) / 100
+        return (self.subtotal * total_tax) / 100
 
 
     def __str__(self):

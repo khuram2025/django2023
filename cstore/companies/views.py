@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.http import JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Category, Customer, Order, OrderItem, Product, StoreProduct
+from product.models import Category, Customer, Order, OrderItem, Product, StoreProduct, TaxConfig
 from django.views.decorators.csrf import csrf_exempt
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -414,18 +414,28 @@ def pos_api(request, store_id):
             # Additional product fields as needed
         })
 
-    customers = Customer.objects.filter(store=store)
-    customers_data = [{'id': cust.id, 'name': cust.name, 'email': cust.email, 'mobile': cust.mobile} for cust in customers]
+        # Fetch tax configurations for the store
+        tax_configs = TaxConfig.objects.filter(store=store, is_active=True)
+        tax_data = [{
+                'id': tax.id,
+                'name': tax.name,
+                'rate': tax.rate,
+                'is_active': tax.is_active
+        } for tax in tax_configs]
 
-    context = {
-        'store_id': store.id,
-        'store_name': store.name,
-        'products': products_data,
-        'categories': categories_data,  # Include categories in the context
-        'customers': customers_data,
-    }
+        customers = Customer.objects.filter(store=store)
+        customers_data = [{'id': cust.id, 'name': cust.name, 'email': cust.email, 'mobile': cust.mobile} for cust in customers]
 
-    print("POS API response data:", context)
+        context = {
+            'store_id': store.id,
+            'store_name': store.name,
+            'products': products_data,
+            'categories': categories_data,  # Include categories in the context
+            'customers': customers_data,
+            'taxes': tax_data,
+        }
+
+        print("POS API response data:", context)
     return JsonResponse(context)
 
 @csrf_exempt
@@ -459,37 +469,41 @@ def order_summary(request, store_id):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
-
 def process_order(store_id, order_data, customer):
-    # Retrieve the store based on the store_id
     store = get_object_or_404(CompanyProfile, pk=store_id)
 
-    # Validate stock and process each item
-    for item_data in order_data['items']:
-        store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
-        quantity = item_data['quantity']
-        if store_product.current_stock < quantity:
-            raise ValueError(f"Not enough stock for product {store_product.product.title}")
-
-    # Create the order with the total price received from Flutter
+    subtotal = Decimal(order_data['subtotal'])
+    discount_value = Decimal(order_data['discount_value'])
+    discount_type = 'percentage' if order_data['is_discount_percentage'] else 'amount'
     total_price = Decimal(order_data['total_price'])
+    tax_ids = order_data.get('tax_ids', [])  # Overall taxes for the order
+
     order = Order.objects.create(
         store=store,
         customer=customer,
+        subtotal=subtotal,
+        discount_type=discount_type,
+        discount_value=discount_value,
         total_price=total_price
     )
 
-    # Update stock and create order items, applying item-level taxes
+    # Add overall taxes to the order
+    for tax_id in tax_ids:
+        tax = get_object_or_404(TaxConfig, pk=tax_id)
+        order.taxes.add(tax)
+
+    # Process each order item
     for item_data in order_data['items']:
         store_product = get_object_or_404(StoreProduct, pk=item_data['product_id'])
         quantity = item_data['quantity']
-        tax_ids = item_data.get('tax_ids', [])
+        item_tax_ids = item_data.get('item_tax_ids', [])  # Item-level taxes
 
-        # Update stock
+        if store_product.current_stock < quantity:
+            raise ValueError(f"Not enough stock for product {store_product.product.title}")
+
         store_product.current_stock -= quantity
         store_product.save()
 
-        # Create OrderItem with taxes
         order_item = OrderItem.objects.create(
             order=order,
             product=store_product,
@@ -497,16 +511,13 @@ def process_order(store_id, order_data, customer):
             price=store_product.sale_price
         )
 
-        # Apply taxes to the item
-        for tax_id in tax_ids:
+        # Add item-level taxes
+        for tax_id in item_tax_ids:
             tax = get_object_or_404(TaxConfig, pk=tax_id)
             order_item.taxes.add(tax)
 
-    # Apply overall taxes to the order
-    overall_tax_ids = order_data.get('overall_tax_ids', [])
-    for tax_id in overall_tax_ids:
-        tax = get_object_or_404(TaxConfig, pk=tax_id)
-        order.taxes.add(tax)
+    for tax in order.taxes.all():
+        print(f"Tax: {tax.name}, Rate: {tax.rate}")
 
     return order
 
@@ -625,6 +636,36 @@ def customer_detail_api(request, company_id, customer_id):
     }
 
     return JsonResponse(customer_data)
+
+
+def list_taxes_api(request, company_id):
+    # Fetch the company profile by ID
+    company_profile = get_object_or_404(CompanyProfile, pk=company_id)
+
+    # Fetch tax configurations belonging to the company
+    taxes = TaxConfig.objects.filter(store=company_profile)
+
+    # Serialize tax configuration data
+    taxes_data = []
+    for tax in taxes:
+        taxes_data.append({
+            'id': tax.id,
+            'name': tax.name,
+            'rate': tax.rate,
+            'is_active': tax.is_active
+        })
+
+    # Context to be returned
+    context = {
+        'company_id': company_profile.id,
+        'company_name': company_profile.name,  # Assuming CompanyProfile has a name field
+        'taxes': taxes_data,
+    }
+
+    print("Sending API response data:", context)
+
+    return JsonResponse(context)
+
 
 def fetch_customer_orders(request, customerId):
     orders = Order.objects.filter(customer_id=customerId)
