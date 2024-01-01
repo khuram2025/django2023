@@ -472,20 +472,34 @@ def order_summary(request, store_id):
 def process_order(store_id, order_data, customer):
     store = get_object_or_404(CompanyProfile, pk=store_id)
 
+    # Extracting payment details
+    payment_type = order_data.get('payment_type', 'cash').lower()
+
+    paid_amount = Decimal(order_data.get('paid_amount', 0))
+    credit_amount = Decimal(order_data.get('credit_amount', 0))
+
     subtotal = Decimal(order_data['subtotal'])
     discount_value = Decimal(order_data['discount_value'])
     discount_type = 'percentage' if order_data['is_discount_percentage'] else 'amount'
     total_price = Decimal(order_data['total_price'])
-    tax_ids = order_data.get('tax_ids', [])  # Overall taxes for the order
+    tax_ids = order_data.get('tax_ids', [])
 
+    print("Payment type before creating order:", payment_type)
+
+
+    # Create order with payment details
     order = Order.objects.create(
         store=store,
         customer=customer,
         subtotal=subtotal,
         discount_type=discount_type,
         discount_value=discount_value,
-        total_price=total_price
+        total_price=total_price,
+        payment_type=payment_type,
+        paid_amount=paid_amount,
+        credit_amount=credit_amount
     )
+    print("Created order details:", order.payment_type, order.paid_amount, order.credit_amount)
 
     # Add overall taxes to the order
     for tax_id in tax_ids:
@@ -516,6 +530,7 @@ def process_order(store_id, order_data, customer):
             tax = get_object_or_404(TaxConfig, pk=tax_id)
             order_item.taxes.add(tax)
 
+    # Print the tax information for debugging
     for tax in order.taxes.all():
         print(f"Tax: {tax.name}, Rate: {tax.rate}")
 
@@ -668,20 +683,21 @@ def list_taxes_api(request, company_id):
 
 
 def fetch_customer_orders(request, customerId):
-    orders = Order.objects.filter(customer_id=customerId)
+    orders = Order.objects.filter(customer_id=customerId).select_related('customer')
 
     orders_data = [{
         'id': order.id,
-        'imageUrl': order.image_url if hasattr(order, 'image_url') else None,  # Correct field name
-        'customerName': order.customer_name if hasattr(order, 'customer_name') else None,  # Correct field name
-        'mobileNumber': order.mobile_number if hasattr(order, 'mobile_number') else None,  # Correct field name
-        'date': order.order_date.strftime('%Y-%m-%d') if hasattr(order, 'order_date') else None,  # Format date
-        'transactionType': order.transaction_type if hasattr(order, 'transaction_type') else None,  # Correct field name
-        'totalAmount': order.total_price if hasattr(order, 'total_price') else None,  # Correct field name
+        'imageUrl': order.image_url if hasattr(order, 'image_url') else None,
+        'customerName': order.customer.name if order.customer else None,
+        'mobileNumber': order.customer.mobile if order.customer else None,
+        'date': order.created_at.strftime('%Y-%m-%d') if order.created_at else None,
+        'transactionType': order.payment_type if hasattr(order, 'payment_type') else None,
+        'totalAmount': order.total_price if order.total_price else None,
     } for order in orders]
 
     print("Sending Customer Orders:", orders_data)
     return JsonResponse({'orders': orders_data})
+
 
 
 @login_required

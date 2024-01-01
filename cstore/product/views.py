@@ -22,6 +22,9 @@ from datetime import timedelta
 from django.utils import timezone
 from django.http import HttpResponse
 from decimal import Decimal
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.http import JsonResponse
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -501,12 +504,21 @@ def list_store_products(request, store_id):
     return render(request, 'companies/items_list.html', context)
 
 
-@api_view(['POST'])
+@csrf_exempt
 def create_customer(request):
     if request.method == 'POST':
-        print("Received Customer Create API:", request.data)
-        serializer = CustomerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            data = json.loads(request.body.decode('utf-8'))  # Decode and load JSON data
+            print("Received Customer Create API:", data)
+
+            store_id = data.get('store')
+            store = get_object_or_404(CompanyProfile, pk=store_id)
+            data['store'] = store  # You might need to adjust this based on your model and serializer
+
+            serializer = CustomerSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=201)
+            return JsonResponse(serializer.errors, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)

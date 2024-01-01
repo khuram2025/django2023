@@ -83,6 +83,7 @@ class Customer(models.Model):
     email = models.EmailField(blank=True, null=True, verbose_name="Email Address")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    opening_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Opening Balance")
 
     class Meta:
         unique_together = ['store', 'mobile', 'email']
@@ -336,6 +337,13 @@ class StoreProductStockEntry(models.Model):
         return f"{self.store_product} - Added {self.quantity_added} on {self.date_added} at {self.purchase_price}"
 
 class Order(models.Model):
+    PAYMENT_CHOICES = [
+        ('cash', 'Cash'),
+        ('bank_transfer', 'Bank Transfer'),
+        ('credit', 'Credit'),
+        ('partial', 'Partial')
+    ]
+
     store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='store_orders',default=1)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True, related_name='customer_orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Total Price"))
@@ -348,6 +356,15 @@ class Order(models.Model):
     custom_charges = models.ManyToManyField(CustomCharge, blank=True)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Subtotal"))
 
+    payment_type = models.CharField(max_length=15, choices=PAYMENT_CHOICES, default='cash', verbose_name=_("Payment Type"))
+    paid_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, verbose_name=_("Paid Amount"))
+    credit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, verbose_name=_("Credit Amount"))
+
+    @property
+    def remaining_amount(self):
+        """Calculate the remaining amount that is due."""
+        return max(self.total_price - self.paid_amount, 0)
+
     # Method to calculate total tax
     def calculate_tax(self):
         total_tax = sum([tax.rate for tax in self.taxes.all()])
@@ -356,7 +373,8 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} from {self.store.name}"
-    
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='order_items')
