@@ -1,3 +1,4 @@
+{% load static %}
 <section class="home-latest" class="default-font font-size-14">
   <div class="container" class="default-font font-size-14">
     <div class="block" class="default-font font-size-14">
@@ -10,7 +11,11 @@
           <div class="simple-wrap" title="" class="default-font font-size-14">
             <div class="img-wrap" class="default-font font-size-14">
               <a class="img" href="{% url 'product:product_detail' pk=product.pk %}" class="default-font font-size-14">
-                <img class="lazy" src="{{ product.images.all.0.image.url }}" data-src="{{ product.images.all.0.image.url }}" alt="BMW Q7 2019" class="default-font font-size-14" />
+                {% if product.images.all %}
+                <img class="lazy" src="{{ product.images.all.0.image.url }}" data-src="{{ product.images.all.0.image.url }}" alt="{{ product.title }}" class="default-font font-size-14" />
+                {% else %}
+                <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Default Image" class="default-font font-size-14" />
+                {% endif %}
               </a>
 
               <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}" class="default-font font-size-17">

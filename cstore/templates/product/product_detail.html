@@ -1,4 +1,5 @@
 {% extends 'home/base.html' %}{% load youtube_filters %} {% block content %}
+ {% load static %}
 
 <body id="item" class="">
   {% include 'home/header.html' %}
@@ -55,17 +56,21 @@
 
             <div class="swiper-container">
               <div class="swiper-wrapper">
-                {% for image in product.images.all %}
-                <li class="swiper-slide ratio" style="padding-top:75.02%;">
-                  <a href="{{ image.image.url }}">
-                    <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-                  </a>
-                </li>
-                {% empty %}
-                <li>No images available.</li>
-                {% endfor %}
+  {% for image in product.images.all %}
+  <li class="swiper-slide ratio" style="padding-top:75.02%;">
+    <a href="{{ image.image.url }}">
+      <img class="lazy" src="{image.image.url}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+    </a>
+  </li>
+  {% empty %}
+  <li class="swiper-slide ratio" style="padding-top:75.02%;">
+    <a href="{% static 'icons/default_cover.png' %}">
+      <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
+    </a>
+  </li>
+  {% endfor %}
+</div>
 
-              </div>
 
               <div class="swiper-pg"></div>
 
@@ -76,13 +81,16 @@
 
             <div class="swiper-thumbs">
               <ul>
-                {% for image in product.images.all %}
-                <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
-                  <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-                </li>
-                {% empty %}
-                <li>No thumbnails available.</li>
-                {% endfor %}
+               {% for image in product.images.all %}
+    <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
+        <img class="lazy" src="{{ image.image.url }}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+    </li>
+{% empty %}
+    <li>
+        <img src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
+    </li>
+{% endfor %}
+
               </ul>
             </div>
           </div>
@@ -219,11 +227,17 @@
 
           <div class="box" id="seller">
             <div class="line1">
-              <div class="img">
-                <img src="../../oc-content/uploads/user-images/3_51u7v_20220323.png" alt="Sam Haghard" />
+             <div class="img">
+    {% if product.company.logo %}
+        <img src="{{ product.company.logo.url }}" alt="Channab Seller" class="company-logo" />
+    {% else %}
+        <div class="company-logo" style="background-image: url('{% static 'icons/default_cover.png' %}'); background-size: cover; background-position: center;"></div>
+    {% endif %}
 
-                <div class="online off" title="User is offline"></div>
-              </div>
+    <div class="online off" title="User is offline"></div>
+</div>
+
+
 
               <div class="data">
     {% if product.company %}
@@ -263,9 +277,9 @@
 
 
             <div class="line3">
-              <div class="address"><i class="fas fa-map-marked-alt"></i> Baboszewo, Mazovia, Poland</div>
+              <div class="address"><i class="fas fa-map-marked-alt"></i>{{ product.company.address.line1 }}, {{ product.company.address.city }}</div>
 
-              <a class="phone-mobile phone masked" title="Click to see phone number" data-prefix="tel" href="#" data-part1="{{ product.seller_information.phone_number }}" data-part2="">
+              <a class="phone-mobile phone masked" title="Click to see phone number" data-prefix="tel" href="#" data-part1="{{ product.company.phone_number }}" data-part2="">
                 <i class="fas fa-phone-alt"></i>
                 <span>Show Number</span>
               </a>

@@ -1,3 +1,4 @@
+{% load static %}
 <section class="home-business" class="default-font font-size-14">
   <div class="container" class="default-font font-size-14">
     <div class="block" class="default-font font-size-14">
@@ -21,7 +22,7 @@
                 {% if company.cover_pic %}
                 <div class="bpr-wrap-img" style="background-image: url('{{ company.cover_pic.url }}')"></div>
                 {% else %}
-                <div class="bpr-wrap-img" style=""></div>
+                <div class="bpr-wrap-img" style="background-image: url('{% static 'icons/default_cover.png' %}')"></div>
                 {% endif %}
                 <div class="bpr-elip"></div>
               </div>
@@ -32,7 +33,7 @@
                 {% if company.logo %}
                 <div style="background-image: url('{{ company.logo.url }}')"></div>
                 {% else %}
-                <div style=""></div>
+                <div style="background-image: url('{% static 'icons/default_cover.png' %}')"></div>
                 {% endif %}
               </div>
             </div>

@@ -118,7 +118,7 @@
                 <div class="bpr-category">
                   {% for category in company.working_categories.all %}
                   {% if forloop.counter <= 3 %}
-                  <a href="#">{{ category.title }}</a>
+                  <a href="#" style="margin-right: 5px;">{{ category.title }}</a>
                   {% endif %}
                   {% empty %}
                   <p></p>

@@ -1,62 +1,340 @@
-{% extends 'home/base.html' %} 
-{% load static %} 
-
-{% block content %}
+{% extends 'home/base.html' %} {% load static %} {% block content %}
 <link href="{% static 'create_company.css' %}" rel="stylesheet" type="text/css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<!-- Include Bootstrap Multiselect CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
 <link href="{% static 'choices.min.css' %}" rel="stylesheet" type="text/css" />
 
-<!-- Additional styles here -->
+<style>
+  #id_about::placeholder {
+    color: #a9a9a9; /* Light grey color */
+    font-style: italic;
+  }
+
+  element.style {
+    width: 100;
+  }
+  .phone-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .choices__inner {
+    width: 100%;
+  }
+
+  .country-flag img {
+    width: 24px;
+    height: auto;
+    margin-right: 10px;
+  }
+
+  .country-code {
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  input[type="tel"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+  }
+  .social-input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .social-icon img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+</style>
 
 <body id="user-dashboard" class="item-publish">
   {% include 'home/header.html' %}
 
+  <!-- Main Content -->
   <div class="content loc-user sec-dashboard">
+    <!-- Breadcrumbs and other existing HTML content -->
+
     <div class="container primary">
       {% include 'account/user_menu.html' %}
 
       <div id="user-main">
         <div class="user-custom-box">
           <div id="bpr-prof" class="bpr-body bpr-prof">
-            <h2>{% if is_editing %}Edit{% else %}Create{% endif %} Company Profile</h2>
+            <h2>Edit Company Profile</h2>
 
-            <form name="company" method="post" enctype="multipart/form-data" class="form-container" 
-                  action="{% if is_editing %}{% url 'companies:edit_company' pk=company.pk %}{% else %}{% url 'create_company' %}{% endif %}">
+            <form name="company" action="{% url 'companies:edit_company'  pk=company.pk %}" method="post" enctype="multipart/form-data" class="form-container">
               {% csrf_token %}
-              
-              <!-- Hidden fields for file uploads -->
               <div style="display: none">{{ form.logo }} {{ form.cover_pic }}</div>
 
               <!-- Custom Interface for Image Upload -->
-              <!-- Adjust as needed based on your existing setup -->
+              <div class="profile-picture-container">
+                {% if company.cover_pic %}
+                <img id="profile-picture-preview" src="{{ company.cover_pic.url }}" alt="Profile Picture" />
+                {% else %}
+                <img id="profile-picture-preview" src="{% static 'icons/default_cover.png' %}" alt="Profile Picture" />
+                {% endif %}
+                <input type="file" id="profile-picture-input" name="cover_pic" accept="image/*" style="display: none" />
 
-              <!-- Form fields here -->
+                <div class="user-image-container">
+                  {% if company.logo %}
+                  <img id="user-image" src="{{ company.logo.url }}" alt="User Image" />
+                  {% else %}
+                  <img id="user-image" src="{% static 'icons/default_logo.png' %}" alt="User Image" />
+                  {% endif %}
+                  <button type="button" id="user-image-upload-button"><i class="fas fa-camera"></i></button>
+                  <input type="file" id="user-image-input" name="logo" accept="image/*" style="display: none" />
+                </div>
+
+                <button type="button" id="remove-profile-button" onclick="document.getElementById('profile-picture-input').click();">Edit</button>
+              </div>
+
               <div class="form-row">
+                <!-- Company Name -->
                 <div class="form-section form-half">
                   <label for="id_name">{{ form.name.label }}</label>
                   {{ form.name }}
                 </div>
+                <!-- City -->
                 <div class="form-section form-half">
                   <label for="id_city">{{ form.city.label }}</label>
                   {{ form.city }}
                 </div>
               </div>
 
-              <!-- Other form sections -->
+              <!-- About -->
+              <div class="form-section form-full">
+                <label for="id_about">{{ form.about.label }}</label>
+                <textarea name="about" id="id_about" class="textarea-fullwidth">{{ form.about.value|default_if_none:company.about }}</textarea>
+              </div>
+
+              <!-- Phone Number -->
+
+              <!-- Phone Number -->
+              <div class="form-section form-full">
+                <label for="id_phone_number">{{ form.phone_number.label }}</label>
+                <input type="text" name="phone_number" id="id_phone_number" class="form-control" placeholder="+923106301527" value="{{ form.phone_number.value|default_if_none:company.phone_number }}" />
+              </div>
+
+              <!-- Social Media Links -->
+              <div class="form-section form-full">
+                <label for="id_twitter_link">{{ form.twitter_link.label }}</label>
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="{% static 'icons/twitter.svg' %}" alt="Twitter Icon" />
+                  </span>
+                  <input type="text" name="twitter_link" id="id_twitter_link" value="{{ form.twitter_link.value|default_if_none:company.twitter_link }}" />
+                </div>
+              </div>
+
+              <div class="form-section form-full">
+                <label for="id_facebook_link">{{ form.facebook_link.label }}</label>
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="{% static 'icons/facebook.svg' %}" alt="Facebook Icon" />
+                  </span>
+                  <input type="text" name="facebook_link" id="id_facebook_link" value="{{ form.facebook_link.value|default_if_none:company.facebook_link }}" />
+                </div>
+              </div>
+
+              <div class="form-section form-full">
+                <label for="id_youtube_link">{{ form.youtube_link.label }}</label>
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="{% static 'icons/youtube.svg' %}" alt="YouTube Icon" />
+                  </span>
+                  <input type="text" name="youtube_link" id="id_youtube_link" value="{{ form.youtube_link.value|default_if_none:company.youtube_link }}" />
+                </div>
+              </div>
+
+              <div class="form-section form-full">
+                <label for="id_instagram_link">{{ form.instagram_link.label }}</label>
+                <div class="social-input-container">
+                  <span class="social-icon">
+                    <img src="{% static 'icons/instagram.svg' %}" alt="Instagram Icon" />
+                  </span>
+                  <input type="text" name="instagram_link" id="id_instagram_link" value="{{ form.instagram_link.value|default_if_none:company.instagram_link }}" />
+                </div>
+              </div>
+
+              <!-- Address Line 1 -->
+              <div class="form-section form-full">
+                <label for="id_line1">{{ form.line1.label }}</label>
+                <input type="text" name="line1" id="id_line1" value="{{ form.line1.value|default_if_none:company.address.line1 }}" />
+              </div>
+
+              <div class="form-section form-full">
+                <label for="choices-multiple-remove-button">{{ form.working_categories.label }}</label>
+                <select id="choices-multiple-remove-button" name="working_categories" placeholder="Select up to 5 tags" multiple>
+                  {% for category in form.working_categories.field.queryset %}
+                  <option value="{{ category.pk }}" {% if category in company.working_categories.all %}selected{% endif %}>{{ category }}</option>
+                  {% endfor %}
+                </select>
+              </div>
 
               <!-- Submit Button -->
-              <button type="submit" class="btn">{% if is_editing %}Update{% else %}Create{% endif %} Profile</button>
+              <button type="submit" class="btn">Create Profile</button>
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1569006273/BBBootstrap/choices.min.js?version=7.0.0"></script>
+  <script>
+    function updateImagePreview(input, imageId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById(imageId).src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 
-  <!-- JavaScript for form functionality -->
-  <!-- Your existing JavaScript setup -->
+    document.addEventListener("DOMContentLoaded", function () {
+      // Attach change event to file input for Cover Picture
+      var coverInput = document.getElementById("profile-picture-input");
+      if (coverInput) {
+        coverInput.addEventListener("change", function () {
+          updateImagePreview(this, "profile-picture-preview");
+        });
+      }
 
-{% endblock %}
+      // Attach click event to button for triggering Cover Picture input
+      var coverButton = document.getElementById("upload-cover-button");
+      if (coverButton) {
+        coverButton.addEventListener("click", function () {
+          coverInput.click();
+        });
+      }
+
+      // Attach change event to file input for User Image
+      var logoInput = document.getElementById("user-image-input");
+      if (logoInput) {
+        logoInput.addEventListener("change", function () {
+          updateImagePreview(this, "user-image");
+        });
+      }
+
+      // Attach click event to button for triggering User Image input
+      var logoButton = document.getElementById("user-image-upload-button");
+      if (logoButton) {
+        logoButton.addEventListener("click", function () {
+          logoInput.click();
+        });
+      }
+
+      // [Rest of the script related to Choices.js and form submission]
+    });
+  </script>
+
+  <script>
+    // Global function for updating image previews
+    function updateImagePreview(input, imageId) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById(imageId).src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Assuming 'id_cover_pic' and 'id_logo' are the IDs for the Django form fields
+      document.getElementById("upload-cover-button").addEventListener("click", function () {
+        document.getElementById("profile-picture-input").click();
+      });
+
+      document.getElementById("user-image-upload-button").addEventListener("click", function () {
+        document.getElementById("user-image-input").click();
+      });
+
+      document.getElementById("profile-picture-input").addEventListener("change", function (event) {
+        updateImagePreview(this, "profile-picture-preview");
+      });
+
+      document.getElementById("user-image-input").addEventListener("change", function (event) {
+        updateImagePreview(this, "user-image");
+      });
+
+      // [Rest of the script related to Choices.js and form submission]
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize Choices.js for the "Working categories" select field
+      var multipleCancelButton = new Choices("#choices-multiple-remove-button", {
+        removeItemButton: true,
+        maxItemCount: 5,
+        searchResultLimit: 5,
+        renderChoiceLimit: 5,
+      });
+
+      // Single event listener for form submission
+      var form = document.querySelector("form[name='company']");
+      form.addEventListener("submit", function (event) {
+        // Get selected working categories using form element API
+        var selectedCategories = [];
+        for (var option of form.elements["working_categories"].selectedOptions) {
+          selectedCategories.push(option.value);
+        }
+
+        // Log selected categories for debugging
+        console.log("Selected Working Categories:", selectedCategories);
+
+        // Submit the form
+        form.submit();
+      });
+
+      // Rest of your custom JavaScript for file input synchronization...
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Sync Custom File Input with Django Form Field for Cover Picture
+      document.getElementById("upload-cover-button").addEventListener("click", function () {
+        document.querySelector("#id_cover_pic").click(); // Assuming 'id_cover_pic' is the ID for the Django form field
+      });
+
+      document.querySelector("#id_cover_pic").addEventListener("change", function (event) {
+        document.getElementById("profile-picture-input").files = event.target.files;
+        updateImagePreview(event, "profile-picture-preview");
+      });
+
+      // Sync Custom File Input with Django Form Field for Logo
+      document.getElementById("user-image-upload-button").addEventListener("click", function () {
+        document.querySelector("#id_logo").click(); // Assuming 'id_logo' is the ID for the Django form field
+      });
+
+      document.querySelector("#id_logo").addEventListener("change", function (event) {
+        document.getElementById("id_logo").files = event.target.files;
+        updateImagePreview(event, "user-image");
+      });
+
+      function updateImagePreview(event, imageElementId) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById(imageElementId).src = e.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+
+      function resetImagePreview(imageElementId, defaultImagePath, inputElementId) {
+        document.getElementById(imageElementId).src = defaultImagePath;
+        document.getElementById(inputElementId).value = "";
+      }
+    });
+  </script>
+
+  {% endblock %}
 </body>

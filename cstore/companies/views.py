@@ -87,7 +87,8 @@ def create_or_edit_company(request, pk=None):
 
     context = {
         'form': form,
-        'is_editing': pk is not None  # Pass this to the template to change the UI based on create/edit
+        'is_editing': pk is not None,  # Pass this to the template to change the UI based on create/edit
+        'company': company if pk else None ,
     }
     return render(request, 'companies/create_or_edit_company.html', context)
 
