@@ -312,14 +312,15 @@
                 {% else %}
                  <div style="text-align: center; padding: 20px;">
   {% if request.user == company.owner %}
-    <h2>Expand Your Reach with Channab</h2>
-    <p>Looks like you haven't added any products yet. Listing your products on Channab, a leading platform for e-commerce, can help maximize your business potential.</p>
+    <h2 style="margin-bottom: 20px;">Expand Your Reach with Channab</h2>
+    <p style="margin-bottom: 20px;">Looks like you haven't added any products yet. Listing your products on Channab, a leading platform for e-commerce, can help maximize your business potential.</p>
     <a href="{% url 'product:add_product' %}" class="btn" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Add Products</a>
   {% else %}
-    <h2>Stay Tuned!</h2>
-    <p>Products from this company will be available soon. Stay connected with Channab to explore exciting offerings.</p>
+    <h2 style="margin-bottom: 20px;">Stay Tuned!</h2>
+    <p style="margin-bottom: 20px;">Products from this company will be available soon. Stay connected with Channab to explore exciting offerings.</p>
   {% endif %}
 </div>
+
 
         {% endif %}
               </div>
