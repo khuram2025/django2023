@@ -111,8 +111,20 @@
                 {% endif %}
 
                 <!-- New Blue Box -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1 style="margin: 0;">{{ company.name|title }}</h1>
+  {% if request.user == company.owner %}
+    <a href="{% url 'companies:edit_company' pk=company.pk %}" style="text-decoration: none;">
+      <button style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Edit Company</button>
+    </a>
+  {% endif %}
+</div>
 
-                <h1>{{ company.name|title }}</h1>
+
+
+                
+
+
 
 
                 <div class="bpr-category">
@@ -231,6 +243,7 @@
           <div class="bpr-items">
             <div id="gallery-view" class="white search-items-wrap">
               <div id="listing-card-list" class="block listing-card-list listing-grid">
+                {% if company_products %}
                 <div class="wrap products grid">
                   {% for product in company_products %}
                   <div class="simple-prod o1">
@@ -296,6 +309,19 @@
                   </div>
                   {%endfor%}
                 </div>
+                {% else %}
+                 <div style="text-align: center; padding: 20px;">
+  {% if request.user == company.owner %}
+    <h2>Expand Your Reach with Channab</h2>
+    <p>Looks like you haven't added any products yet. Listing your products on Channab, a leading platform for e-commerce, can help maximize your business potential.</p>
+    <a href="{% url 'product:add_product' %}" class="btn" style="background-color: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none;">Add Products</a>
+  {% else %}
+    <h2>Stay Tuned!</h2>
+    <p>Products from this company will be available soon. Stay connected with Channab to explore exciting offerings.</p>
+  {% endif %}
+</div>
+
+        {% endif %}
               </div>
             </div>
           </div>

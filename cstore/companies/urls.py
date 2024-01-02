@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('company/<int:pk>/product/<int:product_pk>/', views.store_product_detail, name='store_product_detail'),
     path('company/', views.company_edit, name='company_detail'),
-    path('companies/<int:pk>/', views.company_profile_detail, name='company-public'),
+    path('<int:pk>/', views.company_profile_detail, name='company-public'),
     path('companies/', views.list_companies, name='list-companies'),
      
 
