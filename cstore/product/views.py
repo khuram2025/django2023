@@ -264,6 +264,7 @@ def product_search(request):
     price_min = request.GET.get('sPriceMin')
     price_max = request.GET.get('sPriceMax')
     period = request.GET.get('sPeriod')
+    selected_location = request.GET.get('sLocation', '')
 
     custom_fields = []
     if category_id:
@@ -319,6 +320,8 @@ def product_search(request):
         'products': products,
         'query': query,
         'custom_fields': custom_fields,  # Add custom fields to context
+        'selected_location': selected_location,
+        
         # ... other context variables ...
     }
 

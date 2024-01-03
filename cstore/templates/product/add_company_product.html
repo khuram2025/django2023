@@ -25,13 +25,10 @@
         <!-- Company Name Field -->
         <div class="form-section">
           <label for="id_company">{{ form.company.label }}</label>
-          {{ form.company }}
-          {% if form.company.errors %}
-              {% for error in form.company.errors %}
-                  <div class="alert alert-danger">{{ error }}</div>
-              {% endfor %}
-          {% endif %}
-      </div>
+          {{ form.company }} {% if form.company.errors %} {% for error in form.company.errors %}
+          <div class="alert alert-danger">{{ error }}</div>
+          {% endfor %} {% endif %}
+        </div>
 
         <!-- City Field -->
         <div class="form-section">
@@ -195,83 +192,68 @@
     });
   </script>
   <script>
-      // The rest of your code...
+          // The rest of your code...
+
+        $('#id_category').change(function () {
+          var categoryId = $(this).val();
+          loadCustomFields(categoryId);
+          // No need to call updateSubcategoryOptions() here if it's already called inside loadCustomFields()
+        });
+
+        function loadCustomFields(categoryId) {
+      if (!categoryId) {
+        $('#custom-fields-container').empty();
+        return;
+      }
+
+      $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
+        var container = $('#custom-fields-container');
+        container.empty(); // Clear existing fields
+
+        var fieldsHtml = '';
+        $.each(data.custom_fields, function (index, field) {
+          fieldsHtml += '<div class="form-group">';
+          fieldsHtml += '<label for="id_custom_field_' + field.id + '">' + field.name + '</label>';
+
+          switch(field.field_type) {
+            case 'text':
+            case 'number':
+            case 'email':
+            case 'url':
+            case 'date':
+              fieldsHtml += '<input type="' + field.field_type + '" class="form-control" name="custom_field_' + field.id + '" id="id_custom_field_' + field.id + '">';
+              break;
+            case 'textarea':
+              fieldsHtml += '<textarea class="form-control" name="custom_field_' + field.id + '" id="id_custom_field_' + field.id + '"></textarea>';
+              break;
+            case 'select':
+              fieldsHtml += '<select class="form-control" name="custom_field_' + field.id + '" id="id_custom_field_' + field.id + '">';
+              field.options.split(',').forEach(function(option) {
+                fieldsHtml += '<option value="' + option + '">' + option + '</option>';
+              });
+              fieldsHtml += '</select>';
+              break;
+            case 'radio':
+            case 'checkbox':
+              field.options.split(',').forEach(function(option) {
+                fieldsHtml += '<div><input type="' + field.field_type + '" name="custom_field_' + field.id + '" id="id_custom_field_' + field.id + '_' + option + '" value="' + option + '">';
+                fieldsHtml += '<label for="id_custom_field_' + field.id + '_' + option + '">' + option + '</label></div>';
+              });
+              break;
+            // Add cases for other types if necessary
+          }
+
+          fieldsHtml += '</div>';
+        });
+
+        container.html(fieldsHtml); // Insert all fields at once
+      });
+    }
 
     $('#id_category').change(function () {
       var categoryId = $(this).val();
       loadCustomFields(categoryId);
-      // No need to call updateSubcategoryOptions() here if it's already called inside loadCustomFields()
     });
-
-    function loadCustomFields(categoryId) {
-      if (!categoryId) {
-          $('#custom-fields-container').empty();
-          return;
-      }
-      $.getJSON('{% url 'product:ajax_load_custom_fields' %}', {category_id: categoryId}, function (data) {
-          $('#custom-fields-container').empty();
-          $.each(data.custom_fields, function (index, field) {
-              var input;
-              switch(field.field_type) {
-                  case 'text':
-                  case 'number':
-                  case 'email':
-                  case 'url':
-                  case 'date':
-                      input = $('<input>', {
-                          type: field.field_type,
-                          class: 'form-control',
-                          name: 'custom_field_' + field.id,
-                          id: 'id_custom_field_' + field.id
-                      });
-                      break;
-                  case 'textarea':
-                      input = $('<textarea>', {
-                          class: 'form-control',
-                          name: 'custom_field_' + field.id,
-                          id: 'id_custom_field_' + field.id
-                      });
-                      break;
-                  case 'select':
-                      input = $('<select>', {
-                          class: 'form-control',
-                          name: 'custom_field_' + field.id,
-                          id: 'id_custom_field_' + field.id
-                      });
-                      field.options.split(',').forEach(function(option) {
-                          input.append($('<option>', { value: option, text: option }));
-                      });
-                      break;
-                  case 'radio':
-                  case 'checkbox':
-                      input = $('<div>');
-                      field.options.split(',').forEach(function(option) {
-                          var singleOption = $('<input>', {
-                              type: field.field_type,
-                              name: 'custom_field_' + field.id,
-                              id: 'id_custom_field_' + field.id + '_' + option,
-                              value: option
-                          });
-                          var label = $('<label>', {
-                              text: option,
-                              'for': 'id_custom_field_' + field.id + '_' + option
-                          });
-                          input.append(singleOption).append(label);
-                      });
-                      break;
-                  // Add cases for other types if necessary
-              }
-
-              var label = $('<label>', {
-                  'for': 'id_custom_field_' + field.id,
-                  text: field.name
-              });
-
-              var div = $('<div>', {class: 'form-group'}).append(label).append(input);
-              $('#custom-fields-container').append(div);
-          });
-      });
-    }
   </script>
 </body>
 

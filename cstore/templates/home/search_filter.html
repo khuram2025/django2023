@@ -31,21 +31,10 @@
         <label for="sLocation" class="default-font font-size-14">Location</label>
 
         <div class="input-box picker location only-search" class="default-font font-size-14">
-          <input name="sLocation" type="text" class="location-pick" id="sLocation" placeholder="Region, city..." value="" autocomplete="off" class="default-font font-size-15" />
+          <input name="sLocation" type="text" id="sLocation" placeholder="Region, city..." value="{{ selected_location }}" autocomplete="off" />
+
           <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i>
           <div class="results" class="default-font font-size-14"></div>
-        </div>
-      </div>
-
-      <!-- CONDITION -->
-      <div class="row condition" class="default-font font-size-14">
-        <label for="" class="default-font font-size-14">Condition</label>
-        <div class="input-box" class="default-font font-size-14">
-          <select class="sCondition" id="sCondition" name="sCondition" class="default-font font-size-15">
-            <option value="" class="default-font font-size-15">All</option>
-            <option value="1" class="default-font font-size-15">New</option>
-            <option value="2" class="default-font font-size-15">Used</option>
-          </select>
         </div>
       </div>
 

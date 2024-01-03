@@ -18,7 +18,7 @@ urlpatterns = [
     path('stock_entry/delete/<int:entry_id>/', views.delete_stock_entry, name='delete_stock_entry'),
 
 
-    path('products/', views.product_list, name='product_list'),
+    path('', views.product_list, name='product_list'),
     path('products/<slug:category_slug>/', views.product_list, name='product_list_by_category'),
     path('<int:pk>/', views.product_detail, name='product_detail'),
     path('search/', views.product_search, name='product_search'),

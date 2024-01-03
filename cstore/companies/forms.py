@@ -3,6 +3,7 @@ from product.models import Category
 from locations.models import Address, City
 from .models import CompanyProfile, PhoneNumber
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import URLValidator
 
 class CompanyProfileForm(forms.ModelForm):
     line1 = forms.CharField(max_length=255, required=False)
@@ -19,6 +20,12 @@ class CompanyProfileForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,  # Or any other widget you prefer
         label=_("Working Categories")
     )
+
+    twitter_link = forms.URLField(required=False, validators=[URLValidator], max_length=255)
+    facebook_link = forms.URLField(required=False, validators=[URLValidator], max_length=255)
+    youtube_link = forms.URLField(required=False, validators=[URLValidator], max_length=255)
+    instagram_link = forms.URLField(required=False, validators=[URLValidator], max_length=255)
+
 
 
     class Meta:
