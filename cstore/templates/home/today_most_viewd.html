@@ -1,3 +1,4 @@
+{%load static%}
 <section class="home-premium" class="default-font font-size-14">
   <div class="container" class="default-font font-size-14">
     <div class="block" class="default-font font-size-14">
@@ -16,7 +17,7 @@
                   <img class="lazy" src="{{ product.images.all.first.image.url }}" alt="{{ product.title }}" class="default-font font-size-14" />
                   {% else %}
                   <!-- Fallback Image -->
-                  <img class="lazy" src="https://epsilon.mb-themes.com/oc-content/uploads/0/284_thumbnail.jpg" alt="Fallback Image" class="default-font font-size-14" />
+                  <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Fallback Image" class="default-font font-size-14" />
                   {% endif %}
                 </a>
 
@@ -26,10 +27,16 @@
 
                 <div class="image-counter" class="default-font font-size-13"><i class="fas fa-camera"></i> {{ product.images_count }}</div>
 
-                <a href="https://epsilon.mb-themes.com/user/profile/johndoe" class="user-image isGrid isDetail" class="default-font font-size-14">
+                {% if product.company and product.company.pk %}
+                <a href="{% url 'companies:company-public' pk=product.company.pk %}" class="user-image isGrid isDetail" class="default-font font-size-14">
                   <!-- User Image -->
-                  <img class="lazy loaded" src="https://epsilon.mb-themes.com/oc-content/uploads/user-images/2_Wp30T_20220323.png" alt="John Doe" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+                  {% if product.company.logo.url %}
+                  <img class="lazy loaded" src="{{ product.company.logo.url }}" alt="User Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+                  {% else %}
+                  <img class="lazy loaded" src="{% static 'icons/default_cover.png' %}" alt="Default Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+                  {% endif %}
                 </a>
+                {% endif %}
 
                 <div class="isGrid isDetail" class="default-font font-size-14">
                   <div class="favorite" class="default-font font-size-14">

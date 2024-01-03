@@ -98,7 +98,8 @@ def index(request):
         products = products_query.filter(created_at__gte=date_30_days_ago).order_by('-view_count')[:10]
     if len(products) < 10:
         products = products_query.order_by('-view_count')[:10]
-    companies = CompanyProfile.objects.all()[:10]
+    companies = CompanyProfile.objects.annotate(listings_count=Count('products')).filter(listings_count__gt=0).order_by('-listings_count')[:10]
+
 
     top_cities = Product.objects.values('city__name').annotate(product_count=Count('id')).order_by('-product_count')[:5]
 
