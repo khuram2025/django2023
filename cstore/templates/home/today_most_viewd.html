@@ -28,15 +28,16 @@
                 <div class="image-counter" class="default-font font-size-13"><i class="fas fa-camera"></i> {{ product.images_count }}</div>
 
                 {% if product.company and product.company.pk %}
-                <a href="{% url 'companies:company-public' pk=product.company.pk %}" class="user-image isGrid isDetail" class="default-font font-size-14">
-                  <!-- User Image -->
-                  {% if product.company.logo.url %}
-                  <img class="lazy loaded" src="{{ product.company.logo.url }}" alt="User Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
-                  {% else %}
-                  <img class="lazy loaded" src="{% static 'icons/default_cover.png' %}" alt="Default Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
-                  {% endif %}
-                </a>
-                {% endif %}
+<a href="{% url 'companies:company-public' pk=product.company.pk %}" class="user-image isGrid isDetail" class="default-font font-size-14">
+  <!-- User Image -->
+  {% if product.company.logo and product.company.logo.url %}
+  <img class="lazy loaded" src="{{ product.company.logo.url }}" alt="User Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+  {% else %}
+  <img class="lazy loaded" src="{% static 'icons/default_cover.png' %}" alt="Default Image" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+  {% endif %}
+</a>
+{% endif %}
+
 
                 <div class="isGrid isDetail" class="default-font font-size-14">
                   <div class="favorite" class="default-font font-size-14">
