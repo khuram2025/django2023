@@ -1,7 +1,9 @@
 {% extends 'home/base.html' %}{% load youtube_filters %} {% block content %}
- {% load static %}
+{% load static %}
 
 <body id="item" class="">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
   {% include 'home/header.html' %}
 
 
@@ -46,9 +48,9 @@
         <div id="item-main">
 
           <div id="item-image" class="">
-            <a href="../../search/category%2c19/country%2cUS/region%2c6862182/city%2c6862204.html" class="mlink back isMobile"><i class="fas fa-arrow-left"></i></a>
+            <a href="#" class="mlink back isMobile"><i class="fas fa-arrow-left"></i></a>
 
-            <a href="../../item/send-friend/657ca0.html?type=contact" data-type="contact" class="mlink contact isMobile open-form"><i class="fas fa-envelope-open"></i></a>
+            <a href="#" data-type="contact" class="mlink contact isMobile open-form"><i class="fas fa-envelope-open"></i></a>
 
             <a href="#" class="mlink share isMobile"><i class="fas fa-share-alt"></i></a>
 
@@ -56,20 +58,20 @@
 
             <div class="swiper-container">
               <div class="swiper-wrapper">
-  {% for image in product.images.all %}
-  <li class="swiper-slide ratio" style="padding-top:75.02%;">
-    <a href="{{ image.image.url }}">
-      <img class="lazy" src="{image.image.url}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-    </a>
-  </li>
-  {% empty %}
-  <li class="swiper-slide ratio" style="padding-top:75.02%;">
-    <a href="{% static 'icons/default_cover.png' %}">
-      <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
-    </a>
-  </li>
-  {% endfor %}
-</div>
+                {% for image in product.images.all %}
+                <li class="swiper-slide ratio" style="padding-top:75.02%;">
+                  <a href="{{ image.image.url }}">
+                    <img class="lazy" src="{image.image.url}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+                  </a>
+                </li>
+                {% empty %}
+                <li class="swiper-slide ratio" style="padding-top:75.02%;">
+                  <a href="{% static 'icons/default_cover.png' %}">
+                    <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
+                  </a>
+                </li>
+                {% endfor %}
+              </div>
 
 
               <div class="swiper-pg"></div>
@@ -81,15 +83,15 @@
 
             <div class="swiper-thumbs">
               <ul>
-               {% for image in product.images.all %}
-    <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
-        <img class="lazy" src="{{ image.image.url }}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-    </li>
-{% empty %}
-    <li>
-        <img src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
-    </li>
-{% endfor %}
+                {% for image in product.images.all %}
+                <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
+                  <img class="lazy" src="{{ image.image.url }}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
+                </li>
+                {% empty %}
+                <li>
+                  <img src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
+                </li>
+                {% endfor %}
 
               </ul>
             </div>
@@ -112,9 +114,9 @@
               <span>ID: {{ product.id }}</span>
 
               {% for field_name, field_value in custom_fields.items %}
-        <span>{{ field_name }}: {{ field_value }}</span>
-    {% endfor %}
-              
+              <span>{{ field_name }}: {{ field_value }}</span>
+              {% endfor %}
+
             </div>
 
             <div class="row price under-header p-1100000000x">{{ product.price }}</div>
@@ -149,29 +151,29 @@
             <h2>Description</h2>
 
             <div class="desc-parts">
-  <!-- ... other parts ... -->
-  <div class="desc-text">
-    {% if product.description|length > 50 %}
-      <div class="text visible">
-        {{ product.description|slice:":50" }}...
-        <a href="#" class="read-more-desc" onclick="toggleDescription(); return false;">Read more <i class="fas fa-angle-down"></i></a>
-      </div>
-      <div class="text hidden" style="display: none;">
-        {{ product.description }}
-      </div>
-    {% else %}
-      <div class="text">
-        {{ product.description }}
-      </div>
-    {% endif %}
-  </div>
-  <!-- ... -->
-</div>
+              <!-- ... other parts ... -->
+              <div class="desc-text">
+                {% if product.description|length > 50 %}
+                <div class="text visible">
+                  {{ product.description|slice:":50" }}...
+                  <a href="#" class="read-more-desc" onclick="toggleDescription(); return false;">Read more <i class="fas fa-angle-down"></i></a>
+                </div>
+                <div class="text hidden" style="display: none;">
+                  {{ product.description }}
+                </div>
+                {% else %}
+                <div class="text">
+                  {{ product.description }}
+                </div>
+                {% endif %}
+              </div>
+              <!-- ... -->
+            </div>
 
 
 
 
-           
+
           </div>
 
           <!-- YOUTUBE VIDEO PLAYER -->
@@ -182,7 +184,7 @@
                 <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
                   {% if product.youtube_video_url %}
                   <iframe src="{{ product.youtube_video_url|youtube_embed_url }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>
-                {% endif %}
+                  {% endif %}
                 </div>
               </div>
 
@@ -227,33 +229,33 @@
 
           <div class="box" id="seller">
             <div class="line1">
-             <div class="img">
-    {% if product.company.logo %}
-        <img src="{{ product.company.logo.url }}" alt="Channab Seller" class="company-logo" />
-    {% else %}
-        <div class="company-logo" style="background-image: url('{% static 'icons/default_cover.png' %}'); background-size: cover; background-position: center;"></div>
-    {% endif %}
+              <div class="img">
+                {% if product.company.logo %}
+                <img src="{{ product.company.logo.url }}" alt="Channab Seller" class="company-logo" />
+                {% else %}
+                <div class="company-logo" style="background-image: url('{% static 'icons/default_cover.png' %}'); background-size: cover; background-position: center;"></div>
+                {% endif %}
 
-    <div class="online off" title="User is offline"></div>
-</div>
+                <div class="online off" title="User is offline"></div>
+              </div>
 
 
 
               <div class="data">
-    {% if product.company %}
-        <span class="name">{{ product.company.name }}</span>
-        <div class="phone">{{ product.company.phone_number }}</div>
-        <!-- Add more fields as needed -->
-    {% elif product.seller_information.user %}
-        <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
-            {{ product.seller_information.contact_name }}
-        </a>
-        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
-    {% else %}
-        <span class="name">{{ product.seller_information.contact_name }}</span>
-        <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
-    {% endif %}
-</div>
+                {% if product.company %}
+                <span class="name">{{ product.company.name }}</span>
+                <div class="phone">{{ product.company.phone_number }}</div>
+                <!-- Add more fields as needed -->
+                {% elif product.seller_information.user %}
+                <a class="name" href="{% url 'product:user_product_list' user_pk=product.seller_information.user.pk %}">
+                  {{ product.seller_information.contact_name }}
+                </a>
+                <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+                {% else %}
+                <span class="name">{{ product.seller_information.contact_name }}</span>
+                <div class="items">{{ product.seller_information.number_of_listings }} active listings</div>
+                {% endif %}
+              </div>
 
             </div>
 
@@ -532,6 +534,50 @@
 
       });
     </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var mainSwiper = new Swiper('.swiper-container', {
+          loop: true,
+          autoplay: {
+            delay: 3000,
+          },
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+
+        var thumbsSwiper = new Swiper('.swiper-thumbs', {
+          spaceBetween: 10,
+          slidesPerView: 'auto',
+          freeMode: true,
+          watchSlidesVisibility: true,
+          watchSlidesProgress: true,
+          slideToClickedSlide: true, // Ensure thumbnail clicks change main image
+        });
+
+        // Initialize the Main Swiper and link it to the Thumbnail Swiper
+        var mainSwiper = new Swiper('.swiper-container', {
+          loop: true,
+          autoplay: {
+            delay: 3000,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          thumbs: {
+            swiper: thumbsSwiper
+          }
+        });
+      });
+    </script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 
   </div>
 
@@ -571,5 +617,5 @@
 
 </body>
 
-</html> 
+</html>
 {% endblock %}
