@@ -27,11 +27,12 @@
               {% for product in products %} {% if product.company and product.company.pk %}
               <a href="{% url 'companies:company-public' pk=product.company.pk %}" class="user-image isGrid isDetail" class="default-font font-size-14">
                 <!-- User Image -->
-                {% if product.company.logo.url %}
-                <img class="lazy loaded" src="{{ product.company.logo.url }}" alt="Channab" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
-                {% else %}
-                <img class="lazy loaded" src="{% static 'icons/default_cover.png' %}" alt="Channab" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
-                {% endif %}
+                {% if product.company.logo and product.company.logo.url %}
+  <img class="lazy loaded" src="{{ product.company.logo.url }}" alt="Channab" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+{% else %}
+  <img class="lazy loaded" src="{% static 'icons/default_cover.png' %}" alt="Channab" style="display: block; transition: all 0.2s ease 0s" class="default-font font-size-14" />
+{% endif %}
+
               </a>
               {% endif %} {% endfor %}
 
