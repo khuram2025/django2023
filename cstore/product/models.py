@@ -204,6 +204,26 @@ class CategoryCustomField(models.Model):
     def __str__(self):
         return f"{self.category.title} - {self.custom_field.name}"
 
+class Offer(models.Model):
+    class OfferType(models.TextChoices):
+        PERCENTAGE = 'PCT', _('Percentage')
+        EVENT = 'EVT', _('Event')
+        SEASONAL = 'SSN', _('Seasonal')
+        CLEARANCE = 'CLR', _('Clearance')
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='offers')
+    offer_type = models.CharField(max_length=3, choices=OfferType.choices, verbose_name=_("Offer Type"))
+    value = models.DecimalField(max_digits=5, decimal_places=2, verbose_name=_("Value"), help_text=_("Percentage for percentage type, otherwise flat value"))
+    description = models.TextField(verbose_name=_("Description"), blank=True, null=True)
+    start_date = models.DateTimeField(verbose_name=_("Start Date"))
+    end_date = models.DateTimeField(verbose_name=_("End Date"), null=True, blank=True)
+    
+    def is_active(self):
+        # Logic to determine if the offer is currently active
+        pass
+
+    def __str__(self):
+        return f"{self.product.title} - {self.offer_type}"
 
 class CustomFieldValue(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='custom_field_values')

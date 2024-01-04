@@ -1,0 +1,35 @@
+{% load static %}
+
+<section class="home-premium" class="default-font font-size-14">
+  <div class="container" class="default-font font-size-14">
+    <div class="block" class="default-font font-size-14">
+      <h2 class="default-font font-size-22">Today's premium selection</h2>
+
+      <div class="nice-scroll-wrap nice-scroll-nothave-overflow" class="default-font font-size-14">
+        <div class="nice-scroll-prev" class="default-font font-size-14">
+          <i class="fas fa-caret-left" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="20px"></i>
+        </div>
+
+        <div id="premium-items" class="products grid nice-scroll no-visible-scroll">
+          {% for offer_type in offer_types %} {% with img_url='images/offer'|add:offer_type|add:'.png' %}
+          <div class="simple-prod {% if forloop.first %}o1 is-premium day-offer{% else %}o2 is-premium{% endif %}">
+            <!-- Offer Image -->
+            <div class="img-wrap">
+              <a class="img" href="{% url 'product:product_list_with_offers' %}?sOfferType={{ offer_type }}">
+                <!-- Use a different image for each offer type -->
+                <img class="lazy" src="{% static img_url %}" alt="Offer {{ offer_type }}" />
+              </a>
+            </div>
+            <!-- Offer Details -->
+            <!-- ... Similar structure to your product details -->
+          </div>
+          {% endwith %} {% endfor %}
+        </div>
+
+        <div class="nice-scroll-next disabled" style="display: block" class="default-font font-size-14">
+          <i class="fas fa-caret-right" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="20px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

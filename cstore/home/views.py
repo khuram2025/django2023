@@ -86,6 +86,8 @@ def index(request):
 
     # Get city from request (e.g., a session variable, a cookie, or a request parameter)
     selected_city = request.session.get('selected_city')  # or any other method you prefer
+    offer_types = ['PCT', 'EVT', 'SSN', 'CLR']
+    print("Offer types in view:", offer_types)
 
     # Filter products based on the selected city
     if selected_city:
@@ -132,6 +134,7 @@ def index(request):
         'selected_city': selected_city,
         'top_cities': top_cities,
         'companies': companies,
+        'offer_types': offer_types,
     }
     return render(request, 'home/index.html', context)
 

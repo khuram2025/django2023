@@ -25,6 +25,7 @@ from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import JsonResponse
+from django.db.models import Count
 
 def ajax_load_custom_fields(request):
     category_id = request.GET.get('category_id')
@@ -167,7 +168,10 @@ def product_detail(request, pk):
     
 def product_list(request, category_slug=None):
     category = None
-    categories = Category.objects.filter(parent__isnull=True)
+    categories = Category.objects.filter(parent__isnull=True).annotate(
+        product_count=Count('products')
+    ).order_by('-product_count')[:10]
+    
 
     products = Product.objects.annotate(images_count=Count('images'))
 
@@ -220,6 +224,45 @@ def product_list(request, category_slug=None):
         'products': products,
         'custom_fields': custom_fields,
         'products_count': products_count,
+    })
+
+
+def product_list_with_offers(request, category_slug=None):
+    category = None
+    categories = Category.objects.filter(parent__isnull=True).annotate(
+        product_count=Count('products')
+    ).order_by('-product_count')[:10]
+    
+    # Join with the Offer model
+    products = Product.objects.filter(offers__isnull=False).annotate(images_count=Count('images'))
+
+    # Category filter
+    custom_fields = []
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug, parent__isnull=True)
+        products = products.filter(category__in=category.get_descendants(include_self=True))
+        custom_fields = CustomField.objects.filter(categories=category, is_searchable=True)
+        for field in custom_fields:
+            field.options_list = field.options.split(',') if field.options else []
+
+    # Offer type filter
+    offer_type = request.GET.get('sOfferType')
+    if offer_type:
+        products = products.filter(offers__offer_type=offer_type)
+   
+
+    # Other filters (location, condition, price, period) remain the same
+    # ...
+
+    products_count = products.count()
+
+    return render(request, 'product/product_listing.html', {
+        'category': category, 
+        'categories': categories, 
+        'products': products,
+        'custom_fields': custom_fields,
+        'products_count': products_count,
+      
     })
 
 

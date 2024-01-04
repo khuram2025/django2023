@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomCharge, Customer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation, StoreConfig, TaxConfig
+from .models import CustomCharge, Customer, Offer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation, StoreConfig, TaxConfig
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -7,6 +7,17 @@ from django.urls import reverse
 from django.utils.html import escape
 from django.utils.html import format_html
 from mptt.admin import MPTTModelAdmin  # Import this if you are using django-mptt for Category
+
+class OfferAdmin(admin.ModelAdmin):
+    list_display = ('product', 'offer_type', 'value', 'start_date', 'end_date', 'is_active')
+    list_filter = ('offer_type', 'start_date', 'end_date')
+    search_fields = ('product__title', 'description')
+
+    # Optionally, you can add more customizations here
+    # For example, custom forms, fieldsets, actions, etc.
+
+# Register the admin class with the associated model
+admin.site.register(Offer, OfferAdmin)
 
 # Category Admin
 class CategoryAdmin(MPTTModelAdmin):  # Use MPTTModelAdmin for hierarchical models like Category
@@ -18,6 +29,8 @@ class CategoryAdmin(MPTTModelAdmin):  # Use MPTTModelAdmin for hierarchical mode
 class SellerInformationAdmin(admin.ModelAdmin):
     list_display = ['contact_name', 'phone_number', 'email', 'status', 'member_since']
     search_fields = ['contact_name', 'phone_number', 'email']
+
+
 
 # Register your models here.
 admin.site.register(Category, CategoryAdmin)
