@@ -1,4 +1,30 @@
 {% extends 'home/base.html' %} {% block content %}
+<style>
+  #home-cat {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  #home-cat a {
+    display: inline-block; /* or use 'flex' if you prefer */
+    margin-right: 10px; /* Adjust as needed for spacing */
+    /* Additional styling here */
+  }
+
+  /* Optional: Style for scrollbar appearance */
+  #home-cat::-webkit-scrollbar {
+    display: none; /* Adjust height of scrollbar */
+  }
+
+  #home-cat::-webkit-scrollbar-thumb {
+    background: #888; /* Color of scrollbar thumb */
+  }
+
+  #home-cat::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color on hover */
+  }
+</style>
 
 <body id="home" class="layout-default dvc-ios demo">
   {% include 'home/header.html' %}

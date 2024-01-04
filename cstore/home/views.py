@@ -13,6 +13,8 @@ import requests
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json
+from django.db.models import Count, F
+from django.db.models.functions import Random
 
 
 def product_detail(request, product_id):
@@ -78,7 +80,9 @@ def index(request):
     date_7_days_ago = today - timedelta(days=7)
     date_30_days_ago = today - timedelta(days=30)
 
-    root_categories = Category.objects.filter(parent__isnull=True, status=True)
+    root_categories = Category.objects.annotate(
+        product_count=Count('products')
+    ).order_by('-product_count', Random())[:9]
 
     # Get city from request (e.g., a session variable, a cookie, or a request parameter)
     selected_city = request.session.get('selected_city')  # or any other method you prefer
