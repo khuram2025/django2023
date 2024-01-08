@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomCharge, Customer, Offer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation, StoreConfig, TaxConfig
+from .models import CustomCharge, Customer, ManualTransaction, Offer, Order, OrderItem, Product, ProductImage, CustomFieldValue, SellerInformation, StoreConfig, TaxConfig
 from .models import CustomField, CategoryCustomField, Category
 from django import forms
 from django.utils.safestring import mark_safe
@@ -239,3 +239,15 @@ class CustomChargeAdmin(admin.ModelAdmin):
     search_fields = ['name', 'store__name']
 
 
+class ManualTransactionAdmin(admin.ModelAdmin):
+    list_display = ('customer', 'amount', 'transaction_type', 'transaction_date', 'notes')
+    list_filter = ('transaction_type', 'transaction_date')
+    search_fields = ('customer__name', 'customer__mobile')
+
+    def get_readonly_fields(self, request, obj=None):
+        # Make all fields read-only if editing an existing object
+        if obj:
+            return [f.name for f in self.model._meta.fields]
+        return super().get_readonly_fields(request, obj)
+
+admin.site.register(ManualTransaction, ManualTransactionAdmin)

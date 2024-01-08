@@ -93,7 +93,22 @@ class Customer(models.Model):
         return self.mobile
 
 
-    # Additional methods as needed
+class ManualTransaction(models.Model):
+    TRANSACTION_CHOICES = [
+        ('in', 'Payment Received'),
+        ('out', 'Sale'),
+    ]
+
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='manual_transactions')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    transaction_type = models.CharField(max_length=3, choices=TRANSACTION_CHOICES)
+    transaction_date = models.DateField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_transaction_type_display()} - {self.customer.name or self.customer.mobile} - ${self.amount}"
+
+
 
 class Product(models.Model):
     

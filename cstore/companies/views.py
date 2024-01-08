@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from product.models import Category, Customer, Order, OrderItem, Product, StoreProduct, TaxConfig
+from product.models import Category, Customer, ManualTransaction, Order, OrderItem, Product, StoreProduct, TaxConfig
 from django.views.decorators.csrf import csrf_exempt
 from locations.models import Address, City, Country
 from .forms import CompanyProfileForm
@@ -698,6 +698,7 @@ def create_customer_api(request):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return HttpResponseBadRequest(f"Error: {e}")
+
 def list_taxes_api(request, company_id):
     # Fetch the company profile by ID
     company_profile = get_object_or_404(CompanyProfile, pk=company_id)
@@ -777,6 +778,56 @@ def customer_ledger(request, customerId):
     ledger_entries.sort(key=lambda x: x['date'])
     print("Sending Customer Orders:", ledger_entries)
     return JsonResponse({'ledger_entries': ledger_entries})
+
+@csrf_exempt  # This is for demonstration purposes. It's not recommended for production without proper CSRF protection.
+@require_http_methods(["POST"])
+def add_manual_transaction(request):
+    try:
+        # Parse request body
+        data = json.loads(request.body)
+       
+        # Validate the required fields
+        required_fields = ['customer_id', 'amount', 'transaction_type']
+        if not all(field in data for field in required_fields):
+            return HttpResponseBadRequest('Missing required fields.')
+
+        # Validate the customer
+        try:
+            customer = Customer.objects.get(pk=data['customer_id'])
+        except Customer.DoesNotExist:
+            return HttpResponseBadRequest('Customer does not exist.')
+
+        # Validate the transaction type
+        if data['transaction_type'] not in dict(ManualTransaction.TRANSACTION_CHOICES):
+            return HttpResponseBadRequest('Invalid transaction type.')
+
+        # Create the manual transaction
+        transaction = ManualTransaction.objects.create(
+            customer=customer,
+            amount=Decimal(data['amount']),
+            transaction_type=data['transaction_type'],
+            transaction_date=data.get('transaction_date'),
+            notes=data.get('notes', '')
+        )
+
+        print("Transaction created successfully:", transaction.id)  # Log transaction creation
+
+        # Return success response
+        return JsonResponse({
+            'id': transaction.id,
+            'customer': transaction.customer.id,
+            'amount': transaction.amount,
+            'transaction_type': transaction.transaction_type,
+            'transaction_date': transaction.transaction_date,
+            'notes': transaction.notes
+        })
+
+    except json.JSONDecodeError as e:
+        print("JSONDecodeError:", e)  # Log JSON parsing error
+        return HttpResponseBadRequest('Invalid JSON.')
+    except Exception as e:
+        print("Exception occurred:", e)  # Log general exception
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 @login_required
