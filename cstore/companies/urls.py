@@ -30,6 +30,7 @@ urlpatterns = [
 
     path('api/companies/<int:company_id>/customers/<int:customer_id>/', views.customer_detail_api, name='customer_detail_api'),
     path('api/<int:customerId>/orders', views.fetch_customer_orders, name='fetch_customer_orders'),
+    path('api/<int:customerId>/ledger', views.customer_ledger, name='customer_ledger'),
 
 
     path('api/companies/<int:company_id>/taxes/', views.list_taxes_api, name='list_taxes_api'),

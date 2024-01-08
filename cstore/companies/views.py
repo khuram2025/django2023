@@ -21,6 +21,7 @@ from account.models import CustomUser, UserProfile  # Import your CustomUser mod
 from django.dispatch import receiver
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.db.models import Sum
 import base64
 from django.contrib.auth.decorators import login_required
 from account.forms import UserProfileForm
@@ -610,6 +611,7 @@ def list_customers_api(request, company_id):
             'mobile': customer.mobile,
             'name': customer.name,
             'email': customer.email,
+            'openingBalance': customer.opening_balance,
             'created_at': customer.created_at.isoformat(),
             'updated_at': customer.updated_at.isoformat(),
             'orders': customer_orders  # Add orders to customer data
@@ -730,17 +732,51 @@ def fetch_customer_orders(request, customerId):
 
     orders_data = [{
         'id': order.id,
-        'imageUrl': order.image_url if hasattr(order, 'image_url') else None,
+        'imageUrl': getattr(order, 'image_url', None),
         'customerName': order.customer.name if order.customer else None,
         'mobileNumber': order.customer.mobile if order.customer else None,
         'date': order.created_at.strftime('%Y-%m-%d') if order.created_at else None,
-        'transactionType': order.payment_type if hasattr(order, 'payment_type') else None,
+        'transactionType': getattr(order, 'payment_type', None),
         'totalAmount': order.total_price if order.total_price else None,
+        'paidAmount': float(order.paid_amount) if order.paid_amount else 0.0,  # Convert to float for JSON serialization
+        'creditAmount': float(order.credit_amount) if order.credit_amount else 0.0,  # Convert to float for JSON serialization
     } for order in orders]
 
     print("Sending Customer Orders:", orders_data)
     return JsonResponse({'orders': orders_data})
 
+def customer_ledger(request, customerId):
+    orders = Order.objects.filter(customer_id=customerId).select_related('customer')
+    total_sales = orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
+    total_payments = orders.aggregate(Sum('paid_amount'))['paid_amount__sum'] or 0
+
+    ledger_entries = []
+
+    for order in orders:
+        # Add sale entry
+        ledger_entries.append({
+            'id': order.id,
+            'type': 'sale',
+            'date': order.created_at.strftime('%Y-%m-%d'),
+            'amount': order.total_price,
+        })
+
+        # Add payment entry if there is a payment
+        if order.paid_amount > 0:
+            ledger_entries.append({
+                'id': order.id,
+                'type': 'payment',
+                'date': getattr(order, 'payment_date', order.created_at).strftime('%Y-%m-%d'),
+                'amount': order.paid_amount,
+                # ... other relevant fields ...
+            })
+
+            
+
+    # Sort entries by date
+    ledger_entries.sort(key=lambda x: x['date'])
+    print("Sending Customer Orders:", ledger_entries)
+    return JsonResponse({'ledger_entries': ledger_entries})
 
 
 @login_required

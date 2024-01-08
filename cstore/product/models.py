@@ -84,6 +84,7 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     opening_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Opening Balance")
+    
 
     class Meta:
         unique_together = ['store', 'mobile', 'email']
