@@ -1,5 +1,5 @@
 from decimal import Decimal
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from product.models import Category, Customer, Order, OrderItem, Product, StoreProduct, TaxConfig
@@ -11,10 +11,11 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse
 from django.contrib import messages
+from django.views.decorators.http import require_http_methods
 from .forms import CompanyProfileForm
 import json
 from companies.models import CompanyProfile
-
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from account.models import CustomUser, UserProfile  # Import your CustomUser model
 from django.dispatch import receiver
@@ -653,7 +654,48 @@ def customer_detail_api(request, company_id, customer_id):
 
     return JsonResponse(customer_data)
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def create_customer_api(request):
+    try:
+        # Log the raw request body for debugging
+        print(f"Raw request body: {request.body}")
 
+        # Parse the JSON body of the request
+        data = json.loads(request.body)
+        print(f"Parsed JSON data: {data}")
+
+        # Validate and create a new customer
+        customer = Customer(
+            mobile=data.get('mobile'),
+            name=data.get('name', ''),
+            email=data.get('email', ''),
+            store_id=data.get('store_id'),  # Assuming this is passed in the request
+            opening_balance=data.get('opening_balance', 0.00)  # Set default to 0.00 if not provided
+        )
+        customer.full_clean()  # This will raise a ValidationError if the data is not valid
+        customer.save()
+
+        # Return the created customer data
+        return JsonResponse({
+            'id': customer.id,
+            'mobile': customer.mobile,
+            'name': customer.name,
+            'email': customer.email,
+            'created_at': customer.created_at.isoformat(),
+            'updated_at': customer.updated_at.isoformat(),
+            'opening_balance': customer.opening_balance  # Include opening_balance in the response
+        })
+
+    except json.JSONDecodeError as e:
+        print(f"JSON decoding error: {e}")
+        return HttpResponseBadRequest("Invalid JSON")
+    except ValidationError as e:
+        print(f"Validation error: {e.messages}")
+        return HttpResponseBadRequest(f"Invalid data: {e.messages}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return HttpResponseBadRequest(f"Error: {e}")
 def list_taxes_api(request, company_id):
     # Fetch the company profile by ID
     company_profile = get_object_or_404(CompanyProfile, pk=company_id)

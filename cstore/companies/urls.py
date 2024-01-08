@@ -26,8 +26,11 @@ urlpatterns = [
     path('api/submit-order/<int:store_id>/', views.order_summary, name='submit-order'),
 
     path('api/companies/<int:company_id>/customers/', views.list_customers_api, name='list_customers_api'),
+    path('api/customers/create', views.create_customer_api, name='create_customer_api'),
+
     path('api/companies/<int:company_id>/customers/<int:customer_id>/', views.customer_detail_api, name='customer_detail_api'),
     path('api/<int:customerId>/orders', views.fetch_customer_orders, name='fetch_customer_orders'),
+
 
     path('api/companies/<int:company_id>/taxes/', views.list_taxes_api, name='list_taxes_api'),
 
