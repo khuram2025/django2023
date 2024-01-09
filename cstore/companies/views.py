@@ -748,6 +748,8 @@ def fetch_customer_orders(request, customerId):
 
 def customer_ledger(request, customerId):
     orders = Order.objects.filter(customer_id=customerId).select_related('customer')
+    manual_transactions = ManualTransaction.objects.filter(customer_id=customerId)
+
     total_sales = orders.aggregate(Sum('total_price'))['total_price__sum'] or 0
     total_payments = orders.aggregate(Sum('paid_amount'))['paid_amount__sum'] or 0
 
@@ -772,6 +774,14 @@ def customer_ledger(request, customerId):
                 # ... other relevant fields ...
             })
 
+    for transaction in manual_transactions:
+        ledger_entries.append({
+            'id': transaction.id,
+            'type': transaction.transaction_type,  # 'in' or 'out'
+            'date': transaction.transaction_date.strftime('%Y-%m-%d'),
+            'amount': transaction.amount,
+            'is_manual': True  # Indicator for manual transactions
+    })
             
 
     # Sort entries by date
