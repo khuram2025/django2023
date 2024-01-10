@@ -1,70 +1,39 @@
-{% extends 'home/base.html' %} {% load static %} {% block content %}
-<!-- [Include CSS and other links here] -->
 
-<style>
-  /* [Your existing CSS styles] */
-</style>
-
-<body id="user-dashboard" class="item-publish">
-  {% include 'home/header.html' %}
-
-  <!-- Main Content -->
-  <div class="content loc-user sec-dashboard">
-    <!-- [Breadcrumbs and other existing HTML content] -->
-
-    <div class="container primary">
-      {% include 'account/user_menu.html' %}
-
-      <div id="user-main">
-        <div class="user-custom-box">
-          <div id="bpr-prof" class="bpr-body bpr-prof">
-            <h2>Edit Company Profile</h2>
-
-            <form name="company" action="{% url 'companies:edit_company' pk=company.pk %}" method="post" enctype="multipart/form-data" class="form-container">
-              {% csrf_token %}
-              <input type="file" id="profile-picture-input" accept="image/*" style="display: none" onchange="updateImagePreview(this, 'profile-picture-preview')" />
-              <input type="file" id="user-image-input" accept="image/*" style="display: none" onchange="updateImagePreview(this, 'user-image')" />
-
-              <!-- Custom Interface for Image Upload -->
-              <div class="profile-picture-container">
-                {% if company.cover_pic %}
-                <img id="profile-picture-preview" src="{{ company.cover_pic.url }}" alt="Profile Picture" />
-                {% else %}
-                <img id="profile-picture-preview" src="{% static 'icons/default_cover.png' %}" alt="Profile Picture" />
-                {% endif %}
-                <button type="button" onclick="document.getElementById('profile-picture-input').click();">Edit Cover</button>
-              </div>
-
-              <div class="user-image-container">
-                {% if company.logo %}
-                <img id="user-image" src="{{ company.logo.url }}" alt="User Image" />
-                {% else %}
-                <img id="user-image" src="{% static 'icons/default_logo.png' %}" alt="User Image" />
-                {% endif %}
-                <button type="button" onclick="document.getElementById('user-image-input').click();"><i class="fas fa-camera"></i> Edit Logo</button>
-              </div>
-
-              <!-- [Rest of your form fields] -->
-
-              <button type="submit" class="btn">Update Profile</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+<a class="card public" href="{% url 'companies:company-public' pk=company.pk %}">
+  <div class="icon">
+    <i class="far fa-address-card"></i>
   </div>
 
-  <script>
-    function updateImagePreview(input, imageId) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById(imageId).src = e.target.result;
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-  </script>
+  <div class="header">Business profile</div>
+  <div class="description">Your business profile visible to customers, where your information, address and listings are shown.</div>
+</a>
 
-  {% endblock %}
-</body>
+
+
+
+
+{% if request.user.is_authenticated %}
+    {% with request.user.owned_companies.first as company %}
+        {% if company %}
+            <a class="card public" href="{% url 'companies:company-public' pk=company.pk %}">
+                <!-- Content of the link for company profile -->
+            </a>
+        {% endif %}
+    {% endwith %}
+    
+    {% if not company %}
+        <a class="card public" href="{% url 'companies:create_company' %}">
+            <!-- Content of the link for creating a company -->
+        </a>
+    {% endif %}
+{% else %}
+    <a class="card public" href="{% url 'account:login' %}">
+        <!-- Content of the link for login -->
+    </a>
+{% endif %}
+
+<div class="icon">
+    <i class="far fa-address-card"></i>
+</div>
+<div class="header">Business profile</div>
+<div class="description">Your business profile visible to customers, where your information, address and listings are shown.</div>

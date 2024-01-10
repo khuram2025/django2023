@@ -9,7 +9,14 @@
       <div class="line1" class="default-font font-size-14">Hello <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAAV1BMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/yD3UjQH3wDcw0fbemg4jGwfjsjbtsCUln7uvgx8acIMFEBJKOhEtweMJKjHHmy5sUxcOPUiRcB9IUWvxAAAACnRSTlMAMRr/81Lhpcd5+GBt8QAAAwBJREFUWMPtmNd2pSAUhqOiWOCIvb7/cw7tKCItOncz+yJxmfCt3YB/+/Pz3/6SpTlIQA6L+CWnSL4Go1f+JIrBF17lKigB6WMQoMtbPLX9LFDFOxCzlqNA8Sq0YesnjHv+/Nvo0gJCmJ7JHnrq1EAfsl9lPJJJzs7qJ/OEW167p0U/bJhEdEH9FME8y+EV0OK2H7hPGM9hLsUKYuy69QvCeNrYUy+C82Ypyk5OV1IjtUwPZW0iuDmkcApnLUuVRH2ZBv6rD4itEBGRZZUOqaSWIzYRG8icO5g5NCK2vEu6j0YSiAFPxw62+sNbh4jl3V5pJInA+Ig+N9dLdGDdyOVLpZPa9vxp9ymWeR6rL6mpjscjT8LqDqGutnSm9KeuKy+p5llE9BWA5i0x0vyQzkuS9eyMWWINPYp/+FQVcpLkXxHrAmPhlzKMVJ6g5AZiL4/lHpITxA7U6hNGcoJY0dZAkhPEd1kXRnKCYsAbLYjkBAmXrKQviJPcIHnWm0mKUZITxDt7JUjZqhZSVXuTzTsbeUj0nRMEjz2EPi7S5wzdB9JJKgYpHF9oGqlpbBwLKFIujgvJEpen/G6S9tICEkft6CA1WuZNIKpbgTizR2QlnRvFClKUi0pCmkMa+Q66SpiDdOugxge66taDdEs18oGAdvmZSZUfdF7E8jquiRFUhng04YELjtlKCggt54jt1GNGkjHZ4LZhhX76ik0TCenlJ0zz3so/Cz22MX0/mEl6Qy63Kzs+9ViyTWxWMJL0jtzvugYKX2ah79tJJKpetNi0XTPeJ5xIEZuqPF9cWSImfQRFcNOsKf2ltNtuUjX8ehyolO4PpzIPiZhnt1RKaTz1m2DlhSqq7jbeiq+eJLOc8HirOUm7dZiUZ9JMiyZBLlJnV8c/KbjkOT/gu8UfEAcMRnJsEalbtd1KRt+8HZ2oQi3CsCsosiYBk22cQv79ItUDHveFIESWfXw6/6sTnJLBJx83CqBjsoejf1xcvMoff4tgARY8d3RqLl59sfmH7Q97YGQsT2rqKAAAAABJRU5ErkJggg==" alt="wave" class="default-font font-size-14" /></div>
       <strong class="line2" speechify-initial-font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' speechify-initial-font-size="20px">Welcome!</strong>
 
-      <a class="line3" href="{%url 'account:login' %}" class="default-font font-size-14">Sign in or register</a>
+      <a class="line3 default-font font-size-14" href="{% if request.user.is_authenticated %}# {% else %}{% url 'account:login' %}{% endif %}">
+        {% if request.user.is_authenticated %}
+            {{ request.user.full_name }}
+        {% else %}
+            Sign in or register
+        {% endif %}
+    </a>
+    
     </div>
 
     <div class="section delim-top" class="default-font font-size-16">
@@ -25,15 +32,24 @@
     </div>
 
     <div class="section delim-top" class="default-font font-size-16">
-      <a href="{%url 'account:login' %}" class="login" class="default-font font-size-16">
-        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="default-font font-size-16"><path d="M144 112v51.6H48c-26.5 0-48 21.5-48 48v88.6c0 26.5 21.5 48 48 48h96v51.6c0 42.6 51.7 64.2 81.9 33.9l144-143.9c18.7-18.7 18.7-49.1 0-67.9l-144-144C195.8 48 144 69.3 144 112zm192 144L192 400v-99.7H48v-88.6h144V112l144 144zm80 192h-84c-6.6 0-12-5.4-12-12v-24c0-6.6 5.4-12 12-12h84c26.5 0 48-21.5 48-48V160c0-26.5-21.5-48-48-48h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96z" class="default-font font-size-16"></path></svg>
-        Log in
-      </a>
+    
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'account:logout' %}" class="default-font font-size-16">
+          <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13,3H4C2.9,3,2,3.9,2,5v14c0,1.1,0.9,2,2,2h9c1.1,0,2-0.9,2-2V12l5,4v-3.59L17.42,12L22,7.59V4l-5,4V5C17,3.9,16.1,3,15,3z M4,5h9v14H4V5z M15,10.17L18.17,7H15V10.17z"/>
+        </svg>
+        
+            Log out
+        </a>
+    {% else %}
+        <a href="{% url 'account:login' %}" class="default-font font-size-16">
+          <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="default-font font-size-16"><path d="M144 112v51.6H48c-26.5 0-48 21.5-48 48v88.6c0 26.5 21.5 48 48 48h96v51.6c0 42.6 51.7 64.2 81.9 33.9l144-143.9c18.7-18.7 18.7-49.1 0-67.9l-144-144C195.8 48 144 69.3 144 112zm192 144L192 400v-99.7H48v-88.6h144V112l144 144zm80 192h-84c-6.6 0-12-5.4-12-12v-24c0-6.6 5.4-12 12-12h84c26.5 0 48-21.5 48-48V160c0-26.5-21.5-48-48-48h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96z" class="default-font font-size-16"></path></svg>
 
-      <a href="{%url 'account:register' %}" class="register" class="default-font font-size-16">
-        <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="default-font font-size-16"><path d="M224 288c79.5 0 144-64.5 144-144S303.5 0 224 0 80 64.5 80 144s64.5 144 144 144zm0-240c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96zm89.6 256c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 304 0 364.2 0 438.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-25.6c0-74.2-60.2-134.4-134.4-134.4zM400 464H48v-25.6c0-47.6 38.8-86.4 86.4-86.4 14.6 0 38.3 16 89.6 16 51.7 0 74.9-16 89.6-16 47.6 0 86.4 38.8 86.4 86.4V464zm224-248h-72v-72c0-8.8-7.2-16-16-16h-16c-8.8 0-16 7.2-16 16v72h-72c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h72v72c0 8.8 7.2 16 16 16h16c8.8 0 16-7.2 16-16v-72h72c8.8 0 16-7.2 16-16v-16c0-8.8-7.2-16-16-16z" class="default-font font-size-16"></path></svg>
-        Register account
-      </a>
+            Log in
+        </a>
+    {% endif %}
+
+      
     </div>
 
     <div class="section delim-top" class="default-font font-size-16">

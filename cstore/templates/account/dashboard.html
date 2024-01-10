@@ -87,7 +87,8 @@
         </div>
 
         <div class="card-box">
-          <a class="card public" href="{% url 'product:user_product_list' user_pk=request.user.pk %}">
+          {% if single_company %}
+          <a class="card public" href="{% url 'companies:company-public' pk=single_company.pk %}">
             <div class="icon">
               <i class="far fa-address-card"></i>
             </div>
@@ -95,6 +96,7 @@
             <div class="header">Business profile</div>
             <div class="description">Your business profile visible to customers, where your information, address and listings are shown.</div>
           </a>
+          {% endif %}
 
           <a class="card active" href="">
             <div class="icon">
