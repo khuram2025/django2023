@@ -277,8 +277,6 @@ class CustomCharge(models.Model):
         return f"{self.name} - {self.value}"
 
 
-
-
 class StoreProduct(models.Model):
     store = models.ForeignKey('companies.CompanyProfile', on_delete=models.CASCADE, related_name='store_products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='store_products', null=True, blank=True)  # Nullable for store-exclusive products
@@ -360,6 +358,8 @@ class StoreProduct(models.Model):
             quantity_added=quantity, 
             purchase_price=purchase_price or self.purchase_price
         )
+
+
 
 class StoreProductStockEntry(models.Model):
     store_product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='stock_entries')

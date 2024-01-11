@@ -39,6 +39,9 @@
             <div class="image-preview-container"></div>
             <input type="file" id="product_images" name="product_images" multiple hidden />
           </div>
+          <!-- Hidden input field for product_id -->
+
+          <input type="hidden" name="product_id" id="product_id" value="" />
 
           <div class="form-group">
             <input type="text" name="{{ form.custom_title.name }}" placeholder="{{ form.custom_title.label }}" required />
@@ -121,6 +124,8 @@
     function selectDropdownItem(element, productId, categoryId, cityId, address) {
       var selectedContainer = document.querySelector(".dropdown-selected");
       selectedContainer.innerHTML = element.innerHTML;
+
+      document.querySelector("[name='product_id']").value = productId;
 
       // Debug: Log selected element details
       console.log("Dropdown item selected:", element);

@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.models import CustomUser, UserProfile
+from django.urls import reverse
+
 from companies.models import CompanyProfile
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
@@ -373,6 +375,8 @@ def product_search(request):
 
 def create_or_import_product(request, pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
+    print(f"Company ID: {pk}, Company Name: {company.name}")
+
     
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
@@ -386,7 +390,9 @@ def create_or_import_product(request, pk):
     if request.method == 'GET' and 'product_id' in request.GET:
         product_id = request.GET.get('product_id')
         existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
+        print(f"GET Request - Product ID: {product_id}")
         if existing_store_product:
+            print(f"Existing Store Product Found - Store Product ID: {existing_store_product.id}")
             initial_data.update({
                 'opening_stock': existing_store_product.current_stock,
                 'custom_title': existing_store_product.custom_title or existing_store_product.product.title,
@@ -395,51 +401,45 @@ def create_or_import_product(request, pk):
             })
 
     form = StoreProductForm(initial=initial_data)
+    
+
     products = Product.objects.filter(is_published=True)
 
     if request.method == 'POST':
         form = StoreProductForm(request.POST, request.FILES)
         if form.is_valid():
             product_id = request.POST.get('product_id')
+            if product_id:
             existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
 
             if existing_store_product:
+                # Update existing StoreProduct
                 store_product = existing_store_product
                 additional_quantity = form.cleaned_data.get('stock_quantity')
                 store_product.stock_quantity += additional_quantity
                 store_product.current_stock += additional_quantity
+                print(f"Existing store product updated - Product ID: {product_id}, Store Product ID: {store_product.id}")
             else:
+                # Create new StoreProduct linked to the existing Product
                 store_product = form.save(commit=False)
                 store_product.store = company
-                new_stock_quantity = form.cleaned_data.get('stock_quantity')
-                store_product.current_stock = new_stock_quantity
+                store_product.current_stock = form.cleaned_data.get('stock_quantity')
 
-                if 'import_product' in request.POST:
-                    product = get_object_or_404(Product, id=product_id)
-                    store_product.product = product
-                    store_product.is_store_exclusive = False
-                else:
-                    new_product = Product(
-                        title=store_product.custom_title,
-                        description=store_product.custom_description,
-                        price=store_product.sale_price,
-                        category=form.cleaned_data['category'],
-                        city=form.cleaned_data.get('city') or (company.address.city if company.address else None),
-                        address=form.cleaned_data.get('address') or (str(company.address) if company.address else None),
-                        is_published=False
-                    )
-                    new_product.save()
-                    store_product.product = new_product
+                # Link to existing Product
+                linked_product = Product.objects.get(id=product_id)
+                store_product.product = linked_product
+                print(f"New StoreProduct linked to existing Product - Product ID: {product_id}")
 
             store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
             store_product.opening_stock = store_product.current_stock
             store_product.save()
+            print(f"Store Product Saved - ID: {store_product.id}")
 
             for f in request.FILES.getlist('product_images'):
                 product_image = ProductImage(product=store_product.product, image=f)
                 product_image.save()
 
-            return redirect('some-success-view')
+            return redirect(reverse('companies:company-inventory', args=[pk]))
         else:
             print("Form Errors:", form.errors)
 
