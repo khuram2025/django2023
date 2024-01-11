@@ -1,0 +1,60 @@
+{% extends 'home/base.html' %} {% block content %} {% include 'home/header.html' %}
+
+<body id="home" class="layout-default dvc-ios demo">
+  <div class="form-container">
+    <div class="form-container">
+      <div class="duplicate-product-form">
+        <h2>Duplicate Product</h2>
+        <form action="{% url 'product:duplicate_product_to_store' product.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %} {% if product.images.all %}
+          <div class="form-section">
+            <label>Original Product Images:</label>
+            {% for image in product.images.all %}
+            <img src="{{ image.image.url }}" alt="{{ product.title }}" style="max-width: 200px; margin-right: 10px" />
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Displaying the original product's details -->
+          <div class="original-product-details">
+            <h3>Original Product Details</h3>
+            <p><strong>Title:</strong> {{ product.title }}</p>
+          </div>
+
+          <!-- Customization Form -->
+          <div class="customization-form">
+            <h3>Customization Options</h3>
+
+            <!-- Custom Title Field -->
+            <div class="form-section">
+              <label for="id_custom_title">Custom Title</label>
+              <input type="text" id="id_custom_title" name="custom_title" placeholder="Custom Title" value="{{ product.title }}" required />
+            </div>
+
+            <!-- Custom Description Field -->
+            <div class="form-section full-width-textarea">
+              <label for="id_custom_description">Custom Description</label>
+              <textarea id="id_custom_description" name="custom_description" placeholder="Custom Description" required>{{ product.description }}</textarea>
+            </div>
+
+            <!-- Sale Price Field -->
+            <div class="form-section">
+              <label for="id_sale_price">Sale Price</label>
+              <input type="number" id="id_sale_price" name="sale_price" placeholder="Sale Price" value="{{ product.price }}" required />
+            </div>
+
+            <!-- Add more customization fields as needed -->
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Duplicate Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %} {% endblock %} {% block custom_js %}
+  <script>
+    // Add custom JavaScript here if needed
+  </script>
+  {% endblock %}
+</body>

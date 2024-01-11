@@ -11,7 +11,15 @@ urlpatterns = [
     path('ajax/load-subcategories/', views.load_subcategories, name='ajax_load_subcategories'),  # URL for loading subcategories via AJAX
 
     path('company/<int:pk>/product/create', views.create_or_import_product, name='create_or_import_product'),
-    path('get-product/<int:productId>/', views.get_product, name='get_product'),
+    path('product/<int:product_id>/duplicate', views.duplicate_product_to_store, name='duplicate_product_to_store'),
+    path('product/get-product-image/<int:product_id>/', views.get_product_image, name='get_product_image'),
+
+    path('products/available-for-duplication', views.list_products_for_duplication, name='list_products_for_duplication'),
+
+
+
+
+    path('get-store-product/<int:store_id>/<int:productId>/', views.get_product, name='get_product'),
     path('store-products/', views.list_store_products, name='store_product_list'),
     path('store/<int:store_id>/product/<int:product_id>/add_stock/', views.add_stock_to_store_product, name='add_stock_to_store_product'),
     path('stock_entry/edit/<int:entry_id>/', views.edit_stock_entry, name='edit_stock_entry'),

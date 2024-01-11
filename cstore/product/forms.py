@@ -251,11 +251,12 @@ class ProductImageForm(forms.ModelForm):
 class StoreProductForm(forms.ModelForm):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), required=True)
     city = forms.ModelChoiceField(queryset=City.objects.all(), required=False)
-    
+    product_images = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
 
     class Meta:
         model = StoreProduct
-        fields = ['custom_title', 'custom_description', 'sale_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold',]
+        fields = ['custom_title', 'custom_description', 'sale_price', 'stock_quantity', 'category', 'city', 'purchase_price', 'opening_stock', 'low_stock_threshold','product_images']
 
 class AddStockForm(forms.Form):
     vendor = forms.ModelChoiceField(

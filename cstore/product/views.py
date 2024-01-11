@@ -370,33 +370,47 @@ def product_search(request):
 
     return render(request, 'product/product_listing.html', context)
 
-def create_or_import_product(request, pk):
-    print("PK value:", pk)
-    company = CompanyProfile.objects.get(pk=pk)
-    print("Company found:", company)
 
+def create_or_import_product(request, pk):
+    company = get_object_or_404(CompanyProfile, pk=pk)
+    
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
 
-    if request.method == 'POST':
-        print("Form Data Received:", request.POST)
-        form = StoreProductForm(request.POST)
+    initial_data = {
+        'city': company.address.city if company.address else None,
+        'address': str(company.address) if company.address else None
+    }
 
+    # Check for existing StoreProduct if product_id is in GET request
+    if request.method == 'GET' and 'product_id' in request.GET:
+        product_id = request.GET.get('product_id')
+        existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
+        if existing_store_product:
+            initial_data.update({
+                'opening_stock': existing_store_product.current_stock,
+                'custom_title': existing_store_product.custom_title or existing_store_product.product.title,
+                'custom_description': existing_store_product.custom_description or existing_store_product.product.description,
+                'sale_price': existing_store_product.sale_price or existing_store_product.product.price
+            })
+
+    form = StoreProductForm(initial=initial_data)
+    products = Product.objects.filter(is_published=True)
+
+    if request.method == 'POST':
+        form = StoreProductForm(request.POST, request.FILES)
         if form.is_valid():
             product_id = request.POST.get('product_id')
             existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
 
             if existing_store_product:
-                # Update existing StoreProduct instance
                 store_product = existing_store_product
-                store_product.stock_quantity += form.cleaned_data.get('stock_quantity')
-                store_product.current_stock += form.cleaned_data.get('stock_quantity')
-                # Update other fields as necessary
+                additional_quantity = form.cleaned_data.get('stock_quantity')
+                store_product.stock_quantity += additional_quantity
+                store_product.current_stock += additional_quantity
             else:
-                # Create a new StoreProduct instance
                 store_product = form.save(commit=False)
                 store_product.store = company
-
                 new_stock_quantity = form.cleaned_data.get('stock_quantity')
                 store_product.current_stock = new_stock_quantity
 
@@ -404,11 +418,7 @@ def create_or_import_product(request, pk):
                     product = get_object_or_404(Product, id=product_id)
                     store_product.product = product
                     store_product.is_store_exclusive = False
-                    store_product.category = product.category
-                    store_product.city = product.city
-                    store_product.address = product.address
                 else:
-                    # Logic for a new product
                     new_product = Product(
                         title=store_product.custom_title,
                         description=store_product.custom_description,
@@ -419,18 +429,21 @@ def create_or_import_product(request, pk):
                         is_published=False
                     )
                     new_product.save()
-                    print(f"New store_product created with stock_quantity: {store_product.stock_quantity}, current_stock: {store_product.current_stock}")
                     store_product.product = new_product
 
             store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
             store_product.opening_stock = store_product.current_stock
             store_product.save()
 
-            print("Store Product Saved:", store_product)
-            return redirect('some-view')
+            for f in request.FILES.getlist('product_images'):
+                product_image = ProductImage(product=store_product.product, image=f)
+                product_image.save()
+
+            return redirect('some-success-view')
         else:
             print("Form Errors:", form.errors)
 
+    
     initial_city = company.address.city if company.address else None
     initial_address = str(company.address) if company.address else None
     form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
@@ -440,24 +453,89 @@ def create_or_import_product(request, pk):
         'form': form, 
         'products': products, 
         'company': company, 
-        'pk': pk
+        'pk': pk,
+        'store_id': company.pk
     })
 
 
-def get_product(request, productId):
+
+def get_product_image(request, product_id):
+    print(f"Getting image for product ID: {product_id}")
+    product = Product.objects.filter(id=product_id).first()
+    if product and product.images.all():
+        image_url = product.images.all()[0].image.url
+        print(f"Image URL: {image_url}") 
+        return JsonResponse({'image_url': image_url})
+    print("No image found")  # Debug print
+    return JsonResponse({'image_url': None})
+    
+
+@login_required
+def duplicate_product_to_store(request, product_id):
+    # Fetch the product to be duplicated
+    product = get_object_or_404(Product, pk=product_id)
+
+    # Check if the product is published site-wide
+    if not product.is_published:
+        # Handle the error, e.g., show a message or redirect
+        return render(request, 'error_page.html', {'error': 'This product is not available for duplication.'})
+
+    if request.method == 'POST':
+        form = StoreProductForm(request.POST)
+        if form.is_valid():
+            store_product = form.save(commit=False)
+            store_product.product = product  # Linking the duplicated product
+            store_product.store = request.user.companyprofile  # Assuming the user's store is linked to their user account
+            store_product.save()
+            # Redirect to a success page or the store product list
+            return redirect('store_product_list')  # Replace with your actual URL name
+    else:
+        # Pre-populate the form with product details
+        initial_data = {
+            'custom_title': product.title,
+            'custom_description': product.description,
+            'sale_price': product.price,
+            # Add other fields as needed
+        }
+        form = StoreProductForm(initial=initial_data)
+
+    return render(request, 'product/duplicate_product.html', {'form': form, 'product': product})
+
+@login_required
+def list_products_for_duplication(request):
+    # Fetch products that are published site-wide
+    products = Product.objects.filter(is_published=True)
+
+    return render(request, 'product/list_products_for_duplication.html', {'products': products})
+
+def get_product(request, store_id, productId):
     try:
         product = Product.objects.get(id=productId)
+        print(f"Found product: {product.title}, ID: {product.id}")
+
+        store = CompanyProfile.objects.get(pk=store_id)
+        store_product = StoreProduct.objects.filter(store=store, product=product).first()
+        if store_product:
+            print(f"Found store product with current stock: {store_product.current_stock}")
+        else:
+            print(f"No matching store product found for store ID: {store_id}")
+
+        image_url = product.images.first().image.url if product.images.first() else None
+
         data = {
             'title': product.title,
             'description': product.description,
             'price': str(product.price),  # Convert Decimal to string for JSON serialization
             'category_id': product.category.id if product.category else None,
-            'city_id': product.city.id if product.city else None
+            'city_id': product.city.id if product.city else None,
+            'image_url': image_url,
+            'opening_stock': store_product.current_stock if store_product else 0
         }
         return JsonResponse(data)
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Product not found'}, status=404)
-
+    except CompanyProfile.DoesNotExist:
+        return JsonResponse({'error': 'Store not found'}, status=404)
 
 def add_stock_to_store_product(request, store_id, product_id):
     # Ensure the user is authenticated and has permission to add stock

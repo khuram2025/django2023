@@ -35,7 +35,9 @@
               </div>
             </label>
             <input type="file" id="product_images" name="product_images" multiple hidden />
+            <!-- Image Preview Container -->
             <div class="image-preview-container"></div>
+            <input type="file" id="product_images" name="product_images" multiple hidden />
           </div>
 
           <div class="form-group">
@@ -87,6 +89,8 @@
   </div>
   {% include 'home/footer.html' %} {% include 'home/mobile_bottom_bar.html' %} {% endblock %} {% block custom_js %}
   <script>
+    const pk = "{{ pk }}";
+    const storeId = "{{ store_id }}";
     document.querySelector("#product_images").addEventListener("change", function () {
       const files = this.files;
       const previewContainer = document.querySelector(".image-preview-container");
@@ -130,6 +134,8 @@
       var productDescription = element.querySelector(".product-description") ? element.querySelector(".product-description").textContent : "";
       var productCategory = categoryId; // categoryId is passed as an argument
       var productCity = cityId; // cityId is passed as an argument
+      var formAction = `/product/company/${pk}/product/create?product_id=${productId}`;
+      document.querySelector("form").action = formAction;
 
       // Debug: Log extracted details
       console.log("Product Title:", productTitle);
@@ -151,23 +157,37 @@
       console.log("City Field Found:", !!cityField);
       console.log("Sale Price Field Found:", !!salePriceField);
 
-      fetch(`/product/get-product/${productId}/`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Product details not found");
-          }
-          return response.json();
-        })
+      fetch(`/product/get-store-product/${storeId}/${productId}/`)
+        .then((response) => response.json())
         .then((data) => {
-          // Populate fields with the fetched data
-          if (customTitleField) customTitleField.value = data.title;
-          if (customDescriptionField) customDescriptionField.value = data.description;
-          if (salePriceField) salePriceField.value = data.price;
+          // Populate form fields with product details
+          document.querySelector("[name='custom_title']").value = data.title || "";
+          document.querySelector("[name='custom_description']").value = data.description || "";
+          document.querySelector("[name='sale_price']").value = data.price || "";
 
-          // Update category and city fields
-          if (categoryField && data.category_id) categoryField.value = data.category_id;
-          if (cityField && data.city_id) cityField.value = data.city_id;
+          console.log("Opening Stock for Product ID " + productId + ": ", data.opening_stock);
+
+          // Update category and city fields if they exist in the form
+          if (document.querySelector("[name='category']") && data.category_id) {
+            document.querySelector("[name='category']").value = data.category_id;
+          }
+          if (document.querySelector("[name='city']") && data.city_id) {
+            document.querySelector("[name='city']").value = data.city_id;
+          }
+
+          // Update the image preview container
+          const previewContainer = document.querySelector(".image-preview-container");
+          previewContainer.innerHTML = ""; // Clear existing previews
+          if (data.image_url) {
+            const imgElement = document.createElement("img");
+            imgElement.src = data.image_url;
+            previewContainer.appendChild(imgElement);
+          }
+          if (data.opening_stock !== undefined) {
+            document.querySelector("[name='opening_stock']").value = data.opening_stock;
+          }
         })
+
         .catch((error) => console.error("Error:", error));
 
       // Close the dropdown
