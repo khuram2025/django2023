@@ -111,7 +111,11 @@
                         <div class="price-cart-row">
                           <span class="price">{{ product.sale_price|default:product.product.price }} Rs.</span>
                           <!-- Add to Cart or any other action -->
-                          <a href="#" class="cart-icon"> Add </a>
+                          <a href="#" class="cart-icon add-to-cart" 
+   data-product-id="{{ product.product.pk }}" 
+   data-product-name="{{ product.custom_title|default:product.product.title }}" 
+   data-product-price="{{ product.sale_price|default:product.product.price }}">Add</a>
+
                         </div>
                       </div>
                     </div>
@@ -150,23 +154,12 @@
           </div>
         </div>
         <div class="pos-container">
+          
           <div class="pos-inner-container">
+            <h3 class="order-summary-title">Order Summary</h3>
             <div class="pos-item-container">
               <!-- Assuming the item in cart -->
-              <div class="pos-item">
-                <img src="img/croissant.png" alt="" class="pos-item-image" />
-                <div style="flex-grow: 1">
-                  <h5 style="font-size: 0.875rem; font-weight: 500">Croissant</h5>
-                  <p style="font-size: 0.75rem">Rp. 16.000</p>
-                </div>
-                <div style="padding: 0.25rem">
-                  <div class="pos-item-controls">
-                    <button class="pos-button">-</button>
-                    <input type="text" value="1" class="pos-input" />
-                    <button class="pos-button">+</button>
-                  </div>
-                </div>
-              </div>
+            
 
               <!-- ... other items ... -->
             </div>
@@ -182,20 +175,20 @@
 
               <!-- Sub Total -->
               <div class="pos-subtotal-container">
-                <span class="pos-subtotal-label">Sub Total (5 items)</span>
-                <span class="pos-subtotal-amount">$2000</span>
+                <span class="pos-subtotal-label">Sub Total</span>
+                <span class="pos-subtotal-amount">00.0</span>
               </div>
 
               <!-- Tax -->
               <div class="pos-tax-container">
                 <span class="pos-tax-label">Tax (22% VAT included)</span>
-                <span class="pos-tax-amount">$70</span>
+                <span class="pos-tax-amount">00.0</span>
               </div>
 
               <!-- Total Amount -->
               <div class="pos-total-container">
                 <div class="pos-total-label">TOTAL</div>
-                <div class="pos-total-amount">Rp. 204.000</div>
+                <div class="pos-total-amount">Rp. 00.0</div>
               </div>
 
               <!-- Submit Button -->
@@ -242,58 +235,91 @@
   </body>
 </html>
 <script>
-  function togglePosContainer() {
-    const posContainer = document.querySelector(".pos-container");
-    posContainer.style.display = posContainer.style.display === "flex" ? "none" : "flex";
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const cartItems = {};
+    const taxRate = 0.22; // 22% VAT
 
-  // Close the POS container when clicking outside of it
-  window.addEventListener("click", function (event) {
-    const posContainer = document.querySelector(".pos-container");
-    if (event.target === posContainer) {
-      posContainer.style.display = "none";
+    // Add to cart functionality
+    document.querySelectorAll('.add-to-cart').forEach(item => {
+      item.addEventListener('click', function (event) {
+        event.preventDefault();
+        const productId = this.getAttribute('data-product-id');
+        const productName = this.getAttribute('data-product-name');
+        const productPrice = parseFloat(this.getAttribute('data-product-price'));
+
+        addToCart(productId, productName, productPrice);
+      });
+    });
+
+    function addToCart(productId, productName, productPrice) {
+      if (cartItems[productId]) {
+        cartItems[productId].quantity += 1;
+      } else {
+        cartItems[productId] = {
+          name: productName,
+          price: productPrice,
+          quantity: 1
+        };
+      }
+      updateCart();
     }
-  });
 
-  document.addEventListener("DOMContentLoaded", (event) => {
-    const customerSearch = document.getElementById("customer-search");
-    const customerList = document.getElementById("customer-list");
+    // Update Cart UI
+    function updateCart() {
+      const posItemContainer = document.querySelector('.pos-item-container');
+      posItemContainer.innerHTML = ''; // Clear existing items
 
-    customerSearch.addEventListener("input", function (e) {
-      filterCustomers(e.target.value);
-    });
+      let subtotal = 0;
+      for (let id in cartItems) {
+        const item = cartItems[id];
+        subtotal += item.price * item.quantity;
 
-    customerSearch.addEventListener("focus", function () {
-      // Show the list when the search box is clicked
-      customerList.classList.add("active");
-    });
-
-    document.addEventListener("click", function (e) {
-      // Hide the list when clicking outside
-      if (!customerList.contains(e.target) && e.target !== customerSearch) {
-        customerList.classList.remove("active");
+        const itemElement = document.createElement('div');
+        itemElement.classList.add('pos-item');
+        itemElement.innerHTML = `
+          <img src="img/croissant.png" alt="" class="pos-item-image" />
+          <div style="flex-grow: 1">
+            <h5 style="font-size: 0.875rem; font-weight: 500">${item.name}</h5>
+            <p style="font-size: 0.75rem">${item.price} x ${item.quantity}</p>
+          </div>
+          <div style="padding: 0.25rem">
+            <div class="pos-item-controls">
+              <button class="pos-button decrease" onclick="updateQuantity('${id}', false)">-</button>
+              <input type="text" value="${item.quantity}" class="pos-input" readonly />
+              <button class="pos-button increase" onclick="updateQuantity('${id}', true)">+</button>
+            </div>
+          </div>
+        `;
+        posItemContainer.appendChild(itemElement);
       }
-    });
+      updateSummary(subtotal);
+    }
 
-    // Define the filterCustomers function here or make sure it's accessible
-    function filterCustomers(searchText) {
-      const customers = customerList.getElementsByClassName("customer-option");
-      const searchLower = searchText.toLowerCase();
-
-      let listVisible = false;
-      for (let customer of customers) {
-        const customerName = customer.textContent.toLowerCase();
-        if (customerName.includes(searchLower)) {
-          customer.style.display = "block";
-          listVisible = true;
-        } else {
-          customer.style.display = "none";
+    // Update Quantity
+    function updateQuantity(productId, increase) {
+      if (cartItems[productId]) {
+        if (increase) {
+          cartItems[productId].quantity += 1;
+        } else if (cartItems[productId].quantity > 1) {
+          cartItems[productId].quantity -= 1;
         }
+        updateCart();
       }
+    }
 
-      customerList.style.display = listVisible ? "block" : "none";
+    // Update Order Summary
+    function updateSummary(subtotal) {
+      const tax = subtotal * taxRate;
+      const total = subtotal + tax;
+
+      document.querySelector('.pos-subtotal-amount').textContent = `$${subtotal.toFixed(2)}`;
+      document.querySelector('.pos-tax-amount').textContent = `$${tax.toFixed(2)}`;
+      document.querySelector('.pos-total-amount').textContent = `$${total.toFixed(2)}`;
+      const itemCount = Object.values(cartItems).reduce((total, item) => total + item.quantity, 0);
+      document.querySelector('.pos-subtotal-label').textContent = `Sub Total (${itemCount} items)`;
     }
   });
 </script>
+    
 
 {% endblock %}

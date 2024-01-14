@@ -158,6 +158,13 @@
   font-weight: bold;
   margin-top: 10px;
   }
+  .order-summary-title {
+    text-align: center;
+    color: #3b49df;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
   
   .print-bills {
   width: 100%;
