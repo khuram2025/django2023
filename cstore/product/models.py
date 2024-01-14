@@ -410,7 +410,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} from {self.store.name}"
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(StoreProduct, on_delete=models.CASCADE, related_name='order_items')

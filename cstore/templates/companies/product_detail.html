@@ -1,156 +1,9 @@
-Product Detail
-{% extends 'home/base.html' %}{% load youtube_filters %} {% block content %}
+
+{% extends 'home/base.html' %}{% load static %}{% load youtube_filters %} {% block content %}
 
 
 <body id="item" class="">
-  <style>
-    /* Base style for the tabs */
-    
-    .nav-tabs {
-      display: flex;
-      justify-content: space-around;
-      background: #3b49df;
-      overflow-x: auto;
-      white-space: nowrap;
-      border-radius: 10px;
-      /* Rounded corners */
-    }
-
-    .nav-item {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 71px;
-      /* Adjusted height for desktop */
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 10px;
-      padding: 5px;
-      /* Adjusted padding */
-    }
-
-    .nav-link.active {
-      background-color: white;
-      /* White background for active tab */
-      color: #3b49df;
-      /* Text color for active tab */
-      border-radius: 10px;
-      /* Rounded corners */
-      padding: 0px 20px;
-      /* Adjusted padding for active tab */
-      border: 2px solid #3b49df;
-      /* Border color for active tab */
-
-      height: calc(71px * 0.7);
-    }
-
-    /* Scrollbar customization */
-    .nav-tabs::-webkit-scrollbar {
-      height: 10px;
-    }
-
-    .nav-tabs::-webkit-scrollbar-thumb {
-      background: #888;
-    }
-
-    .nav-tabs::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-
-    /* Responsive adjustments for mobile screens */
-    @media (max-width: 768px) {
-      .nav-link {
-        height: 41px;
-        /* Adjusted height for mobile */
-        font-size: 14px;
-        /* Adjusted font size for mobile */
-      }
-
-      .nav-link.active {
-        height: calc(41px * 0.7);
-        /* 70% of 41px for mobile */
-
-        padding: 0px 10px;
-        /* Adjusted padding for active tab */
-      }
-    }
-
-    .tab-pane {
-      display: none;
-      /* Hide all tab content by default */
-    }
-
-    .tab-pane.active {
-      display: block;
-      /* Only show the content of the active tab */
-    }
-
-
-    .responsive-table {
-      overflow-x: auto;
-      /* Allows table to scroll horizontally on small screens */
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-
-    th,
-    td {
-      border: 1px solid #ddd;
-      text-align: left;
-      padding: 8px;
-      min-width: 20px;
-      /* Minimum space around content */
-    }
-
-    th {
-      background-color: #f2f2f2;
-      color: #333;
-    }
-
-    tbody tr:nth-child(odd) {
-      background-color: #f9f9f9;
-    }
-
-    /* Ensure table headers and cells are never stacked */
-    @media screen and (max-width: 600px) {
-      .responsive-table {
-        overflow-x: auto;
-        /* Enable horizontal scrolling */
-      }
-
-      table {
-        min-width: unset;
-        /* Allow the table to adjust to content width */
-      }
-
-      th,
-      td {
-        white-space: nowrap;
-        /* Ensure text doesn't wrap */
-        padding: 8px;
-        /* Maintain padding */
-        border: 1px solid #ddd;
-        /* Consistent borders */
-      }
-
-      th {
-        background-color: #f2f2f2;
-        color: #333;
-      }
-    }
-  </style>
-
+  <link href="{% static 'store_product_detail.css' %}" rel="stylesheet" type="text/css" />
   {% include 'home/header.html' %}
 
 
@@ -205,17 +58,17 @@ Product Detail
 
             <div class="swiper-container">
               <div class="swiper-wrapper">
-                {% for image in product.images.all %}
+                {% for image in store_product.product.images.all %}
                 <li class="swiper-slide ratio" style="padding-top:75.02%;">
-                  <a href="{{ image.image.url }}">
-                    <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-                  </a>
+                    <a href="{{ image.image.url }}">
+                        <img class="lazy" src="{{ image.image.url }}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:store_product.product.title }}" />
+                    </a>
                 </li>
                 {% empty %}
                 <li>No images available.</li>
                 {% endfor %}
-
-              </div>
+            </div>
+            
 
               <div class="swiper-pg"></div>
 
@@ -226,162 +79,27 @@ Product Detail
 
             <div class="swiper-thumbs">
               <ul>
-                {% for image in product.images.all %}
-                <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
-                  <img class="lazy" src="../../oc-content/themes/epsilon/images/load-image.png" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:product.title }}" />
-                </li>
-                {% empty %}
-                <li>No thumbnails available.</li>
-                {% endfor %}
+                  {% for image in store_product.product.images.all %}
+                  <li class="{{ forloop.first|yesno:'active,' }}" data-id="{{ forloop.counter0 }}">
+                      <img class="lazy" src="{{ image.image.url }}" data-src="{{ image.image.url }}" alt="{{ image.alt_text|default:store_product.product.title }}" />
+                  </li>
+                  {% empty %}
+                  <li>No thumbnails available.</li>
+                  {% endfor %}
               </ul>
-            </div>
           </div>
-          <div class="tabs-bar">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Info</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="stock-status-tab" data-toggle="tab" href="#stock-status" role="tab" aria-controls="stock-status" aria-selected="false">Stock Status</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="vendors" aria-selected="false">Vendors</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="customers-tab" data-toggle="tab" href="#customers" role="tab" aria-controls="customers" aria-selected="false">Customers</a>
-              </li>
-            </ul>
+          
           </div>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-              <!-- Info content goes here -->
-              <div class="responsive-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Current Stock</td>
-                      <td>50 items</td>
-                    </tr>
-                    <tr>
-                      <td>Stock Threshold</td>
-                      <td>10%</td>
-                    </tr>
-                    <tr>
-                      <td>Yesterday Profit</td>
-                      <td>25%</td>
-                    </tr>
-                    <tr>
-                      <td>Yesterday Sale</td>
-                      <td>10 items</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="stock-status" role="tabpanel" aria-labelledby="stock-status-tab">
-
-              <!-- Product Detail -->
-              <!-- Iterate over stock entries and display each entry in the given format -->
-              {% for entry in stock_entries %}
-              <div class="mo-two mo-twi" data-offer-id="{{ entry.id }}">
-                <div class="mo-img">
-                  <!-- Display a relevant image or a placeholder -->
-                  <img src="{% if entry.vendor.logo %}{{ entry.vendor.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
-                </div>
-
-                <div class="mo-box-left">
-                  <!-- Vendor Name -->
-                  <a class="mo-line-link" href="#">{{ entry.vendor.name }}</a>
-
-                  <div class="mo-line-title">
-                    <!-- Display the date of the stock entry -->
-                    <span>{{ entry.date_added|date:"d. M Y" }}</span>
-                  </div>
-
-                  <div class="mo-line-sub">
-                    <!-- Purchase price and quantity -->
-                    <span class="mo-prc">Purchase Price: {{ entry.purchase_price }} Rs.</span>
-                    <span class="mo-qt">Qty: {{ entry.quantity_added }}x</span>
-                  </div>
-                </div>
-                <div class="mo-box-right">
-                  <!-- Edit Button -->
-                  <a href="{% url 'product:edit_stock_entry' entry_id=entry.id %}">
-                    <button style="background-color: #4CAF50; color: white; border: none; border-radius: 10px; width: 70px; height: 20px; margin-top: 10px;">Edit</button>
-                  </a>
-
-                  <!-- Spacing between buttons -->
-                  <div style="height: 10px;"></div>
-
-                  <!-- Delete Button -->
-                  <a href="{% url 'product:delete_stock_entry' entry_id=entry.id %}">
-                    <button style="background-color: #f44336; color: white; border: none; border-radius: 10px; width: 70px; height: 20px;">Delete</button>
-                  </a>
-
-
-
-                </div>
-              </div>
-              {% empty %}
-              <!-- Display this section if no stock entries are found -->
-              <p>No stock entries found for this product.</p>
-              {% endfor %}
-
-
-
-            </div>
-            <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
-              <!-- Other Vendors Section -->
-
-              {% if similar_store_products %}
-              {% for vendor_product in similar_store_products %}
-              <div class="mo-two mo-twi" data-offer-id="{{ vendor_product.id }}">
-                <div class="mo-img">
-                  <!-- Display vendor's logo or a placeholder -->
-                  <img src="{% if vendor_product.store.logo %}{{ vendor_product.store.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
-                </div>
-
-                <div class="mo-box-left">
-                  <!-- Vendor Name -->
-                  <a class="mo-line-link" href="#">{{ vendor_product.store.name }}</a>
-
-                  <div class="mo-line-title">
-                    <!-- Optionally display additional information about the stock -->
-                  </div>
-
-                  <div class="mo-line-sub">
-                    <!-- Stock quantity -->
-                    <span class="mo-prc">Stock Quantity: {{ vendor_product.stock_quantity }}</span>
-                  </div>
-                </div>
-              </div>
-              {% endfor %}
-              {% else %}
-              <!-- Display this if no other vendors are found -->
-              <p>No other vendors found for this product.</p>
-              {% endif %}
-
-
-            </div>
-            <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
-              <!-- Customers content goes here -->
-            </div>
-          </div>
+          
           <div class="basic">
-            <h1 class="row">{{ product.title }}</h1>
+            <h1 class="row">{{ store_product.product.title }}</h1>
 
             <div class="labels">
               <span class="premium">Premium</span> </div>
 
             <div class="row details">
-              <span>{{ product.category.title }}</span>
-              <span>{{ product.view_count }} views</span>
+              <span>{{ store_product.product.category.title }}</span>
+              <span>{{ store_product.product.view_count }} views</span>
 
 
 
@@ -394,21 +112,25 @@ Product Detail
 
             </div>
 
-
-            <div class="row price under-header p-1100000000x">{{ product.price }}</div>
-
-            <a href="../../indexfacf.html?page=ajax&amp;action=runhook&amp;hook=mo_offers_list&amp;itemId=65&amp;currency=USD" class="mo-open-offer mo-button-create mo-make-offer-price">Make price offer</a>
-
-
-
+            <div class="row details">
+              <span>Purchase Price: {{ store_product.purchase_price }}</span>
+              <span>Sale Price:  {{ store_product.sale_price }}</span>
+            </div>
+          
             <div class="row date">
               <p>
-                Posted on {{ product.created_at }} </p>
+                {% if store_product.created_at|date:"Y-m-d H:i:s" == store_product.updated_at|date:"Y-m-d H:i:s" %}
+                    Buy on {{ store_product.created_at }}
+                {% else %}
+                    Stock Added on {{ store_product.updated_at }}
+                {% endif %}
+            </p>
+            
             </div>
 
             <div class="favorite"><a href="javascript://" class="fi_save_favorite fi_save fi_fav_65" rel="65" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a></div>
           </div>
-
+          {% include 'companies/store_product_detail_tabs.html' %}
 
           <!-- CUSTOM FIELDS -->
           <div class="props">

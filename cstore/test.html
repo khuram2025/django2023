@@ -1,2 +1,82 @@
-from django.shortcuts import get_object_or_404, redirect from django.urls import reverse from .models import CompanyProfile, StoreProduct, Product, ProductImage from .forms import StoreProductForm def create_or_import_product(request, pk): company = get_object_or_404(CompanyProfile, pk=pk) print(f"Company ID: {pk}, Company Name: {company.name}") if request.user != company.owner: return HttpResponse("Unauthorized", status=401) form = StoreProductForm(request.POST or None, request.FILES or None) if request.method == 'POST' and form.is_valid(): product_id = request.POST.get('product_id') print("POST Request - Product ID:", product_id) if product_id: existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first() if existing_store_product: store_product = existing_store_product additional_quantity = form.cleaned_data.get('stock_quantity') store_product.stock_quantity += additional_quantity store_product.current_stock += additional_quantity print(f"Existing store product updated - Product ID: {product_id}, Store Product ID: {store_product.id}") else: store_product = form.save(commit=False) store_product.store = company store_product.current_stock = form.cleaned_data.get('stock_quantity') store_product.product = Product.objects.get(id=product_id) store_product.is_store_exclusive = False print(f"Product imported - Original Product ID: {product_id}, New Store Product ID: {store_product.id}") else: new_product = Product( title=form.cleaned_data['custom_title'], description=form.cleaned_data['custom_description'], price=form.cleaned_data['sale_price'], category=form.cleaned_data['category'], city=form.cleaned_data.get('city') or (company.address.city if company.address else None), address=form.cleaned_data.get('address') or (str(company.address) if company.address else None), is_published=False ) new_product.save() store_product = form.save(commit=False) store_product.store = company store_product.product = new_product
-store_product.current_stock = form.cleaned_data.get('stock_quantity') print(f"New product created - New Product ID: {new_product.id}, Linked to Store Product ID: {store_product.id}") store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price) store_product.opening_stock = store_product.current_stock store_product.save() print(f"Store Product Saved - ID: {store_product.id}") for f in request.FILES.getlist('product_images'): product_image = ProductImage(product=store_product.product, image=f) product_image.save() return redirect(reverse('companies:company-inventory', args=[pk])) else: print("Form Errors:", form.errors) initial_data = { 'city': company.address.city if company.address else None, 'address': str(company.address) if company.address else None } form = StoreProductForm(initial=initial_data) products = Product.objects.filter(is_published=True) return render(request, 'companies/create_or_import_product.html', { 'form': form, 'products': products, 'company': company, 'pk': pk, 'store_id': company.pk })
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple POS System</title>
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'pos.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body id="item" class="bg-light">
+  {% include 'home/header.html' %}
+  
+  <div class="pos-container">
+    <div class="product-section">
+      <!-- Product categories -->
+      <div class="product-categories">
+        {% for category, products in categories.items %}
+          <button class="category">{{ category }}</button>
+        {% endfor %}
+      </div>
+      <!-- Product grid -->
+      <div class="product-grid row">
+        {% for category, products in categories.items %}
+          {% for product in products %}
+            <div class="col-lg-4 col-md-6 col-sm-6 col-6 product-card">
+              <img src="{{ product.product.image.url }}" alt="{{ product.product.title }}" class="product-image img-fluid">
+              <h5 class="product-title">{{ product.custom_title|default:product.product.title }}</h5>
+              <p class="product-price">${{ product.sale_price|default:product.product.price }}</p>
+            </div>
+          {% endfor %}
+          <!-- Pagination logic for the products -->
+        {% endfor %}
+      </div>
+    </div>
+    <div class="cart-section">
+        <!-- Cart header -->
+        <div class="cart-header">
+          <h2>Order #2156</h2>
+          <button class="clear-cart">Clear All</button>
+        </div>
+        <!-- Cart items -->
+        <div class="cart-items">
+          <!-- Single cart item -->
+          <div class="cart-item">
+            <img src="espresso.jpg" alt="Espresso" class="cart-item-image">
+            <div class="cart-item-details">
+              <h5 class="cart-item-title">Espresso</h5>
+              <p class="cart-item-price">$2.6</p>
+            </div>
+            <div class="quantity-controls">
+              <button class="quantity-decrease">-</button>
+              <span class="quantity">1</span>
+              <button class="quantity-increase">+</button>
+            </div>
+          </div>
+          <!-- ... other cart items ... -->
+        </div>
+        <!-- Cart summary -->
+        <div class="cart-summary">
+          <div class="summary-item">
+            <span>Subtotal</span>
+            <span>$11.8</span>
+          </div>
+          <!-- ... other summary items ... -->
+          <div class="total">
+            <span>Total</span>
+            <span>$16.79</span>
+          </div>
+          <button class="print-bills">Print bills</button>
+        </div>
+      </div>
+    <!-- ... existing cart section ... -->
+  </div>
+
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
+{% endblock %}

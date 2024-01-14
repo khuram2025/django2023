@@ -1,0 +1,163 @@
+<div class="tabs-bar">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Info</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="stock-status-tab" data-toggle="tab" href="#stock-status" role="tab" aria-controls="stock-status" aria-selected="false">Stock Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="vendors-tab" data-toggle="tab" href="#vendors" role="tab" aria-controls="vendors" aria-selected="false">Vendors</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="customers-tab" data-toggle="tab" href="#customers" role="tab" aria-controls="customers" aria-selected="false">Customers</a>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+      <!-- Info content goes here -->
+      <div class="responsive-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Current Stock</td>
+              <td>{{ store_product.stock_quantity }} items</td>
+            </tr>
+            <tr>
+              <td>Stock Threshold</td>
+              <td>{{ store_product.low_stock_threshold }}%</td>
+            </tr>
+            <tr>
+              <td>Yesterday Profit</td>
+              <td>25%</td>
+            </tr>
+            <tr>
+              <td>Yesterday Sale</td>
+              <td>10 items</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="stock-status" role="tabpanel" aria-labelledby="stock-status-tab">
+
+      <!-- Product Detail -->
+      <!-- Iterate over stock entries and display each entry in the given format -->
+      {% for entry in stock_entries %}
+      <div class="mo-two mo-twi" data-offer-id="{{ entry.id }}">
+        <div class="mo-img">
+          <!-- Display a relevant image or a placeholder -->
+          <img src="{% if entry.vendor.logo %}{{ entry.vendor.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
+        </div>
+
+        <div class="mo-box-left">
+          <!-- Vendor Name -->
+          <a class="mo-line-link" href="#">{{ entry.vendor.name }}</a>
+
+          <div class="mo-line-title">
+            <!-- Display the date of the stock entry -->
+            <span>{{ entry.date_added|date:"d. M Y" }}</span>
+          </div>
+
+          <div class="mo-line-sub">
+            <!-- Purchase price and quantity -->
+            <span class="mo-prc">Purchase Price: {{ entry.purchase_price }} Rs.</span>
+            <span class="mo-qt">Qty: {{ entry.quantity_added }}x</span>
+          </div>
+        </div>
+        <div class="mo-box-right">
+          <!-- Edit Button -->
+          <a href="{% url 'product:edit_stock_entry' entry_id=entry.id %}">
+            <button style="background-color: #4CAF50; color: white; border: none; border-radius: 10px; width: 70px; height: 20px; margin-top: 10px;">Edit</button>
+          </a>
+
+          <!-- Spacing between buttons -->
+          <div style="height: 10px;"></div>
+
+          <!-- Delete Button -->
+          <a href="{% url 'product:delete_stock_entry' entry_id=entry.id %}">
+            <button style="background-color: #f44336; color: white; border: none; border-radius: 10px; width: 70px; height: 20px;">Delete</button>
+          </a>
+
+
+
+        </div>
+      </div>
+      {% empty %}
+      <!-- Display this section if no stock entries are found -->
+      <p>No stock entries found for this product.</p>
+      {% endfor %}
+
+
+
+    </div>
+    <div class="tab-pane fade" id="vendors" role="tabpanel" aria-labelledby="vendors-tab">
+      <!-- Other Vendors Section -->
+
+      {% if similar_store_products %}
+      {% for vendor_product in similar_store_products %}
+      <div class="mo-two mo-twi" data-offer-id="{{ vendor_product.id }}">
+        <div class="mo-img">
+          <!-- Display vendor's logo or a placeholder -->
+          <img src="{% if vendor_product.store.logo %}{{ vendor_product.store.logo.url }}{% else %}https://your-default-placeholder-image.jpg{% endif %}">
+        </div>
+
+        <div class="mo-box-left">
+          <!-- Vendor Name -->
+          <a class="mo-line-link" href="#">{{ vendor_product.store.name }}</a>
+
+          <div class="mo-line-title">
+            <!-- Optionally display additional information about the stock -->
+          </div>
+
+          <div class="mo-line-sub">
+            <!-- Stock quantity -->
+            <span class="mo-prc">Stock Quantity: {{ vendor_product.stock_quantity }}</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <!-- Display this if no other vendors are found -->
+      <p>No other vendors found for this product.</p>
+      {% endif %}
+
+
+    </div>
+    <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
+        <div class="responsive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Customer Mobile</th>
+                        <th>Total Quantity</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in customer_purchases %}
+                    <tr>
+                        <td>{{ purchase.name }}</td>
+                        <td>{{ purchase.mobile }}</td>
+                        <td>{{ purchase.total_quantity }}</td>
+                        <td>{{ purchase.total_price }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No purchases available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+  </div>

@@ -37,5 +37,9 @@ urlpatterns = [
     path('ajax/get-product-details/', views.get_product_details, name='get_product_details'),
 
     path('api/customers/', views.create_customer, name='create-customer'),
+
+
+    path('pos/<int:store_id>/', views.pos_view, name='pos-view'),
+
     
 ]

@@ -14,6 +14,8 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .forms import CompanyProfileForm
 import json
+from collections import defaultdict
+
 from companies.models import CompanyProfile
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -559,6 +561,31 @@ def store_product_detail(request, pk, product_pk):
     ).exclude(
         store=company
     )
+    order_items = OrderItem.objects.filter(product=store_product)
+    customer_aggregate = defaultdict(lambda: {'quantity': 0, 'total_price': 0})
+    for item in order_items:
+        customer = item.order.customer
+        if customer:
+            key = (customer.name, customer.mobile)
+            customer_aggregate[key]['quantity'] += item.quantity
+            customer_aggregate[key]['total_price'] += item.total_price  # Corrected line
+        else:
+            key = ('Walk In Customer', '')
+            customer_aggregate[key]['quantity'] += item.quantity
+            customer_aggregate[key]['total_price'] += item.total_price  # Corrected line
+
+
+    customer_purchases = [
+        {
+            'name': key[0],
+            'mobile': key[1],
+            'total_quantity': value['quantity'],
+            'total_price': value['total_price']
+        }
+        for key, value in customer_aggregate.items()
+    ]
+
+
 
     context = {
         'company': company,
@@ -566,6 +593,7 @@ def store_product_detail(request, pk, product_pk):
         'stock_entries': stock_entries,
         'similar_store_products': similar_store_products,
         'store_id': company.id,  # Adding store_id to context
+        'customer_purchases': customer_purchases,
         'product_id': store_product.id,
         'pk': pk
     }

@@ -4,6 +4,8 @@ from account.models import CustomUser, UserProfile
 from django.urls import reverse
 
 from companies.models import CompanyProfile
+from django.core.paginator import Paginator
+
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -377,7 +379,6 @@ def create_or_import_product(request, pk):
     company = get_object_or_404(CompanyProfile, pk=pk)
     print(f"Company ID: {pk}, Company Name: {company.name}")
 
-    
     if request.user != company.owner:
         return HttpResponse("Unauthorized", status=401)
 
@@ -386,7 +387,6 @@ def create_or_import_product(request, pk):
         'address': str(company.address) if company.address else None
     }
 
-    # Check for existing StoreProduct if product_id is in GET request
     if request.method == 'GET' and 'product_id' in request.GET:
         product_id = request.GET.get('product_id')
         existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
@@ -401,8 +401,6 @@ def create_or_import_product(request, pk):
             })
 
     form = StoreProductForm(initial=initial_data)
-    
-
     products = Product.objects.filter(is_published=True)
 
     if request.method == 'POST':
@@ -410,31 +408,40 @@ def create_or_import_product(request, pk):
         if form.is_valid():
             product_id = request.POST.get('product_id')
             if product_id:
-            existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
-
-            if existing_store_product:
-                # Update existing StoreProduct
-                store_product = existing_store_product
-                additional_quantity = form.cleaned_data.get('stock_quantity')
-                store_product.stock_quantity += additional_quantity
-                store_product.current_stock += additional_quantity
-                print(f"Existing store product updated - Product ID: {product_id}, Store Product ID: {store_product.id}")
+                existing_store_product = StoreProduct.objects.filter(store=company, product_id=product_id).first()
+                if existing_store_product:
+                    store_product = existing_store_product
+                    additional_quantity = form.cleaned_data.get('stock_quantity')
+                    store_product.stock_quantity += additional_quantity
+                    store_product.current_stock += additional_quantity
+                    print(f"Existing store product updated - Product ID: {product_id}, Store Product ID: {store_product.id}")
+                else:
+                    store_product = form.save(commit=False)
+                    store_product.store = company
+                    store_product.current_stock = form.cleaned_data.get('stock_quantity')
+                    linked_product = Product.objects.get(id=product_id)
+                    store_product.product = linked_product
+                    print(f"New StoreProduct linked to existing Product - Product ID: {product_id}")
             else:
-                # Create new StoreProduct linked to the existing Product
+                new_product = Product(
+                    title=form.cleaned_data['custom_title'],
+                    description=form.cleaned_data['custom_description'],
+                    price=form.cleaned_data['sale_price'],
+                    category=form.cleaned_data['category'],
+                    city=form.cleaned_data.get('city') or (company.address.city if company.address else None),
+                    address=form.cleaned_data.get('address') or (str(company.address) if company.address else None),
+                    is_published=False
+                )
+                new_product.save()
                 store_product = form.save(commit=False)
                 store_product.store = company
+                store_product.product = new_product
                 store_product.current_stock = form.cleaned_data.get('stock_quantity')
-
-                # Link to existing Product
-                linked_product = Product.objects.get(id=product_id)
-                store_product.product = linked_product
-                print(f"New StoreProduct linked to existing Product - Product ID: {product_id}")
+                print(f"New product created - New Product ID: {new_product.id}, Linked to Store Product ID: {store_product.id}")
 
             store_product.purchase_price = form.cleaned_data.get('purchase_price', store_product.purchase_price)
             store_product.opening_stock = store_product.current_stock
             store_product.save()
-            print(f"Store Product Saved - ID: {store_product.id}")
-
             for f in request.FILES.getlist('product_images'):
                 product_image = ProductImage(product=store_product.product, image=f)
                 product_image.save()
@@ -442,12 +449,6 @@ def create_or_import_product(request, pk):
             return redirect(reverse('companies:company-inventory', args=[pk]))
         else:
             print("Form Errors:", form.errors)
-
-    
-    initial_city = company.address.city if company.address else None
-    initial_address = str(company.address) if company.address else None
-    form = StoreProductForm(initial={'city': initial_city, 'address': initial_address})
-    products = Product.objects.filter(is_published=True)
 
     return render(request, 'companies/create_or_import_product.html', {
         'form': form, 
@@ -646,3 +647,24 @@ def create_customer(request):
             return JsonResponse(serializer.errors, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        
+@login_required
+def pos_view(request, store_id):
+    store_products = StoreProduct.objects.filter(store_id=store_id).select_related('product')
+    paginator = Paginator(store_products, 10)  # Show 10 products per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    # Group products by category
+    categories = {}
+    for store_product in store_products:
+        category = store_product.product.category.title
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(store_product)
+    
+    context = {
+        'categories': categories,
+        'page_obj': page_obj
+    }
+    return render(request, 'product/pos.html', context)
