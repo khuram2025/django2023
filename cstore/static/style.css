@@ -485,6 +485,42 @@ body#search .container.primary {padding-bottom:35px;}
 #search-quick-bar .view-type a.grid svg {width:12px;}
 #search-quick-bar .view-type a.detail svg {transform: scaleY(-1);}
 
+/* Base styles for the custom view-type container */
+.custom-view-type {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: 0; /* Aligns content to the left */
+}
+
+/* Styles for each custom link inside custom-view-type */
+.custom-view-type .custom-link {
+    color: #3b49df; /* Blue text */
+    border: 2px solid #3b49df; /* Blue border */
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin: 2px;
+    text-decoration: none; /* Removes underline from links */
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* Styles for active custom link */
+.custom-view-type .custom-link.custom-active {
+    background-color: #3b49df; /* Blue background */
+    color: #ffffff; /* White text */
+    border-color: #3b49df; /* Blue border */
+}
+
+/* Hover effect for custom links */
+.custom-view-type .custom-link:hover {
+    background-color: rgba(59, 73, 223, 0.1); /* Light blue background on hover */
+}
+
+
 /* SORTING */
 #search-quick-bar .sort-type {position:relative;margin-left:8px;}
 #search-quick-bar label {position: absolute; left: 15px; top: 3px; font-size: 11px; font-weight: bold;}

@@ -1,0 +1,183 @@
+.pos-container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  height: 100vh;
+  width: 41.666667%;
+  height: 100%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
+  padding-left: 0.5rem;
+  background-color: #eceff1;
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  color: #37474f;
+}
+
+.pos-inner-container {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  flex: 1 1 auto; /* Grow to fill space, don't shrink, base size is automatic */
+  overflow-y: auto;
+}
+
+.pos-item-container {
+  flex: 1 1 0%;
+  width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  -webkit-text-size-adjust: 100%;
+  font-family: inherit;
+  line-height: inherit;
+  -webkit-font-smoothing: antialiased;
+  color: #37474f;
+  box-sizing: border-box;
+}
+.pos-divider {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); /* Fancy gradient line */
+  margin-top: 1rem; /* Space above the line */
+  margin-bottom: 1rem; /* Space below the line */
+}
+
+.pos-item {
+  margin-bottom: 0.75rem;
+  display: flex;
+  width: 100%;
+  user-select: none;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f8fafc;
+  color: #4b5563;
+}
+
+.pos-item-image {
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  margin-right: 0.5rem;
+}
+
+.pos-item-details {
+  flex-grow: 1;
+  padding-left: 0.5rem;
+}
+
+.pos-item-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pos-item-price {
+  font-size: 0.75rem;
+}
+
+.pos-item-controls {
+  width: 7rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+}
+
+.pos-button {
+  border-radius: 0.5rem;
+  text-align: center;
+  padding: 0.25rem;
+  color: #ffffff;
+  background-color: #3b49df;
+  border: 2px solid #3b49df;
+}
+
+.pos-input {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  text-align: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.pos-payment-info {
+  text-align: center;
+  padding-top: 0.75rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-top: 1px solid #ccc; /* Solid line on top of the payment section if needed */
+  padding-top: 1rem;
+}
+
+.pos-total-container {
+  display: flex;
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #37474f;
+}
+
+.pos-total-label {
+  flex-grow: 1;
+  text-align: left;
+}
+
+.pos-total-amount {
+  text-align: right;
+}
+
+.pos-submit-button {
+  color: white;
+  border-radius: 1rem;
+  font-size: 1.125rem;
+  width: 100%;
+  border: 2px solid #3b49df;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: #3b49df;
+  cursor: pointer;
+}
+
+.pos-discount-container,
+.pos-subtotal-container,
+.pos-tax-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem; /* Adjust as needed */
+}
+
+@media (max-width: 768px) {
+  /* Hide pos-container on mobile */
+  .pos-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Style the inner container as a popup */
+  .pos-inner-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    z-index: 1001;
+    position: relative;
+  }
+}

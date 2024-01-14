@@ -650,21 +650,23 @@ def create_customer(request):
         
 @login_required
 def pos_view(request, store_id):
+    selected_category = request.GET.get('category', None)
     store_products = StoreProduct.objects.filter(store_id=store_id).select_related('product')
-    paginator = Paginator(store_products, 10)  # Show 10 products per page
 
+    if selected_category:
+        store_products = store_products.filter(product__category__title=selected_category)
+
+    paginator = Paginator(store_products, 10)  # Show 10 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    # Group products by category
-    categories = {}
-    for store_product in store_products:
-        category = store_product.product.category.title
-        if category not in categories:
-            categories[category] = []
-        categories[category].append(store_product)
+
+    # Get all categories for filtering options
+    all_categories = set(sp.product.category.title for sp in StoreProduct.objects.filter(store_id=store_id))
     
     context = {
-        'categories': categories,
-        'page_obj': page_obj
+        'all_categories': all_categories,
+        'selected_category': selected_category,
+        'page_obj': page_obj,
+        'store_id': store_id,
     }
     return render(request, 'product/pos.html', context)

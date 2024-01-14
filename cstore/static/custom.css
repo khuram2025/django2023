@@ -818,3 +818,221 @@ form label {
     margin-right: 0; /* Last item in a row should not have a right margin */
   }
 }
+
+/* Reset some default styles */
+.default-font,
+.default-font * {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Order Summary Styles */
+.order-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.order-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.order-btn {
+  background-color: #007aff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-id {
+  font-weight: bold;
+}
+
+.order-items {
+  list-style: none;
+}
+
+.order-items .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-name {
+  flex: 2;
+}
+
+.item-quantity {
+  flex: 1;
+}
+
+.item-price {
+  flex: 1;
+}
+
+.item-discount {
+  flex: 1;
+  color: #ff0000;
+  font-size: 12px;
+}
+
+.order-totals {
+  margin-top: 20px;
+}
+
+.order-totals > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.discount-btn {
+  background-color: transparent;
+  color: #007aff;
+  border: 2px solid #007aff;
+  padding: 5px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.total {
+  font-weight: bold;
+}
+
+.total-amount {
+  color: #007aff;
+  font-size: 18px;
+}
+
+/* Base styles for order summary */
+.order-filter-menu {
+  width: 300px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin: 5px; /* Adjust as needed */
+}
+
+.order-filter-menu .order-wrap {
+  /* Add any necessary properties you copied from .filter-menu .wrap */
+}
+
+.order-filter-menu .order-summary-content {
+  /* Additional styles for the order summary content */
+}
+
+.order-filter-menu .add-customer-btn {
+  background-color: #f2f2f2;
+  color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.order-filter-menu .order-items .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.order-filter-menu .order-items .item .quantity {
+  font-weight: bold;
+}
+
+.order-filter-menu .order-items .item .edit-btn {
+  background: none;
+  color: #007bff;
+  border: none;
+  text-decoration: underline;
+}
+
+.order-filter-menu .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.order-filter-menu .actions .action-btn {
+  background-color: #f2f2f2;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-bottom: 5px; /* For wrap */
+}
+
+.order-filter-menu .totals {
+  border-top: 1px solid #eaeaea;
+  padding-top: 20px;
+}
+
+.order-filter-menu .totals .subtotal,
+.order-filter-menu .totals .tax,
+.order-filter-menu .totals .payable {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.order-filter-menu .checkout-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.order-filter-menu .checkout-actions .hold-cart,
+.order-filter-menu .checkout-actions .proceed {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  margin-top: 10px; /* Adjust as needed */
+}
+
+.order-filter-menu .checkout-actions .hold-cart {
+  background-color: #ffcc00;
+  color: #fff;
+}
+
+.order-filter-menu .checkout-actions .proceed {
+  background-color: #28a745;
+  color: #fff;
+}
+
+/* Mobile view toggle */
+@media (max-width: 768px) {
+  #open-search-filters {
+    display: none; /* Hide by default */
+  }
+
+  #order-summary-menu {
+    width: 100%; /* Full width on mobile */
+    display: none; /* Hide by default, show when toggled */
+  }
+
+  /* Assuming a JavaScript toggle adds a class 'active' to show the menu */
+  #order-summary-menu.active {
+    display: block; /* Show the order summary when active */
+  }
+
+  .order-filter-menu {
+    width: 100%; /* Adjust width for mobile view */
+    margin: 0;
+    padding: 10px; /* Adjust padding for mobile view */
+  }
+}
