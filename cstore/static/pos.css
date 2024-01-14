@@ -215,3 +215,43 @@
   .product-categories::-webkit-scrollbar {
   display: none;
   }
+
+
+  .customer-dropdown {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#customer-search {
+    width: 100%;
+    padding: 8px 
+    10px;
+border: 1px solid #ddd;
+border-radius: 4px;
+}
+
+.customer-list {
+position: absolute;
+width: 100%;
+background-color: #fff;
+border: 1px solid #ddd;
+border-top: none;
+list-style: none;
+padding: 0;
+max-height: 200px;
+overflow-y: auto;
+display: none; /* Hide by default */
+}
+
+.customer-list.active {
+display: block; /* Show when active */
+}
+.customer-list.li {
+  padding: 8px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  }
+  
+  .customer-list .li:hover {
+  background-color: #f0f0f0;
+  }
