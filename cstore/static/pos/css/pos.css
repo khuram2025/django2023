@@ -181,3 +181,82 @@
     position: relative;
   }
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  z-index: 1;
+}
+
+.dropdown-content option {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown input {
+  border: none;
+  padding: 14px;
+  margin: 0;
+}
+
+.dropdown input:focus {
+  outline: none;
+}
+.customer-dropdown {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #ccc; /* Add border for the dropdown */
+  padding: 5px 10px; /* Add padding for the input box */
+}
+
+.customer-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid #ccc; /* Add border for the list */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.customer-list li {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.customer-list li:hover {
+  background-color: #f1f1f1;
+}
+
+.customer-list div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.customer-list div:hover {
+  background-color: #f1f1f1;
+}
+
+#customer-search {
+  border: 1px solid #cacaca;
+  padding: 10px 15px; /* Added padding */
+  margin: 0;
+  width: calc(100% - 30px); /* Subtract the padding from the width */
+}
