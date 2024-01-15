@@ -149,7 +149,7 @@ class CompanyProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        exclude = ['seller_information','view_count']  # Exclude the seller_information field
+        exclude = ['seller_information','view_count', 'search_vector']  # Exclude the seller_information field
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)

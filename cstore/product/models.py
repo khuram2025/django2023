@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from account.models import CustomUser
+from django.db import transaction
 from PIL import Image
 from io import BytesIO
 from django.core.files import File
@@ -153,13 +154,19 @@ class Product(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        Product.objects.filter(pk=self.pk).update(search_vector=(
-            SearchVector('title', weight='A') +
-            SearchVector('description', weight='B') +
-            SearchVector('address', weight='C')
-        ))
-    
+        with transaction.atomic():
+            # Save the product instance first
+            super().save(*args, **kwargs)
+
+            # Then update the search_vector field separately
+            if 'update_fields' not in kwargs or 'search_vector' in kwargs.get('update_fields', []):
+                Product.objects.filter(pk=self.pk).update(search_vector=(
+                    SearchVector('title', weight='A') +
+                    SearchVector('description', weight='B') +
+                    SearchVector('address', weight='C')
+                    ))
+
+        
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='product_images/', verbose_name=_("Image"))

@@ -96,6 +96,7 @@ def create_company_product(request):
                 messages.error(request, "No Company Assigned")
                 return redirect('some_error_handling_view')
             product.save()
+            print("Product saved successfully:", product)  # Print success message
 
             # Handle custom fields
             for key, value in request.POST.items():
@@ -117,14 +118,15 @@ def create_company_product(request):
             return redirect('product:product_detail', pk=product.pk)
 
         else:
+            print("Form is invalid:", form.errors)  # Print form errors
             messages.error(request, "There was an error with the form. Please check the details.")
     else:
         if request.method == 'POST':
             form = CompanyProductForm(request.POST, request.FILES, user=request.user, company_profiles=company_profiles)
-            # ... [rest of your POST handling code]
+          
         else:
             form = CompanyProductForm(user=request.user, company_profiles=company_profiles)
-    # ... [rest of your GET handling code]
+   
 
 
     return render(request, 'product/add_company_product.html', {'form': form})
