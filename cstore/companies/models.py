@@ -7,6 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from django.apps import apps
+from django.contrib.postgres.search import SearchVectorField
+
 
 
 
@@ -34,6 +36,8 @@ class CompanyProfile(models.Model):
     instagram_link = models.URLField(blank=True, null=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
+    search_vector = SearchVectorField(null=True)
+
 
     def import_category(self):
         Category = apps.get_model('product', 'Category')
