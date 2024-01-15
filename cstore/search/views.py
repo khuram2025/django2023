@@ -13,7 +13,7 @@ def search(request):
     print("Search query received:", query_string)
 
     if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-        # PostgreSQL full-text search
+        print("Using PostgreSQL search") # Diagnostic print
         query = SearchQuery(query_string)
         
         product_results = Product.objects.annotate(

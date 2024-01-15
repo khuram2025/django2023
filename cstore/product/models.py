@@ -113,8 +113,7 @@ class ManualTransaction(models.Model):
 
 
 
-class Product(models.Model):
-    
+class Product(models.Model):    
     category = models.ForeignKey('product.Category', on_delete=models.CASCADE, related_name='products')
     city = models.ForeignKey('locations.City', on_delete=models.SET_NULL, null=True, verbose_name=_("City"))
     address = models.TextField(verbose_name=_("Address"), blank=True, null=True)
