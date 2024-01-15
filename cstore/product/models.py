@@ -7,13 +7,16 @@ from django.core.files import File
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
 from companies.models import CompanyProfile
-
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from locations.models import City
 from mptt.models import MPTTModel, TreeForeignKey
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.postgres.fields import JSONField as PostgresJSONField
 from django.db.models import JSONField as DefaultJSONField
+from django.contrib.postgres.search import SearchVector
+
 
 class Category(MPTTModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"))
@@ -140,12 +143,23 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     view_count = models.PositiveIntegerField(default=0)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta:
+        indexes = [GinIndex(fields=['search_vector'])]
+
+
 
     def __str__(self):
         return self.title
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        Product.objects.filter(pk=self.pk).update(search_vector=(
+            SearchVector('title', weight='A') +
+            SearchVector('description', weight='B') +
+            SearchVector('address', weight='C')
+        ))
     
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
