@@ -19,7 +19,8 @@ def search(request):
         # Check the raw SQL query
         product_query = Product.objects.annotate(
             rank=SearchRank('search_vector', query)
-        ).filter(rank__gte=0.3).order_by('-rank')
+        ).filter(rank__gt=0.06).order_by('-rank').values('id', 'title', 'rank')
+
         print("Product query SQL:", product_query.query)  # Diagnostic print
 
         product_results = product_query
@@ -31,14 +32,7 @@ def search(request):
         print("Company query SQL:", company_query.query)  # Diagnostic print
 
         company_results = company_query
-    else:
-        print("Using SQLite search")  # Diagnostic print
-        product_results = Product.objects.filter(
-            Q(title__icontains=query_string) | Q(description__icontains=query_string)
-        )
-        company_results = CompanyProfile.objects.filter(
-            Q(name__icontains=query_string) | Q(about__icontains=query_string)
-        )
+    
 
     print("Number of products found:", product_results.count())  # Diagnostic print
     print("Number of companies found:", company_results.count())  # Diagnostic print
