@@ -20,6 +20,15 @@ DATABASES = {
 }
 
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://localhost:9200'  # or 'https://localhost:9200' if using https
+    },
+}
+
+
+INSTALLED_APPS += ['django_elasticsearch_dsl']
+
 
 AWS_ACCESS_KEY_ID = 'AKIASTSQA7RFPTLKOHGN'
 AWS_SECRET_ACCESS_KEY = '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'
