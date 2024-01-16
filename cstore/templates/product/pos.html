@@ -200,64 +200,64 @@
           </div>
         </div>
       </div>
-      <div class="pos-container">
-        <div class="pos-inner-container">
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-            <h3 class="order-summary-title">Order Summary</h3>
-            <button onclick="refreshOrder()"
-              style="background: none; border: none; cursor: pointer; font-size: 20px;">&#x21bb; </button>
-          </div>
-          <!-- Customer dropdown -->
-          <div class="customer-dropdown">
-            <h2>Customer</h2>
-            <input type="text" id="customer-search" placeholder="Search Customer" autocomplete="off" />
-            <ul id="customer-list" class="customer-list">
-              {% for customer in customers %}
-              <li data-customer-id="{{ customer.id }}">{{ customer.name }} - {{ customer.mobile }}</li>
-              {% endfor %}
-            </ul>
-          </div>
 
-
-          <div class="pos-item-container">
-            <!-- Assuming the item in cart -->
-
-            <!-- ... other items ... -->
-          </div>
-          <hr class="pos-divider" />
-
-          <!-- Payment info -->
-          <div class="pos-payment-info">
-            <!-- Order Discount -->
-            <div class="pos-discount-container">
-              <span class="pos-discount-label">Add Order Discount</span>
-              <button class="pos-discount-button">+</button>
-            </div>
-
-            <!-- Sub Total -->
-            <div class="pos-subtotal-container">
-              <span class="pos-subtotal-label">Sub Total</span>
-              <span class="pos-subtotal-amount">00.0</span>
-            </div>
-
-            <!-- Tax -->
-            <div class="pos-tax-container">
-              <span class="pos-tax-label">Tax (22% VAT included)</span>
-              <span class="pos-tax-amount">00.0</span>
-            </div>
-
-            <!-- Total Amount -->
-            <div class="pos-total-container">
-              <div class="pos-total-label">TOTAL</div>
-              <div class="pos-total-amount">Rp. 00.0</div>
-            </div>
-
-            <!-- Submit Button -->
-            <button class="pos-submit-button">SUBMIT</button>
-          </div>
-          <!-- end of payment info -->
+      <div class="pos-inner-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+          <h3 class="order-summary-title">Order Summary</h3>
+          <button onclick="refreshOrder()"
+            style="background: none; border: none; cursor: pointer; font-size: 20px;">&#x21bb; </button>
         </div>
+        <!-- Customer dropdown -->
+        <div class="customer-dropdown">
+          <h2>Customer</h2>
+          <input type="text" id="customer-search" placeholder="Search Customer" autocomplete="off" />
+          <ul id="customer-list" class="customer-list">
+            {% for customer in customers %}
+            <li data-customer-id="{{ customer.id }}">{{ customer.name }} - {{ customer.mobile }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+
+        <div class="pos-item-container">
+          <!-- Assuming the item in cart -->
+
+          <!-- ... other items ... -->
+        </div>
+        <hr class="pos-divider" />
+
+        <!-- Payment info -->
+        <div class="pos-payment-info">
+          <!-- Order Discount -->
+          <div class="pos-discount-container">
+            <span class="pos-discount-label">Add Order Discount</span>
+            <button class="pos-discount-button">+</button>
+          </div>
+
+          <!-- Sub Total -->
+          <div class="pos-subtotal-container">
+            <span class="pos-subtotal-label">Sub Total</span>
+            <span class="pos-subtotal-amount">00.0</span>
+          </div>
+
+          <!-- Tax -->
+          <div class="pos-tax-container">
+            <span class="pos-tax-label">Tax (22% VAT included)</span>
+            <span class="pos-tax-amount">00.0</span>
+          </div>
+
+          <!-- Total Amount -->
+          <div class="pos-total-container">
+            <div class="pos-total-label">TOTAL</div>
+            <div class="pos-total-amount">Rp. 00.0</div>
+          </div>
+
+          <!-- Submit Button -->
+          <button class="pos-submit-button">SUBMIT</button>
+        </div>
+        <!-- end of payment info -->
       </div>
+
     </div>
   </div>
 
@@ -307,51 +307,56 @@
 
 </html>
 <script>
-  
-  const customerSearch = document.getElementById('customer-search');
-  const customerList = document.getElementById('customer-list');
-
-  // Toggle customer list on search box click
-  customerSearch.addEventListener('click', function (event) {
-    event.stopPropagation(); // Prevent click event from reaching the window
-    customerList.style.display = 'block';
-  });
-
-  customerSearch.addEventListener('input', function () {
-    const searchTerm = customerSearch.value.toLowerCase();
-    const customers = customerList.getElementsByTagName('li');
-
-    for (let i = 0; i < customers.length; i++) {
-      let customer = customers[i];
-      let text = customer.textContent || customer.innerText;
-      if (text.toLowerCase().indexOf(searchTerm) > -1) {
-        customer.style.display = '';
-      } else {
-        customer.style.display = 'none';
-      }
-    }
-  });
-
-  // Close the dropdown when clicking outside
-  window.addEventListener("click", (event) => {
-    if (!customerDropdown.contains(event.target)) {
-      customerList.style.display = "none";
-    }
-  });
-
-  // Handle list item selection
-  customerList.addEventListener("click", (event) => {
-    if (event.target.tagName === "LI") {
-      const selectedCustomer = event.target.textContent;
-      customerSearch.value = selectedCustomer;
-      customerList.style.display = "none";
-      // Perform any other actions needed after selection
-    }
-  });
-
   document.addEventListener("DOMContentLoaded", function () {
-    const cartItems = {};
-    const taxRate = 0.22; // 22% VAT
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+    let selectedCustomer = localStorage.getItem('selectedCustomer') || '';
+
+    // Populate the customer search input and cart items on page load
+    document.getElementById('customer-search').value = selectedCustomer;
+    updateCart();
+
+    const customerSearch = document.getElementById('customer-search');
+    const customerList = document.getElementById('customer-list');
+    const customerDropdown = document.querySelector('.customer-dropdown'); // Add this line
+
+    // Toggle customer list on search box click
+    customerSearch.addEventListener('click', function (event) {
+      event.stopPropagation(); // Prevent click event from reaching the window
+      customerList.style.display = 'block';
+    });
+
+    customerSearch.addEventListener('input', function () {
+      const searchTerm = customerSearch.value.toLowerCase();
+      const customers = customerList.getElementsByTagName('li');
+
+      for (let i = 0; i < customers.length; i++) {
+        let customer = customers[i];
+        let text = customer.textContent || customer.innerText;
+        if (text.toLowerCase().indexOf(searchTerm) > -1) {
+          customer.style.display = '';
+        } else {
+          customer.style.display = 'none';
+        }
+      }
+    });
+
+    // Close the dropdown when clicking outside
+    window.addEventListener("click", (event) => {
+      if (!customerDropdown.contains(event.target)) {
+        customerList.style.display = "none";
+      }
+    });
+
+    // Handle list item selection
+    customerList.addEventListener("click", (event) => {
+      if (event.target.tagName === "LI") {
+        const selectedCustomer = event.target.textContent;
+        customerSearch.value = selectedCustomer;
+        localStorage.setItem('selectedCustomer', selectedCustomer); // Save the selected customer
+        customerList.style.display = "none";
+        // Perform any other actions needed after selection
+      }
+    });
 
     // Add to cart functionality
     document.querySelectorAll(".add-to-cart").forEach((item) => {
@@ -375,6 +380,15 @@
           quantity: 1,
         };
       }
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCart();
+    }
+
+    window.refreshOrder = function () {
+      localStorage.removeItem('cartItems');
+      localStorage.removeItem('selectedCustomer'); // Remove selected customer from storage
+      cartItems = {};
+      document.getElementById('customer-search').value = '';
       updateCart();
     }
 
@@ -398,9 +412,10 @@
           </div>
           <div style="padding: 0.25rem">
             <div class="pos-item-controls">
-              <button class="pos-button decrease" onclick="updateQuantity('${id}', false)">-</button>
+              <button class="pos-button decrease" onclick="decreaseQuantity('${id}')">-</button>
               <input type="text" value="${item.quantity}" class="pos-input" readonly />
-              <button class="pos-button increase" onclick="updateQuantity('${id}', true)">+</button>
+              <button class="pos-button increase" onclick="increaseQuantity('${id}')">+</button>
+
             </div>
           </div>
         `;
@@ -421,8 +436,19 @@
       }
     }
 
+    // Call this function when the + button is clicked
+    function increaseQuantity(productId) {
+      updateQuantity(productId, true);
+    }
+
+    // Call this function when the - button is clicked
+    function decreaseQuantity(productId) {
+      updateQuantity(productId, false);
+    }
+
     // Update Order Summary
     function updateSummary(subtotal) {
+      const taxRate = 0.22; // 22% VAT
       const tax = subtotal * taxRate;
       const total = subtotal + tax;
 

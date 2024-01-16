@@ -1,65 +1,31 @@
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
-    const selectedCustomer = localStorage.getItem('selectedCustomer') || '';
+document.addEventListener("DOMContentLoaded", function () {
+  const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+  const selectedCustomer = localStorage.getItem('selectedCustomer') || '';
 
-    // Populate the customer search input and cart items on page load
-    document.getElementById('customer-search').value = selectedCustomer;
-    updateCart();
-
-    // ... existing event listeners ...
-
-    // Update the 'addToCart' function to use localStorage
-    function addToCart(productId, productName, productPrice) {
-      if (cartItems[productId]) {
-        cartItems[productId].quantity += 1;
-      } else {
-        cartItems[productId] = {
-          name: productName,
-          price: productPrice,
-          quantity: 1,
-        };
-     
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  // Populate the customer search input and cart items on page load
+  document.getElementById('customer-search').value = selectedCustomer;
   updateCart();
-}
+  
+  // ... Your existing code ...
 
-// Handle list item selection for customers
-customerList.addEventListener("click", (event) => {
-  if (event.target.tagName === "LI") {
-    const selectedCustomer = event.target.textContent;
-    customerSearch.value = selectedCustomer;
-    localStorage.setItem('selectedCustomer', selectedCustomer);
-    customerList.style.display = "none";
-    // Perform any other actions needed after selection
+  // Define a function to update the cart and order summary
+  function updateCart() {
+      // Your existing code for updating the cart UI
+      // ...
+
+      // Update the Order Summary UI
+      // Calculate subtotal, tax, and total based on cartItems
+      // Update the corresponding HTML elements with new values
+  }
+  
+  // ... Rest of your existing code ...
+
+  // Handle the "Refresh Order" button click event
+  window.refreshOrder = function () {
+      localStorage.removeItem('cartItems');
+      localStorage.removeItem('selectedCustomer');
+      cartItems = {};
+      document.getElementById('customer-search').value = '';
+      updateCart();
   }
 });
-
-// Refresh Order function to clear localStorage and UI
-window.refreshOrder = function () {
-  localStorage.removeItem('cartItems');
-  localStorage.removeItem('selectedCustomer');
-  cartItems = {};
-  document.getElementById('customer-search').value = '';
-  updateCart();
-}
-
-// Update Cart UI
-function updateCart() {
-  const posItemContainer = document.querySelector(".pos-item-container");
-  posItemContainer.innerHTML = ""; // Clear existing items
-
-  let subtotal = 0;
-  for (let id in cartItems) {
-    const item = cartItems[id];
-    subtotal += item.price * item.quantity;
-
-    const itemElement = document.createElement("div");
-    // ... existing itemElement innerHTML and appendChild
-  }
-  updateSummary(subtotal);
-}
-
-// ... existing updateQuantity and updateSummary functions ...
-});
-</script>
