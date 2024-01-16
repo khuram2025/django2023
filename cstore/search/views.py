@@ -1,35 +1,23 @@
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from django_elasticsearch_dsl_drf.filter_backends import (
-    FilteringFilterBackend,
-    OrderingFilterBackend,
-    SearchFilterBackend,
-)
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from .documents import ProductDocument
-from .serializers import ProductDocumentSerializer
+from django.shortcuts import render
+from .documents import ProductDocument  # Make sure this import is correct
 
-class ProductSearchViewSet(DocumentViewSet):
-    document = ProductDocument
-    serializer_class = ProductDocumentSerializer
-    lookup_field = 'id'
-    filter_backends = [
-        FilteringFilterBackend,
-        OrderingFilterBackend,
-        SearchFilterBackend,
-    ]
-    search_fields = (
-        'title',
-        'description',
-    )
-    filter_fields = {
-        'price': 'price',
-        
-    }
-    ordering_fields = {
-        'title': 'title',
-        'price': 'price',
-    }
-    ordering = ('id',)
+def search_view(request):
+    query = request.GET.get('sPattern', '')
+    print("Search query received:", query)  # Print the received query
 
-  
+    if query:
+        search = ProductDocument.search().query("match", title=query)
+        response = search.execute()
+        results = [{'pk': hit.meta.id, **hit.to_dict()} for hit in response]
+
+        print("Number of results:", len(results))  # Print the number of results
+        for res in results:
+            print(res)  # Print each result
+        for product in results:
+            print(product.get('images'))  # Adjust based on how images are stored
+
+    else:
+        results = []
+    
+
+    return render(request, 'home/search_results.html', {'results': results})

@@ -1,20 +1,37 @@
-<div id="search-alert" class="pos-top">
-  <a class="open-alert-box btn" href="#" title="You will receive email notification once new listing matching search criteria is published">
-    <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="default-font font-size-16"><path d="M459.7 194.6C482 174.1 496 144.7 496 112 496 50.1 445.9 0 384 0c-45.3 0-84.3 26.8-101.9 65.5-17.3-2-34.9-2-52.2 0C212.3 26.8 173.3 0 128 0 66.1 0 16 50.1 16 112c0 32.7 14 62.1 36.3 82.6C39.3 223 32 254.7 32 288c0 53.2 18.6 102.1 49.5 140.5L39 471c-9.4 9.4-9.4 24.6 0 33.9 9.4 9.4 24.6 9.4 33.9 0l42.5-42.5c81.5 65.7 198.7 66.4 281 0L439 505c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.4-24.6 0-33.9l-42.5-42.5c31-38.4 49.5-87.3 49.5-140.5.1-33.4-7.2-65.1-20.2-93.5zM384 48c35.3 0 64 28.7 64 64 0 15.1-5.3 29-14 39.9-26.2-34.2-62-60.6-103.3-75.2C342.1 59.4 361.7 48 384 48zM64 112c0-35.3 28.7-64 64-64 22.3 0 41.9 11.4 53.4 28.7-41.4 14.6-77.2 41-103.3 75.2C69.3 141 64 127.1 64 112zm192 352c-97.3 0-176-78.7-176-176 0-97 78.4-176 176-176 97.4 0 176 78.8 176 176 0 97.3-78.7 176-176 176zm46.2-95.7l-69-47.5c-3.3-2.2-5.2-5.9-5.2-9.9V180c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v107.7l50 34.4c5.5 3.8 6.8 11.2 3.1 16.7L319 365.2c-3.8 5.4-11.3 6.8-16.8 3.1z" class="default-font font-size-16"></path></svg>
-    <span class="default-font font-size-16">Create alert</span>
-  </a>
+<form action="#" method="GET" class="nocsrf" class="default-font font-size-14">
+  <input type="hidden" name="page" value="search" class="default-font font-size-15" />
 
-  <div class="alert-box nonlogged" style="display: none">
-    <form action="https://epsilon.mb-themes.com/index.php" method="post" name="sub_alert" id="alert-form" class="nocsrf">
-      <input id="page" type="hidden" name="page" value="search" class="default-font font-size-15" /> <input id="alert" type="hidden" name="alert" value="QsBSsUQ8GPhIfMaQ6Zx8hEkk444sLAH3R0xfPMoTRxebVaC3FxBshHL+t7c5mp4KQiPtQPIgCx+xAjXGPZsAjsqv6ASJt6TubHjklh2ypuCD77G+Snx8UdcXTTd2dcVBrZeng/mXBC90V63wW9jvUjSIaGubJIPoHnH02TwAhjhuJ8g2ZYAOsURxxS3zbNWJSVmC8suUpVU1c8pxi78oVhJrQXJQTyZtNiw6rH47Lh0A56XBtRnODnWwusRThf4EIWtO+jpplwgnBg0qYgiJDTQjHAmpJuIQBalTt/lVVnB3G/k0Irhu9SEMhTcxXOXZw4cQiNNcR0lC3ev0bC7Ic9Mbcp+F/3c2yxJDMvIQoXgAixmraCpxfXSjFieWhA7qmBvFY51vEr+flYt9N1OigVS21j54rSvDSxYq5TJQ4GBAgU1kfrWs/6haChfYwiGmlZbDwZ53mRchPX2codQL2K2SLa83ZaEaCupviqJ2ygZpzRxX3PjxV6uZzsIWlkOr6oD0GyiAlHxpnc5DG5pyBIgSGoInYzLzj2O+G/Diltmd67T+u/FsCiI8qUKP7H4BIVm7cncFkbh94WSBEq5LL4cRkAZCdUTmrsRc" class="default-font font-size-15" /> <input id="alert_userId" type="hidden" name="alert_userId" value="0" class="default-font font-size-15" />
-      <img src="https://epsilon.mb-themes.com/oc-content/themes/epsilon/images/reminder.png" alt="Subscriptions" class="default-font font-size-14" />
-      <div class="header" speechify-initial-font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' speechify-initial-font-size="22px">Subscribe to this search</div>
-      <div class="text">Create alert to receive email notification when new listing matching search criteria is published. <a href="https://epsilon.mb-themes.com/user/alerts" class="default-font font-size-14">Manage subscriptions.</a></div>
-
-      <div class="inputs">
-        <input id="alert_email" type="email" name="alert_email" required="" value="" placeholder="Enter your email..." class="default-font font-size-15" />
-        <button type="submit" class="btn create-alert">Create alert</button>
+  <div class="input-box picker pattern" class="default-font font-size-14">
+    <input type="text" name="sPattern" class="pattern" placeholder="Enter keyword..." value="" autocomplete="off" class="default-font font-size-17" />
+    <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="18px"></i>
+    <div class="results" class="default-font font-size-14" style="overflow: hidden">
+      <div class="loaded" class="default-font font-size-14"></div>
+      <div class="default" class="default-font font-size-14">
+        <div class="row minlength" class="default-font font-size-13">
+          <em class="default-font font-size-13">Enter <span class="min" class="default-font font-size-13">2</span> more character(s) to search...</em>
+        </div>
+        <div class="row cities locations" class="default-font font-size-14">
+          <div class="lead" class="default-font font-size-13">Popular cities</div>
+          <a class="option direct" href="https://epsilon.mb-themes.com/ireton-c6862204" data-city="6862204" class="default-font font-size-15">Ireton, Iowa <em class="default-font font-size-11">253 items</em></a
+          ><a class="option direct" href="https://epsilon.mb-themes.com/kerens-c6703063" data-city="6703063" class="default-font font-size-15">Kerens, Texas <em class="default-font font-size-11">97 items</em></a
+          ><a class="option direct" href="https://epsilon.mb-themes.com/audubon-c6500572" data-city="6500572" class="default-font font-size-15">Audubon, New Jersey <em class="default-font font-size-11">3 items</em></a
+          ><a class="option direct" href="https://epsilon.mb-themes.com/atlantic-highlands-c7095312" data-city="7095312" class="default-font font-size-15">Atlantic Highlands, New Jersey <em class="default-font font-size-11">2 items</em></a
+          ><a class="option direct" href="https://epsilon.mb-themes.com/borkowice-c9532517" data-city="9532517" class="default-font font-size-15">Borkowice, Mazovia <em class="default-font font-size-11">1 item</em></a
+          ><a class="option direct" href="https://epsilon.mb-themes.com/alice-c6670234" data-city="6670234" class="default-font font-size-15">Alice, Texas <em class="default-font font-size-11">1 item</em></a>
+        </div>
       </div>
-    </form>
+    </div>
   </div>
-</div>
+
+  <button class="btn" type="submit" class="default-font font-size-16"><i class="fa fa-search" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i> <span class="default-font font-size-16">Search</span></button>
+</form>
+
+{% if products %}
+<ul>
+  {% for product in products %}
+  <li>{{ product.title }} - {{ product.description }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No results found</p>
+{% endif %}
