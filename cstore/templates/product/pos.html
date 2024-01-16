@@ -180,24 +180,40 @@
 
           <div class="paginate" class="default-font font-size-14">
             <ul class="default-font font-size-14">
-              <li class="default-font font-size-14"><span class="searchPaginationSelected list-first"
-                  class="default-font font-size-14">1</span></li>
-              <li class="default-font font-size-14"><a href="https://epsilon.mb-themes.com/search/iPage,2"
-                  class="searchPaginationNonSelected" class="default-font font-size-14">2</a></li>
-              <li class="default-font font-size-14"><a href="https://epsilon.mb-themes.com/search/iPage,3"
-                  class="searchPaginationNonSelected" class="default-font font-size-14">3</a></li>
-              <li class="default-font font-size-14">
-                <a href="https://epsilon.mb-themes.com/search/iPage,2" class="searchPaginationNext"
-                  class="default-font font-size-14"><i class="fas fa-angle-right"
-                    speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="14px"></i></a>
-              </li>
-              <li class="default-font font-size-14">
-                <a href="https://epsilon.mb-themes.com/search/iPage,47" class="searchPaginationLast list-last"
-                  class="default-font font-size-14"><i class="fas fa-step-forward"
-                    speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="14px"></i></a>
-              </li>
+                {% if page_obj.has_previous %}
+                <li class="default-font font-size-14">
+                    <a href="?page=1" class="searchPaginationFirst list-first">
+                        <i class="fas fa-angle-double-left"></i> 
+                    </a>
+                </li>
+                <li class="default-font font-size-14">
+                    <a href="?page={{ page_obj.previous_page_number }}" class="searchPaginationNonSelected">
+                        <i class="fas fa-angle-left"></i> previous
+                    </a>
+                </li>
+                {% endif %}
+        
+                <li class="default-font font-size-14">
+                    <span class="searchPaginationSelected list-first">
+                        {{ page_obj.number }}
+                    </span>
+                </li>
+        
+                {% if page_obj.has_next %}
+                <li class="default-font font-size-14">
+                    <a href="?page={{ page_obj.next_page_number }}" class="searchPaginationNonSelected">
+                        next <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="default-font font-size-14">
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="searchPaginationLast list-last">
+                        last <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
             </ul>
-          </div>
+        </div>
+        
         </div>
       </div>
 
