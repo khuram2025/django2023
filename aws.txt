@@ -16,7 +16,7 @@ git pull origin 1st
 python3 manage.py makemigrations --settings=cstore.settings.prod
 python3 manage.py migrate --settings=cstore.settings.prod
 python3 manage.py shell --settings=cstore.settings.prod
-
+python manage.py  search_index --create --settings=cstore.settings.prod
 
 sudo systemctl restart gunicorn
 sudo systemctl restart nginx
@@ -26,6 +26,7 @@ python3 manage.py makemigrations --settings=cstore.settings.prod
 python3 manage.py migrate --settings=cstore.settings.prod
 python3 manage.py collectstatic --settings=cstore.settings.prod
 python manage.py showmigrations --settings=cstore.settings.prod
+python manage.py search_index --rebuild --settings=cstore.settings.prod
 
 
 
