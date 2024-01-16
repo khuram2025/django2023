@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CustomerSerializer
-from .models import CustomFieldValue, Product, StoreProduct, StoreProductStockEntry
+from .models import CustomFieldValue, Customer, Product, StoreProduct, StoreProductStockEntry
 from .forms import CompanyProductForm, EditStockEntryForm, ProductForm, StoreProductForm,AddStockForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
@@ -662,11 +662,25 @@ def pos_view(request, store_id):
 
     # Get all categories for filtering options
     all_categories = set(sp.product.category.title for sp in StoreProduct.objects.filter(store_id=store_id))
-    
+
+    # Fetch customers related to the store
+    customers = Customer.objects.filter(store_id=store_id)
+
     context = {
         'all_categories': all_categories,
         'selected_category': selected_category,
         'page_obj': page_obj,
         'store_id': store_id,
+        'customers': customers,  # Add customers to the context
     }
     return render(request, 'product/pos.html', context)
+
+
+
+
+def list_customers(request):
+    # Retrieve all customer instances
+    customers = Customer.objects.all()
+
+    # If you want to render to a template
+    return render(request, 'product/list_customers.html', {'customers': customers})

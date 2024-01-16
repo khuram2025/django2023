@@ -1,37 +1,65 @@
-<form action="#" method="GET" class="nocsrf" class="default-font font-size-14">
-  <input type="hidden" name="page" value="search" class="default-font font-size-15" />
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+    const selectedCustomer = localStorage.getItem('selectedCustomer') || '';
 
-  <div class="input-box picker pattern" class="default-font font-size-14">
-    <input type="text" name="sPattern" class="pattern" placeholder="Enter keyword..." value="" autocomplete="off" class="default-font font-size-17" />
-    <i class="clean fas fa-times-circle" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="18px"></i>
-    <div class="results" class="default-font font-size-14" style="overflow: hidden">
-      <div class="loaded" class="default-font font-size-14"></div>
-      <div class="default" class="default-font font-size-14">
-        <div class="row minlength" class="default-font font-size-13">
-          <em class="default-font font-size-13">Enter <span class="min" class="default-font font-size-13">2</span> more character(s) to search...</em>
-        </div>
-        <div class="row cities locations" class="default-font font-size-14">
-          <div class="lead" class="default-font font-size-13">Popular cities</div>
-          <a class="option direct" href="https://epsilon.mb-themes.com/ireton-c6862204" data-city="6862204" class="default-font font-size-15">Ireton, Iowa <em class="default-font font-size-11">253 items</em></a
-          ><a class="option direct" href="https://epsilon.mb-themes.com/kerens-c6703063" data-city="6703063" class="default-font font-size-15">Kerens, Texas <em class="default-font font-size-11">97 items</em></a
-          ><a class="option direct" href="https://epsilon.mb-themes.com/audubon-c6500572" data-city="6500572" class="default-font font-size-15">Audubon, New Jersey <em class="default-font font-size-11">3 items</em></a
-          ><a class="option direct" href="https://epsilon.mb-themes.com/atlantic-highlands-c7095312" data-city="7095312" class="default-font font-size-15">Atlantic Highlands, New Jersey <em class="default-font font-size-11">2 items</em></a
-          ><a class="option direct" href="https://epsilon.mb-themes.com/borkowice-c9532517" data-city="9532517" class="default-font font-size-15">Borkowice, Mazovia <em class="default-font font-size-11">1 item</em></a
-          ><a class="option direct" href="https://epsilon.mb-themes.com/alice-c6670234" data-city="6670234" class="default-font font-size-15">Alice, Texas <em class="default-font font-size-11">1 item</em></a>
-        </div>
-      </div>
-    </div>
-  </div>
+    // Populate the customer search input and cart items on page load
+    document.getElementById('customer-search').value = selectedCustomer;
+    updateCart();
 
-  <button class="btn" type="submit" class="default-font font-size-16"><i class="fa fa-search" speechify-initial-font-family='"Font Awesome 5 Free"' speechify-initial-font-size="16px"></i> <span class="default-font font-size-16">Search</span></button>
-</form>
+    // ... existing event listeners ...
 
-{% if products %}
-<ul>
-  {% for product in products %}
-  <li>{{ product.title }} - {{ product.description }}</li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No results found</p>
-{% endif %}
+    // Update the 'addToCart' function to use localStorage
+    function addToCart(productId, productName, productPrice) {
+      if (cartItems[productId]) {
+        cartItems[productId].quantity += 1;
+      } else {
+        cartItems[productId] = {
+          name: productName,
+          price: productPrice,
+          quantity: 1,
+        };
+     
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  updateCart();
+}
+
+// Handle list item selection for customers
+customerList.addEventListener("click", (event) => {
+  if (event.target.tagName === "LI") {
+    const selectedCustomer = event.target.textContent;
+    customerSearch.value = selectedCustomer;
+    localStorage.setItem('selectedCustomer', selectedCustomer);
+    customerList.style.display = "none";
+    // Perform any other actions needed after selection
+  }
+});
+
+// Refresh Order function to clear localStorage and UI
+window.refreshOrder = function () {
+  localStorage.removeItem('cartItems');
+  localStorage.removeItem('selectedCustomer');
+  cartItems = {};
+  document.getElementById('customer-search').value = '';
+  updateCart();
+}
+
+// Update Cart UI
+function updateCart() {
+  const posItemContainer = document.querySelector(".pos-item-container");
+  posItemContainer.innerHTML = ""; // Clear existing items
+
+  let subtotal = 0;
+  for (let id in cartItems) {
+    const item = cartItems[id];
+    subtotal += item.price * item.quantity;
+
+    const itemElement = document.createElement("div");
+    // ... existing itemElement innerHTML and appendChild
+  }
+  updateSummary(subtotal);
+}
+
+// ... existing updateQuantity and updateSummary functions ...
+});
+</script>
