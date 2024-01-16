@@ -14,7 +14,10 @@
   -webkit-font-smoothing: antialiased;
   color: #37474f;
 }
-
+#filter-results-popup {
+  display: none;
+  /* Add styles for the pop-up, e.g., position, background color, etc. */
+}
 .pos-inner-container {
   background-color: #ffffff;
   border-radius: 1.5rem;
@@ -24,6 +27,13 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   flex: 1 1 auto; /* Grow to fill space, don't shrink, base size is automatic */
   overflow-y: auto;
+  
+  
+}
+@media (max-width: 767px) {
+  .pos-inner-container {
+    display: none;
+  }
 }
 
 .pos-item-container {

@@ -56,7 +56,10 @@
                 class="default-font font-size-16"></path>
             </svg>
           </div>
-          <span class="default-font font-size-16">Filter results</span>
+          {% comment %} <span class="default-font font-size-16">Filter results</span> {% endcomment %}
+          <!-- Add this button in your HTML -->
+<button id="filter-results-button" class="btn isMobile" onclick="toggleFilterResults()">Filter Results</button>
+
         </a>
 
         <div class="ajax-load-failed flashmessage flashmessage-error" style="display: none"
@@ -385,6 +388,22 @@
         addToCart(productId, productName, productPrice);
       });
     });
+
+    function toggleFilterResults() {
+      const orderSummary = document.querySelector(".pos-inner-container");
+      const filterResultsPopup = document.getElementById("filter-results-popup");
+    
+      if (orderSummary.style.display === "block") {
+        // Hide Order Summary and show the pop-up
+        orderSummary.style.display = "none";
+        filterResultsPopup.style.display = "block";
+      } else {
+        // Show Order Summary and hide the pop-up
+        orderSummary.style.display = "block";
+        filterResultsPopup.style.display = "none";
+      }
+    }
+    
 
     function addToCart(productId, productName, productPrice) {
       if (cartItems[productId]) {
