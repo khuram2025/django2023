@@ -11,8 +11,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import CustomerSerializer
-from .models import CustomFieldValue, Customer, Product, StoreProduct, StoreProductStockEntry
-from .forms import CompanyProductForm, EditStockEntryForm, ProductForm, StoreProductForm,AddStockForm
+from .models import CustomFieldValue, Customer, Order, OrderItem, Product, StoreProduct, StoreProductStockEntry
+from .forms import CompanyProductForm, EditStockEntryForm, OrderForm, ProductForm, StoreProductForm,AddStockForm
 from django.http import JsonResponse
 from .models import Category, City, ProductImage
 from django.contrib import messages
@@ -676,7 +676,101 @@ def pos_view(request, store_id):
     return render(request, 'product/pos.html', context)
 
 
+from decimal import Decimal  # Import Decimal for handling currency values
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import OrderForm  # Import your OrderForm
+from .models import Order, StoreProduct, Customer  # Import your models
 
+@login_required
+def submit_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)  # Use your OrderForm if you have one
+          # Print form data for debugging
+        if form.is_valid():
+            print("Received form data:", form.cleaned_data)
+            store_id = form.cleaned_data['store'].id
+            total_price = Decimal(form.cleaned_data['total_price'])
+
+            selected_product_ids = request.POST.getlist('product_ids')
+            quantities = request.POST.getlist('quantities')
+
+            if not selected_product_ids or not quantities:
+                messages.error(request, "No products selected.")
+                print("No products selected.")
+                return redirect('product:pos-view', store_id=form.cleaned_data['store'].id)
+
+            # Fetch actual StoreProduct objects
+            products = [get_object_or_404(StoreProduct, id=product_id) for product_id in selected_product_ids]
+
+            # Calculate subtotal using the actual product objects
+            subtotal = sum(
+                Decimal(quantity) * product.sale_price
+                for product, quantity in zip(products, map(int, quantities))
+            )
+            customer_id = form.cleaned_data['customer'].id if form.cleaned_data['customer'] else None
+            payment_type = form.cleaned_data['payment_type']
+
+            # Handle customer assignment
+            if customer_id:
+                customer = get_object_or_404(Customer, id=customer_id)
+            else:
+                # Handle the case where no customer is selected
+                # This could be a default 'Walk-in Customer' or similar
+                customer = None  # Replace with your logic
+
+            # Calculate subtotal
+            subtotal = sum(
+                Decimal(quantity) * product.sale_price
+                for product, quantity in zip(selected_product_ids, quantities)
+            )
+
+            # Create an Order instance
+            order = Order(
+                customer=customer,
+                payment_type=payment_type,
+                total_price=total_price,
+                subtotal=subtotal,  # Set subtotal
+                # Add any other necessary fields
+            )
+            order.save()
+
+            # Create OrderItem instances
+            for product_id, quantity in zip(selected_product_ids, quantities):
+                product = get_object_or_404(StoreProduct, id=product_id)
+                quantity = int(quantity)  # Convert quantity to an integer
+
+                # Calculate total price for the item
+                item_total_price = Decimal(quantity) * product.sale_price
+
+                # Create OrderItem instance for each selected product
+                order_item = OrderItem(
+                    order=order,
+                    product=product,
+                    quantity=quantity,
+                    price=product.sale_price,  # or any other logic for price
+                    total_price=item_total_price  # Set total price for the item
+                )
+                order_item.save()
+
+                # Update StoreProduct stock
+                product.stock_quantity -= quantity
+                product.save()
+
+            # Optional: Add other order-related logic here, e.g., sending confirmation emails
+
+            # Redirect to a confirmation page or return a success response
+            messages.success(request, "Order submitted successfully.")
+            return redirect('order_confirmation', order_id=order.id)
+        else:
+            # Handle the case where the form is not valid
+            print("Form is not valid. Errors:", form.errors)
+            messages.error(request, "There was an error in your form.")
+
+    # Handle invalid form submission or non-POST requests
+    messages.error(request, "Invalid request.")
+    
+    return redirect('home:index')  # Redirect to a default POS page or error page
 
 def list_customers(request):
     # Retrieve all customer instances

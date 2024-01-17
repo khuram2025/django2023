@@ -1,7 +1,7 @@
 from django import forms
 
 from companies.models import CompanyProfile
-from .models import CustomFieldValue, Product, SellerInformation, ProductImage, Category, City, CustomField, StoreProductStockEntry
+from .models import CustomFieldValue, Order, Product, SellerInformation, ProductImage, Category, City, CustomField, StoreProductStockEntry
 from django import forms
 from .models import Product, SellerInformation, Category, City ,StoreProduct
 
@@ -293,6 +293,27 @@ class AddStockForm(forms.Form):
         if quantity <= 0:
             raise forms.ValidationError("Quantity must be greater than zero.")
         return quantity
+
+
+from django import forms
+from .models import Order
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = [
+            'store',  # Use a ForeignKey widget to select the store
+            'customer',  # Use a ForeignKey widget to select the customer
+            'total_price',
+            'discount_type',
+            'discount_value',
+            'taxes',  # Use a ModelMultipleChoiceField to select taxes
+            'custom_charges',  # Use a ModelMultipleChoiceField to select custom charges
+            'subtotal',
+            'payment_type',
+            'paid_amount',
+            'credit_amount',
+        ]
 
 
 

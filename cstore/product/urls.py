@@ -40,6 +40,8 @@ urlpatterns = [
 
 
     path('pos/<int:store_id>/', views.pos_view, name='pos-view'),
+    path('submit-order/', views.submit_order, name='submit_order'),
+
     path('customers/', views.list_customers, name='list_customers'),
 
     
