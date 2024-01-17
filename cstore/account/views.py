@@ -19,6 +19,9 @@ from .forms import UserProfileForm
 import requests
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
+from django.http import JsonResponse
+import json
 
 
 def register(request):
@@ -81,6 +84,46 @@ def user_login(request):
 
 
 
+@csrf_exempt
+def mobile_signup_api(request):
+    if request.method == 'POST':
+        # Parse JSON data from the request
+        data = json.loads(request.body)
+        print("Received data:", data)  # Print received data for debugging
+
+        # Extract data from the request
+        full_name = data.get('full_name')
+        email = data.get('email')  # Email is optional
+        mobile = data.get('mobile')
+        password = data.get('password')
+
+        # Basic validation
+        if not mobile or not password:
+            print("Error: Missing required fields")  # Debug print
+            return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+
+        if CustomUser.objects.filter(mobile=mobile).exists():
+            print(f"Error: Mobile number {mobile} already registered")  # Debug print
+            return JsonResponse({'status': 'error', 'message': 'Mobile number already registered'}, status=400)
+
+        # Create a new user
+        try:
+            user = CustomUser.objects.create(
+                full_name=full_name,
+                email=email,
+                mobile=mobile,
+                password=make_password(password),
+                # Add other fields and their defaults if necessary
+            )
+            user.save()
+            print("User registration successful for:", mobile)  # Debug print
+            return JsonResponse({'status': 'success', 'message': 'User registration successful'}, status=201)
+        except Exception as e:
+            print("Exception during user creation:", e)  # Debug print
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    print("Error: Invalid request method")  # Debug print
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 
