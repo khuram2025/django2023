@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, api_views
 from account.views import user_profile
 
 app_name = 'companies'
@@ -32,6 +32,9 @@ urlpatterns = [
     path('api/<int:customerId>/orders', views.fetch_customer_orders, name='fetch_customer_orders'),
     path('api/<int:customerId>/ledger', views.customer_ledger, name='customer_ledger'),
     path('api/add_manual_transaction', views.add_manual_transaction, name='add_manual_transaction'),
+    
+    path('api/create-company/', api_views.create_company_profile, name='api-create-company'),
+
 
 
 
