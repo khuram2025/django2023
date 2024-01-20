@@ -256,22 +256,26 @@
                   <div class="simple-prod o1">
                     <div class="simple-wrap" title="">
                       <div class="img-wrap">
-                        <a class="img" href="{% url 'product:product_detail' pk=product.pk %}">
-                          <img class="lazy loaded" src="product.images.all.0.image.url " alt="iPhone gonna be cool" style="display: block; transition: all 0.2s ease 0s" />
-                        </a>
+    <a class="img" href="{% url 'product:product_detail' pk=product.pk %}">
+        {% if product.images.all %}
+            <img class="lazy loaded" src="{{ product.images.all.0.image.url }}" alt="{{ product.images.all.0.alt_text|default:product.title }}" style="display: block; transition: all 0.2s ease 0s" />
+        {% else %}
+            <img class="lazy" src="{% static 'icons/default_cover.png' %}" alt="Default Image" />
+        {% endif %}
+    </a>
 
-                        <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}">
-                          <div class="price isGrid isDetail"><span>{{ product.price }} Rs.</span></div>
+    <a class="bar" href="{% url 'product:product_detail' pk=product.pk %}">
+        <div class="price isGrid isDetail"><span>{{ product.price }} Rs.</span></div>
+        <div class="image-counter"><i class="fas fa-camera"></i> {{ product.images.count }}</div>
+    </a>
 
-                          <div class="image-counter"><i class="fas fa-camera"></i> 3</div>
-                        </a>
+    <div class="isGrid isDetail">
+        <div class="favorite">
+            <a href="javascript://" class="fi_save_favorite fi_save fi_fav_2" rel="2" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
+        </div>
+    </div>
+</div>
 
-                        <div class="isGrid isDetail">
-                          <div class="favorite">
-                            <a href="javascript://" class="fi_save_favorite fi_save fi_fav_2" rel="2" title="Save to favorite"><i class="far fa-star"></i><span>Save to favorite</span></a>
-                          </div>
-                        </div>
-                      </div>
 
                       <div class="data">
                         <div class="info">Borkowice, Poland</div>

@@ -1,0 +1,130 @@
+{% extends 'home/base.html' %} {% load static %} {% block content %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <link href="{% static 'products/offers.css' %}" rel="stylesheet" type="text/css" />
+
+  <body id="search" class="">
+    {% include 'home/header.html' %}
+
+    <div class="content loc-search sec-default" class="default-font font-size-14">
+      <div id="breadcrumbs" class="container" class="default-font font-size-14">
+        <div class="bread-text" class="default-font font-size-14">
+          <ul class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList" class="default-font font-size-14">
+            <meta itemprop="name" content="Breadcrumb" class="default-font font-size-14" />
+            <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="first-child" class="default-font font-size-14">
+              <a href="https://epsilon.mb-themes.com/" itemprop="item" class="default-font font-size-14"
+                ><span itemprop="name" class="home" class="default-font font-size-14"
+                  ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" height="14" width="16" class="default-font font-size-14"><path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" class="default-font font-size-14"></path></svg> <span class="default-font font-size-14">Home</span></span
+                ></a
+              ><meta itemprop="position" content="1" class="default-font font-size-14" />
+            </li>
+
+            <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem" class="last-child" class="default-font font-size-14">&gt; <span itemprop="name" class="default-font font-size-14">Search results</span><meta itemprop="position" content="2" class="default-font font-size-14" /></li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="flashbox" class="container" class="default-font font-size-14">
+        <div class="wrap" class="default-font font-size-14"><div class="wrap2" class="default-font font-size-14"></div></div>
+      </div>
+
+      <div class="container primary" class="default-font font-size-14">
+        {% include 'home/search_filter.html' %}
+
+        <div id="search-main" class="grid" class="default-font font-size-14">
+          <a href="#" id="open-search-filters" class="btn isMobile" class="default-font font-size-16">
+            <div class="svg-wrap" class="default-font font-size-16">
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="default-font font-size-16"><path d="M496 384H160v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h80v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h336c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160h-80v-16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h336v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h80c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm0-160H288V48c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v16H16C7.2 64 0 71.2 0 80v32c0 8.8 7.2 16 16 16h208v16c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-16h208c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16z" class="default-font font-size-16"></path></svg>
+            </div>
+            <span class="default-font font-size-16">Filter results</span>
+          </a>
+
+          <div id="search-items" class="default-font font-size-14">
+            <div id="banner-theme" class="banner-theme banner-search_top not767 is-demo" class="default-font font-size-14">
+              <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
+                <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
+                  <a href="https://www.a2hosting.com?aid=5ff74858d3bac&amp;bid=a3194333" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/banners/a3194333.jpg" alt="" title="" width="728" height="90" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/imp.php?aid=5ff74858d3bac&amp;bid=a3194333" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
+                </div>
+              </div>
+            </div>
+            <div class="products grid" class="default-font font-size-14">
+              {% for product in products %}
+
+              <div class="offer-container">
+                <div class="offer-card">
+                  <div class="offer-discount">80% Off</div>
+                  <div class="offer-info">
+                    <p class="offer-detail">Don't miss out on our biggest sale!</p>
+                    <button class="offer-button">Explore Now</button>
+                  </div>
+                </div>
+
+                <div class="offer-card">
+                  <div class="offer-discount">50% Off</div>
+                  <div class="offer-info">
+                    <p class="offer-detail">Half Price, Double the Joy!</p>
+                    <button class="offer-button">Get it</button>
+                  </div>
+                </div>
+
+                <div class="offer-card">
+                  <div class="offer-discount">Buy 1 Get 1</div>
+                  <div class="offer-info">
+                    <p class="offer-detail">Twice as nice - One for you, one to share!</p>
+                    <button class="offer-button">Shop Now</button>
+                  </div>
+                </div>
+                <!-- Additional offer cards can be added here -->
+              </div>
+
+              {% empty %}
+              <li>No products available.</li>
+              {% endfor %}
+
+              <div id="banner-theme" class="banner-theme banner-search_middle not767 is-demo" class="default-font font-size-14">
+                <div class="myad" speechify-initial-font-family="monospace" speechify-initial-font-size="14px">
+                  <div class="text" speechify-initial-font-family="monospace" speechify-initial-font-size="16px">
+                    <a href="https://www.a2hosting.com/wordpress-hosting/managed?aid=5ff74858d3bac&amp;bid=0ffde563" target="_top" speechify-initial-font-family="monospace" speechify-initial-font-size="16px"><img src="//affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/0ffde563.jpg" alt="managed osclass hosting" title="managed osclass hosting" width="728" height="90" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=0ffde563" width="1" height="1" alt="" speechify-initial-font-family="monospace" speechify-initial-font-size="16px" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'home/footer.html' %} {% include 'mobile_sidemenu.html' %}
+
+    <div id="body-banner" class="bleft">
+      <div id="banner-theme" class="banner-theme banner-body_left not767 is-demo">
+        <div class="myad">
+          <div class="text">
+            <a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a504f205" target="_top"><img src="../affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="body-banner" class="bright">
+      <div id="banner-theme" class="banner-theme banner-body_right not767 is-demo">
+        <div class="myad">
+          <div class="text">
+            <a href="https://www.a2hosting.com/?aid=5ff74858d3bac&amp;bid=a504f205" target="_top"><img src="../affiliates.a2hosting.com/accounts/default1/9u7wabf7le4/a504f205.jpg" alt="" title="" width="160" height="600" /></a><img style="border: 0" src="https://affiliates.a2hosting.com/scripts/9u7waif7le4?aid=5ff74858d3bac&amp;bid=a504f205" width="1" height="1" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a id="scroll-to-top"
+      ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="20" height="20"><path d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z" /></svg
+    ></a>
+
+    <div id="menu-cover" class="mobile-box">
+      <svg class="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="32px" height="32px"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
+    </div>
+  </body>
+</html>
+
+{% endblock %}

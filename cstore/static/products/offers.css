@@ -1,0 +1,108 @@
+/* Base styles (mobile-first approach) */
+.offer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.offer-card {
+  display: flex;
+  width: 100%;
+  max-width: 360px; /* Mobile width */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.offer-discount {
+  font-size: 36px;
+  color: #fff;
+  padding: 20px;
+  width: 33.33%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.offer-info {
+  padding: 20px;
+  width: 66.67%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.offer-detail {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Offer Button Styling */
+.offer-button {
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #ffffff; /* White background */
+  color: #333333; /* Dark text for contrast */
+  border: 2px solid transparent; /* Smooth border */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase; /* Capitalized text */
+  letter-spacing: 1px; /* Spacing between letters for readability */
+  margin-top: 10px; /* Space from the detail text */
+}
+
+/* Hover effect for the button */
+.offer-button:hover {
+  background-color: #dddddd; /* Slightly darker on hover */
+  border-color: #cccccc; /* Border color change on hover */
+  color: #222222; /* Slightly darker text color */
+}
+
+/* Ensuring button alignment and responsiveness */
+.offer-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start; /* Aligns content to the start */
+}
+
+/* Desktop and larger devices */
+@media (min-width: 768px) {
+  .offer-card {
+    max-width: 500px; /* Desktop width */
+  }
+}
+
+/* Custom background and text colors for each card */
+.offer-card:nth-child(1) .offer-discount {
+  background-color: #e74c3c; /* Red */
+}
+
+.offer-card:nth-child(1) .offer-info {
+  background-color: #f2d7d5; /* Light Red */
+  color: #641e16; /* Dark Red */
+}
+
+.offer-card:nth-child(2) .offer-discount {
+  background-color: #3498db; /* Blue */
+}
+
+.offer-card:nth-child(2) .offer-info {
+  background-color: #d6eaf8; /* Light Blue */
+  color: #1a5276; /* Dark Blue */
+}
+
+.offer-card:nth-child(3) .offer-discount {
+  background-color: #2ecc71; /* Green */
+}
+
+.offer-card:nth-child(3) .offer-info {
+  background-color: #d5f5e3; /* Light Green */
+  color: #145a32; /* Dark Green */
+}
+
+/* Additional styling for more cards can be added here */

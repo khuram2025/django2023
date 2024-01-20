@@ -260,7 +260,7 @@ def product_list_with_offers(request, category_slug=None):
 
     products_count = products.count()
 
-    return render(request, 'product/product_listing.html', {
+    return render(request, 'product/offers.html', {
         'category': category, 
         'categories': categories, 
         'products': products,
