@@ -74,17 +74,25 @@ def create_product(request):
 
     return render(request, 'product/add_product.html', {'form': form})
 
-@login_required
+@login_required(login_url='account:login') 
 def create_company_product(request):
+    print("Creating Company Product")  # Debugging statement
     company_profiles = CompanyProfile.objects.filter(owner=request.user)
 
     if not company_profiles.exists():
-        # Redirect to create company page if no company is found
         messages.error(request, "You need to create a company before adding a product.")
+        print("No company profiles exist for the user")  # Debugging statement
         return redirect('home:company_create_message')
 
     if request.method == 'POST':
         form = CompanyProductForm(request.POST, request.FILES, user=request.user, company_profiles=company_profiles)
+        print("Form fields after initialization:", form.fields)
+        print("Submitted POST data:", request.POST)
+
+
+        if company_profiles and company_profiles.first().address:
+            form.fields['city'].required = False
+            form.fields['address'].required = False
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -92,10 +100,18 @@ def create_company_product(request):
 
             if 'company' in form.cleaned_data and form.cleaned_data['company']:
                 product.company = form.cleaned_data['company']
+                if product.company.address:
+                    product.address = product.company.address
+                    product.city = product.company.address.city
+                print("Company assigned: ", product.company)  # Debugging statement
             else:
                 messages.error(request, "No Company Assigned")
-                return redirect('some_error_handling_view')
+                print("Company field is missing in form data")  # Debugging statement
+                return redirect('some_error_handling_view')  # Change this to a valid URL
+
             product.save()
+            print("Product saved with ID: ", product.pk)  # Debugging statement
+
 
             # Handle custom fields
             for key, value in request.POST.items():
@@ -107,27 +123,27 @@ def create_company_product(request):
                         custom_field=custom_field,
                         defaults={'value': value}
                     )
+                    print(f"Custom field {custom_field.name} updated for product {product.pk}")  # Debugging statement
 
             # Handle the images
             images = request.FILES.getlist('images')
             for image in images:
                 ProductImage.objects.create(product=product, image=image)
+                print("Image added to product")  # Debugging statement
 
             messages.success(request, 'Product added successfully!')
             return redirect('product:product_detail', pk=product.pk)
 
         else:
+            print("Form is not valid. Errors: ", form.errors)  # Debugging statement
             messages.error(request, "There was an error with the form. Please check the details.")
-    else:
-        if request.method == 'POST':
-            form = CompanyProductForm(request.POST, request.FILES, user=request.user, company_profiles=company_profiles)
-            # ... [rest of your POST handling code]
-        else:
-            form = CompanyProductForm(user=request.user, company_profiles=company_profiles)
-    # ... [rest of your GET handling code]
 
+    else:
+        form = CompanyProductForm(user=request.user, company_profiles=company_profiles)
 
     return render(request, 'product/add_company_product.html', {'form': form})
+
+
 
 from django.http import JsonResponse
 

@@ -14,6 +14,7 @@ from django.apps import apps
 
 class CompanyProfile(models.Model):
     name = models.CharField(max_length=200)
+    
     owner = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='owned_companies')
     verified = models.BooleanField(default=False)
     working_categories = models.ManyToManyField(

@@ -26,9 +26,19 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
-        super(ProductForm, self).__init__(*args, **kwargs)
+        company_profiles = kwargs.pop('company_profiles', None)
+        super(CompanyProductForm, self).__init__(*args, **kwargs)
+
         self.fields['category'].queryset = Category.objects.filter(parent__isnull=True, status=True)
         self.fields['city'].queryset = City.objects.all()
+
+        if company_profiles and company_profiles.first().address:
+                self.fields.pop('address', None)
+                self.fields.pop('city', None)
+        else:
+            self.fields['address'].required = False
+            self.fields['city'].required = False
+            self.fields['city'].queryset = City.objects.all()
 
         if self.user and self.user.is_authenticated:
             seller_info = getattr(self.user, 'sellerinformation', None)

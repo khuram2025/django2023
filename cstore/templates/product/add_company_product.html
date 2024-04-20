@@ -24,30 +24,36 @@
         </div>
         <!-- Company Name Field -->
         <div class="form-section">
+          {% if company_profiles %} {% if company_profiles.count > 1 %}
           <label for="id_company">{{ form.company.label }}</label>
-          {{ form.company }} {% if form.company.errors %} {% for error in form.company.errors %}
+          {{ form.company }} {% else %}
+          <!-- For a single company, include a hidden field with the company's ID -->
+          <input type="hidden" name="company" value="{{ company_profiles.first.id }}" />
+          {% endif %} {% if form.company.errors %} {% for error in form.company.errors %}
           <div class="alert alert-danger">{{ error }}</div>
-          {% endfor %} {% endif %}
+          {% endfor %} {% endif %} {% endif %}
         </div>
-
+        {% if company_profiles %} {% with company_profile=company_profiles.first %} {% if not company_profile.address or not company_profile.city %}
         <!-- City Field -->
+        {% if form.city %}
         <div class="form-section">
           <label for="id_city">{{ form.city.label }}</label>
           {{ form.city }}
         </div>
-
+        {% endif %}
         <!-- Address Field -->
+        {% if form.address %}
         <div class="form-section">
           <label for="id_address">{{ form.address.label }}</label>
           {{ form.address }}
         </div>
+        {% endif %} {% endif %} {% endwith %} {% endif %}
 
         <!-- Phone Number Field (from CompanyProfile) -->
         <div class="form-section">
           <label for="id_phone_number">{{ form.phone_number.label }}</label>
           {{ form.phone_number }}
         </div>
-
         <!-- Price Field -->
         <div class="form-section">
           <label for="id_price">{{ form.price.label }}</label>

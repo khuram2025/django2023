@@ -122,6 +122,7 @@ class Product(models.Model):
     # Price and Condition
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Price"))
     check_with_seller = models.BooleanField(default=False, verbose_name=_("Check with Seller"))
+    needs_indexing = models.BooleanField(default=False)
    
 
     # Listing Information
@@ -146,6 +147,13 @@ class Product(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        try:
+            # Add your Elasticsearch indexing logic here
+            self.needs_indexing = False
+        except Exception as e:
+            self.needs_indexing = True
+            # Log the exception
+        super().save(update_fields=['needs_indexing'])
     
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
@@ -286,6 +294,8 @@ class StoreProduct(models.Model):
     stock_quantity = models.PositiveIntegerField(default=0, verbose_name=_("Stock Quantity"))
     is_store_exclusive = models.BooleanField(default=False, verbose_name=_("Store Exclusive"))
 
+    needs_indexing = models.BooleanField(default=False)
+
     purchase_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Purchase Price"), null=True, blank=True)
     opening_stock = models.PositiveIntegerField(default=0, verbose_name=_("Opening Stock"))
     low_stock_threshold = models.PositiveIntegerField(default=0, verbose_name=_("Low Stock Threshold"))
@@ -295,10 +305,27 @@ class StoreProduct(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # If the store product is being created (not updated), set the current_stock
-        if not self.pk:  # pk is None when the object is being created
+        # Check if the object is being created for the first time
+        is_new_instance = not self.pk
+
+        # Call the original save method
+        super().save(*args, **kwargs)
+
+        if is_new_instance:
+            # If it's a new instance, set the current_stock to opening_stock
             self.current_stock = self.opening_stock
-        super(StoreProduct, self).save(*args, **kwargs)
+
+        try:
+            # Add your Elasticsearch indexing logic here
+            # If successful, set needs_indexing to False
+            self.needs_indexing = False
+        except Exception as e:
+            # If there is an exception, set needs_indexing to True
+            self.needs_indexing = True
+            # Log the exception
+
+        # Save again with update_fields to ensure only specified fields are updated
+        super().save(update_fields=['current_stock', 'needs_indexing'])
 
     def add_stock(self, quantity, purchase_price=None):
             # Update the stock quantity
